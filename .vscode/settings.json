@@ -19,8 +19,7 @@
     "titleBar.inactiveForeground": "#e7e7e799",
     "tab.activeBackground": "#1857a4",
     "tab.activeBorderTop": "#1857a4",
-    "tab.activeModifiedBorder": "#1857a4",
-    "tab.activeBorder": "#1857a4"
+    "tab.activeModifiedBorder": "#1857a4"
   },
   "peacock.color": "#1857a4"
 }

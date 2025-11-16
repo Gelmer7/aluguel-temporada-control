@@ -13,6 +13,7 @@ import { RippleModule } from 'primeng/ripple';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Papa from 'papaparse';
 import { AirbnbRow } from '../../../../models/airbnb.model';
+import { AppColors } from '../../../../shared/design/colors';
 
 @Component({
   selector: 'app-csv-viewer-page',
@@ -45,80 +46,30 @@ export class CsvViewerPage {
   public readonly columnMinWidth = signal<Record<string, string>>({ Noites: '6rem' });
   public readonly columnMaxWidth = signal<Record<string, string>>({ Noites: '10rem' });
   protected readonly expandedRowGroups = signal<string[]>([]);
+  private readonly preferredInitial = [
+    'Data',
+    'Tipo',
+    'Código de Confirmação',
+    'Data de início',
+    'Data de término',
+    'Noites',
+    'Hóspede',
+    'Informações',
+    // 'Taxa de serviço',
+    'Taxa de limpeza',
+    'Valor',
+  ];
 
   constructor() {
-    this.loadFromAssets('/airbnb_10_2025-10_2025.csv');
+    this.loadFromAssets('/airbnb_12_2024-11_2025.csv');
   }
 
   private loadFromAssets(url: string): void {
     this.http.get(url, { responseType: 'text' }).subscribe({
-      next: (text) => {
-        const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-        const fields = (result.meta as any).fields || [];
-        const data = Array.isArray(result.data) ? (result.data as any[]) : [];
-        for (let i = 0; i < data.length; i++) data[i] = { __id: i + 1, ...data[i] };
-        this.headers.set(fields);
-        this.rows.set(data as (AirbnbRow & { __id: number })[]);
-        this.recomputeGroupIndexMap(this.rows());
-        this.applyColumnSizes(fields);
-        const mapped = fields.map((f: string) => ({ field: f, header: f }));
-        this.cols.set(mapped);
-        const preferredInitial = [
-          'Data',
-          'Tipo',
-          'Código de Confirmação',
-          'Data de início',
-          'Data de término',
-          'Noites',
-          'Hóspede',
-          'Informações',
-          'Pago',
-          'Taxa de serviço',
-          'Taxa de limpeza',
-          'Ganhos brutos',
-        ];
-        const initialSelected = preferredInitial
-          .filter((n) => fields.includes(n))
-          .map((n) => ({ field: n, header: n }));
-        this.selectedColumns.set(
-          initialSelected.length ? initialSelected : mapped.slice(0, Math.min(8, mapped.length))
-        );
-      },
+      next: (text) => this.applyCsvText(text),
       error: () => {
-        const fallback = '/assets/airbnb_10_2025-10_2025.csv';
-        this.http.get(fallback, { responseType: 'text' }).subscribe((text) => {
-          const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-          const fields = (result.meta as any).fields || [];
-          const data = Array.isArray(result.data) ? (result.data as any[]) : [];
-          for (let i = 0; i < data.length; i++) data[i] = { __id: i + 1, ...data[i] };
-          this.headers.set(fields);
-          this.rows.set(data as (AirbnbRow & { __id: number })[]);
-          this.recomputeGroupIndexMap(this.rows());
-          this.applyColumnSizes(fields);
-          const mapped = fields.map((f: string) => ({ field: f, header: f }));
-          this.cols.set(mapped);
-          const preferredInitial = [
-            'Data',
-            'Tipo',
-            'Código de Confirmação',
-            'Data de início',
-            'Data de término',
-            'Noites',
-            'Hóspede',
-            'Informações',
-            'Código de referência',
-            'Pago',
-            'Taxa de serviço',
-            'Taxa de limpeza',
-            'Ganhos brutos',
-          ];
-          const initialSelected = preferredInitial
-            .filter((n) => fields.includes(n))
-            .map((n) => ({ field: n, header: n }));
-          this.selectedColumns.set(
-            initialSelected.length ? initialSelected : mapped.slice(0, Math.min(8, mapped.length))
-          );
-        });
+        const fallback = '/assets/airbnb_12_2024-11_2025.csv';
+        this.http.get(fallback, { responseType: 'text' }).subscribe((text) => this.applyCsvText(text));
       },
     });
   }
@@ -178,8 +129,10 @@ export class CsvViewerPage {
       'Taxa de limpeza',
       'Ganhos brutos',
       'Hóspede',
+      'Valor',
+      'Informações',
     ];
-    const large = ['Informações, Tipo'];
+    const large = ['Tipo'];
 
     const min: Record<string, string> = { ...this.columnMinWidth() };
     const max: Record<string, string> = { ...this.columnMaxWidth() };
@@ -208,5 +161,50 @@ export class CsvViewerPage {
     const current = this.expandedRowGroups();
     const next = current.includes(date) ? current.filter((d) => d !== date) : [...current, date];
     this.expandedRowGroups.set(next);
+  }
+
+  public tipoHighlight(row: AirbnbRow & { __id: number }): string | undefined {
+    const tipo = (row['Tipo'] ?? '').trim();
+    if (tipo === 'Recebimento do coanfitrião') return AppColors.coHost;
+    if (tipo === 'Reserva') return AppColors.host;
+    if (tipo === 'Pagamento da Resolução') return AppColors.damage;
+    return undefined;
+  }
+
+  public rowClass(row: AirbnbRow & { __id: number }): string {
+    const base = this.groupClass(row['Data']);
+    const extra = this.tipoHighlight(row);
+    return extra ? base + ' ' + extra : base;
+  }
+
+  public colClass(field: string): string {
+    return field === 'Valor' ? AppColors.pagamentos : '';
+  }
+
+  public colHeaderClass(field: string): string {
+    return field === 'Valor' ? AppColors.pagamentos : '';
+  }
+
+  public tdClass(row: AirbnbRow & { __id: number }, field: string): string {
+    return field === 'Valor' ? this.colClass(field) : this.rowClass(row);
+  }
+
+  private applyCsvText(text: string): void {
+    const result = Papa.parse(text, { header: true, skipEmptyLines: true });
+    const fields = (result.meta as any).fields || [];
+    const data = Array.isArray(result.data) ? (result.data as any[]) : [];
+    for (let i = 0; i < data.length; i++) data[i] = { __id: i + 1, ...data[i] };
+    this.headers.set(fields);
+    this.rows.set(data as (AirbnbRow & { __id: number })[]);
+    this.recomputeGroupIndexMap(this.rows());
+    this.applyColumnSizes(fields);
+    const mapped = fields.map((f: string) => ({ field: f, header: f }));
+    this.cols.set(mapped);
+    const initialSelected = this.preferredInitial
+      .filter((n) => fields.includes(n))
+      .map((n) => ({ field: n, header: n }));
+    this.selectedColumns.set(
+      initialSelected.length ? initialSelected : mapped.slice(0, Math.min(8, mapped.length))
+    );
   }
 }

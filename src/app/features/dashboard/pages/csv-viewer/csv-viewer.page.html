@@ -80,8 +80,10 @@
                 [icon]="isGroupExpanded(row['Data']) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
               ></button>
               <!-- Título do grupo (data) e total de registros -->
-              <span>{{ row['Data'] }}</span>
-              <span>Registros: {{ calculateDateTotal(row['Data']) }}</span>
+              <img src="/airbnb_lite.svg" alt="Airbnb" class="inline-block h-5 w-5" />
+              <span [pTooltip]="'Data do pagamento'" tooltipPosition="top" showDelay="200" hideDelay="0">{{ row['Data'] }}</span>
+              <!-- <span>Registros: {{ calculateDateTotal(row['Data']) }}</span> -->
+              <span></span>
             </div>
           </td>
         </tr>
@@ -90,35 +92,43 @@
       <!-- Cabeçalho das colunas (th) -->
       <ng-template pTemplate="header" let-columns>
         <tr>
+          @for (col of columns; track col.field) {
           <th
-            *ngFor="let col of columns"
             [pSortableColumn]="col.field"
             [style.minWidth]="getColMinWidth(col.field)"
             [style.width]="getColMaxWidth(col.field)"
+            [ngClass]="colHeaderClass(col.field)"
           >
             <span>{{ col.header }}</span>
             <!-- Ícone de ordenação -->
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
+          }
         </tr>
       </ng-template>
 
       <!-- Corpo das linhas (td) -->
       <ng-template pTemplate="body" let-row let-columns="columns">
         <!-- Exibe linha apenas se o grupo estiver expandido -->
-        <tr *ngIf="isGroupExpanded(row['Data'])" [ngClass]="groupClass(row['Data'])">
+        @if (isGroupExpanded(row['Data'])) {
+        <tr>
+          @for (col of columns; track col.field) {
           <td
-            *ngFor="let col of columns"
             [pTooltip]="row[col.field]"
             tooltipPosition="top"
             [showDelay]="200"
             [hideDelay]="0"
             [style.minWidth]="getColMinWidth(col.field)"
             [style.width]="getColMaxWidth(col.field)"
+            [ngClass]="tdClass(row, col.field)"
           >
-            <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{ row[col.field] }}</span>
+            <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+              row[col.field]
+            }}</span>
           </td>
+          }
         </tr>
+        }
       </ng-template>
     </p-table>
   </div>
