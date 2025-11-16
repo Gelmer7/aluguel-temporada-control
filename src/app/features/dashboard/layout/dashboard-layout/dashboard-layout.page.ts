@@ -31,6 +31,12 @@ export class DashboardLayoutPage {
       icon: 'pi-file',
       route: '/dashboard/csv-reports/upload',
     },
+    {
+      id: 'csv-viewer',
+      label: 'Visualizador CSV',
+      icon: 'pi-table',
+      route: '/dashboard/csv-reports/viewer',
+    },
     { id: 'entries', label: 'Entradas', icon: 'pi-download', route: '/dashboard/airbnb-payments' },
     { id: 'csv-list', label: "Lista de CSV's", icon: 'pi-list', route: '/dashboard/csv-reports' },
     { id: 'expenses', label: 'Gastos', icon: 'pi-arrow-up', route: '/dashboard/expenses' },

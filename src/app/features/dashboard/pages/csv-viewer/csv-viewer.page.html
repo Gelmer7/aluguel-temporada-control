@@ -1,0 +1,125 @@
+<!-- Container principal da página -->
+<div class="p-4 h-full flex flex-col">
+  <!-- Cabeçalho do painel -->
+  <ng-template pTemplate="header">
+    <div class="flex items-center gap-2">
+      <i class="pi pi-table"></i>
+      <span>Visualizador de CSV</span>
+    </div>
+  </ng-template>
+
+  <!-- Nome do arquivo sendo exibido -->
+  <div class="p-2">
+    <span>Arquivo de exemplo: assets/airbnb_10_2025-10_2025.csv</span>
+  </div>
+
+  <!-- Área da tabela com scroll -->
+  <div class="p-2 flex-1 min-h-0 text-sm">
+    <!-- Configurações da tabela PrimeNG -->
+    <p-table
+      #dt
+      [columns]="selectedColumns()"
+      [value]="rows()"
+      [scrollable]="true"
+      scrollHeight="flex"
+      sortMode="single"
+      sortField="Data"
+      rowGroupMode="subheader"
+      [groupRowsBy]="'Data'"
+      rowGroupExpandMode="multiple"
+      [globalFilterFields]="headers()"
+      [tableStyle]="{ 'min-width': '80rem', 'table-layout': 'fixed' }"
+      dataKey="Data"
+      [rowTrackBy]="rowTrackBy"
+    >
+      <!-- Barra de ferramentas superior (caption) -->
+      <ng-template pTemplate="caption">
+        <div class="flex items-center justify-between gap-2">
+          <!-- Campo de busca global -->
+          <p-iconfield iconPosition="left">
+            <p-inputicon>
+              <i class="pi pi-search"></i>
+            </p-inputicon>
+            <input
+              pInputText
+              type="text"
+              [(ngModel)]="globalQuery"
+              (ngModelChange)="dt.filterGlobal($event, 'contains')"
+              placeholder="Pesquisar"
+            />
+          </p-iconfield>
+
+          <!-- Seletor de colunas visíveis -->
+          <p-multiselect
+            display="chip"
+            [options]="cols()"
+            [ngModel]="selectedColumns()"
+            (ngModelChange)="onColumnsChange($event)"
+            optionLabel="header"
+            selectedItemsLabel="{0} colunas selecionadas"
+            [style]="{ 'min-width': '200px' }"
+            placeholder="Escolher colunas"
+          ></p-multiselect>
+        </div>
+      </ng-template>
+
+      <!-- Linha de cabeçalho do grupo (subheader) -->
+      <ng-template pTemplate="groupheader" let-row let-expanded="expanded" let-rowIndex="rowIndex">
+        <tr pRowGroupHeader [ngClass]="groupClass(row['Data'])">
+          <td [attr.colspan]="selectedColumns().length" [ngClass]="groupClass(row['Data'])">
+            <div class="flex items-center gap-2">
+              <!-- Botão para expandir/recolher grupo -->
+              <button
+                type="button"
+                pButton
+                pRipple
+                (click)="toggleGroup(row['Data'])"
+                text
+                rounded
+                plain
+                [icon]="isGroupExpanded(row['Data']) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+              ></button>
+              <!-- Título do grupo (data) e total de registros -->
+              <span>{{ row['Data'] }}</span>
+              <span>Registros: {{ calculateDateTotal(row['Data']) }}</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <!-- Cabeçalho das colunas (th) -->
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th
+            *ngFor="let col of columns"
+            [pSortableColumn]="col.field"
+            [style.minWidth]="getColMinWidth(col.field)"
+            [style.width]="getColMaxWidth(col.field)"
+          >
+            <span>{{ col.header }}</span>
+            <!-- Ícone de ordenação -->
+            <p-sortIcon [field]="col.field"></p-sortIcon>
+          </th>
+        </tr>
+      </ng-template>
+
+      <!-- Corpo das linhas (td) -->
+      <ng-template pTemplate="body" let-row let-columns="columns">
+        <!-- Exibe linha apenas se o grupo estiver expandido -->
+        <tr *ngIf="isGroupExpanded(row['Data'])" [ngClass]="groupClass(row['Data'])">
+          <td
+            *ngFor="let col of columns"
+            [pTooltip]="row[col.field]"
+            tooltipPosition="top"
+            [showDelay]="200"
+            [hideDelay]="0"
+            [style.minWidth]="getColMinWidth(col.field)"
+            [style.width]="getColMaxWidth(col.field)"
+          >
+            <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{ row[col.field] }}</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

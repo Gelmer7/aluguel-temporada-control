@@ -11,8 +11,8 @@
       (toggleSidebar)="toggleSidebar()"
     ></app-sidebar-menu>
 
-    <main class="flex-1 flex flex-col pl-2" role="main" aria-label="Área principal">
-      <section class="h-full rounded-md border" aria-label="Conteúdo">
+    <main class="flex-1 flex flex-col pl-2 min-w-0" role="main" aria-label="Área principal">
+      <section class="h-full rounded-md border overflow-auto min-h-0" aria-label="Conteúdo">
         <router-outlet></router-outlet>
       </section>
     </main>
