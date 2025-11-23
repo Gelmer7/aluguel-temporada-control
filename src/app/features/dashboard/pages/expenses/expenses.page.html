@@ -3,9 +3,18 @@
     <ng-template pTemplate="header">
       <div class="flex items-center gap-2">
         <i class="pi pi-arrow-up"></i>
-        <span>Gastos</span>
+        <span>Gastos</span> GHAC
+        <p-button
+          pButton
+          label="Novo Gasto"
+          icon="pi pi-plus"
+          (click)="showExpenseForm = true"
+        ></p-button>
       </div>
     </ng-template>
-    <div class="p-2"><!-- Visualização --></div>
+    <div class="p-2">
+      <app-expense-form [(visible)]="showExpenseForm" (save)="onSaveExpense($event)">
+      </app-expense-form>
+    </div>
   </p-card>
 </div>

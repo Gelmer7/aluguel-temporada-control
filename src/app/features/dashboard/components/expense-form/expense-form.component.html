@@ -1,0 +1,154 @@
+<p-dialog
+  header="Novo Gasto"
+  [(visible)]="visible"
+  [modal]="true"
+  [style]="{ width: '50vw' }"
+  [draggable]="false"
+  [resizable]="false"
+  (onHide)="onClose()"
+>
+  <div class="flex flex-col gap-4">
+    <!-- Quick Actions -->
+    <div class="flex gap-2 flex-wrap">
+      <button
+        *ngFor="let qt of quickExpenseTypes"
+        pButton
+        type="button"
+        [label]="qt.label"
+        [icon]="qt.icon"
+        class="p-button-outlined p-button-sm"
+        (click)="applyQuickExpense(qt)"
+      ></button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <!-- Description -->
+      <div class="flex flex-col gap-2">
+        <label for="description">Descrição</label>
+        <input pInputText id="description" formControlName="description" />
+      </div>
+
+      <!-- Price & Type -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="flex flex-col gap-2">
+          <label for="price">Valor (R$)</label>
+          <p-inputNumber
+            id="price"
+            formControlName="price"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+          >
+          </p-inputNumber>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="type">Tipo</label>
+          <p-select
+            id="type"
+            [options]="expenseTypes"
+            formControlName="type"
+            optionLabel="label"
+            optionValue="value"
+            [showClear]="false"
+            class="w-full"
+          >
+            <ng-template pTemplate="selectedItem" let-selectedOption>
+              <div class="flex items-center gap-2" *ngIf="selectedOption">
+                <i [class]="selectedOption.icon"></i>
+                <div>{{ selectedOption.label }}</div>
+              </div>
+            </ng-template>
+            <ng-template let-type pTemplate="item">
+              <div class="flex items-center gap-2">
+                <i [class]="type.icon"></i>
+                <div>{{ type.label }}</div>
+              </div>
+            </ng-template>
+          </p-select>
+        </div>
+      </div>
+
+      <!-- Date -->
+      <div class="flex flex-col gap-2">
+        <label for="purchaseDate">Data do Pagamento</label>
+        <p-datepicker
+          id="purchaseDate"
+          formControlName="purchaseDate"
+          dateFormat="dd/mm/yy"
+          [showIcon]="true"
+        >
+        </p-datepicker>
+      </div>
+
+      <!-- Conditional Fields -->
+      <ng-container *ngIf="form.get('type')?.value === 'ELECTRICITY'">
+        <div class="flex flex-col gap-2">
+          <label for="kws">Kilowatts (KWs)</label>
+          <p-inputNumber id="kws" formControlName="kws" suffix=" kW"></p-inputNumber>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="form.get('type')?.value === 'WATER'">
+        <div class="flex flex-col gap-2">
+          <label for="cubicMeters">Metros Cúbicos (m³)</label>
+          <p-inputNumber
+            id="cubicMeters"
+            formControlName="cubicMeters"
+            suffix=" m³"
+          ></p-inputNumber>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="form.get('type')?.value === 'CONDOMINIUM'">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2">
+            <label for="association">Associação (R$)</label>
+            <p-inputNumber
+              id="association"
+              formControlName="association"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+            >
+            </p-inputNumber>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="reserveFund">Fundo de Reserva (R$)</label>
+            <p-inputNumber
+              id="reserveFund"
+              formControlName="reserveFund"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+            >
+            </p-inputNumber>
+          </div>
+        </div>
+      </ng-container>
+
+      <!-- Observation -->
+      <div class="flex flex-col gap-2">
+        <label for="observation">Observação</label>
+        <textarea
+          pTextarea
+          id="observation"
+          formControlName="observation"
+          rows="3"
+          class="w-full"
+        ></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex justify-end gap-2 mt-4">
+        <button
+          pButton
+          type="button"
+          label="Cancelar"
+          class="p-button-text"
+          (click)="onClose()"
+        ></button>
+        <button pButton type="submit" label="Salvar" [disabled]="form.invalid"></button>
+      </div>
+    </form>
+  </div>
+</p-dialog>

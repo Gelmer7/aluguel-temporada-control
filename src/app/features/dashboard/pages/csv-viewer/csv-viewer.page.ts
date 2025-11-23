@@ -14,7 +14,8 @@ import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Papa from 'papaparse';
-import { AirbnbRow } from '../../../../models/airbnb.model';
+import { AirbnbNormalizedRow, normalizeAirbnbRow } from '../../../../models/airbnb.model';
+import { ViewerRow, getCellValue as gv, renderDerived as rd, isDerived as idv, isPessoa as ip, colTooltip as ct, tipoHighlight as th } from './csv-viewer.helpers';
 import { AppColors } from '../../../../shared/design/colors';
 
 @Component({
@@ -42,9 +43,9 @@ import { AppColors } from '../../../../shared/design/colors';
 export class CsvViewerPage {
   private readonly http = inject(HttpClient);
   protected readonly headers = signal<string[]>([]);
-  protected readonly rows = signal<(AirbnbRow & { __id: number })[]>([]);
-  protected readonly cols = signal<{ field: string; header: string }[]>([]);
-  protected readonly selectedColumns = signal<{ field: string; header: string }[]>([]);
+  protected readonly rows = signal<ViewerRow[]>([]);
+  protected readonly cols = signal<{ field: string; headerFull: string; headerAbbr: string }[]>([]);
+  protected readonly selectedColumns = signal<{ field: string; headerFull: string; headerAbbr: string }[]>([]);
   protected globalQuery = '';
   public readonly groupIndexMap = signal<Record<string, number>>({});
   public readonly columnMinWidth = signal<Record<string, string>>({ Noites: '6rem' });
@@ -53,8 +54,8 @@ export class CsvViewerPage {
   protected readonly hidePayout = signal<boolean>(true);
   private readonly inicioFimField = 'Data Inicio-Fim';
   private readonly inicioFimHeader = 'Inicio-Fim';
-  private readonly pessoaField = 'Pessoa';
-  private readonly pessoaHeader = 'Pessoa';
+  private readonly pessoaField = 'Pessoa Pago';
+  private readonly pessoaHeader = 'Pessoa Pago';
   private readonly preferredInitial = [
     'Data',
     'Tipo',
@@ -85,9 +86,9 @@ export class CsvViewerPage {
     });
   }
 
-  protected readonly rowTrackBy = (_: number, r: AirbnbRow & { __id: number }) => r.__id;
+  protected readonly rowTrackBy = (_: number, r: { __id: number }) => r.__id;
 
-  protected onColumnsChange(cols: { field: string; header: string }[]) {
+  protected onColumnsChange(cols: { field: string; headerFull: string; headerAbbr: string }[]) {
     this.selectedColumns.set(cols || []);
   }
 
@@ -95,13 +96,13 @@ export class CsvViewerPage {
     const data = this.visibleRows();
     let count = 0;
     for (let i = 0; i < data.length; i++) {
-      if (data[i]['Data'] === date) count++;
+      if (data[i].__norm.data === date) count++;
     }
     return count;
   }
 
-  private recomputeGroupIndexMap(data: (AirbnbRow & { __id: number })[]) {
-    const dates = Array.from(new Set(data.map((d) => d['Data']))).sort();
+  private recomputeGroupIndexMap(data: ViewerRow[]) {
+    const dates = Array.from(new Set(data.map((d) => d.__norm.data))).sort();
     const m: Record<string, number> = {};
     for (let i = 0; i < dates.length; i++) m[dates[i]] = i;
     this.groupIndexMap.set(m);
@@ -147,6 +148,7 @@ export class CsvViewerPage {
       'Valor',
       'Informações',
       'Tipo',
+      this.pessoaHeader,
       this.inicioFimField,
     ];
     const large = ['Hóspede'];
@@ -180,16 +182,10 @@ export class CsvViewerPage {
     this.expandedRowGroups.set(next);
   }
 
-  public tipoHighlight(row: AirbnbRow & { __id: number }): string | undefined {
-    const tipo = (row['Tipo'] ?? '').trim();
-    if (tipo === 'Recebimento do coanfitrião') return AppColors.coHost;
-    if (tipo === 'Reserva') return AppColors.host;
-    if (tipo === 'Pagamento da Resolução') return AppColors.damage;
-    return undefined;
-  }
+  public tipoHighlight(row: ViewerRow): string | undefined { return th(row); }
 
-  public rowClass(row: AirbnbRow & { __id: number }): string {
-    const base = this.groupClass(row['Data']);
+  public rowClass(row: ViewerRow): string {
+    const base = this.groupClass(row.__norm.data);
     const extra = this.tipoHighlight(row);
     return extra ? base + ' ' + extra : base;
   }
@@ -203,7 +199,7 @@ export class CsvViewerPage {
     return (base ? base + ' ' : '') + '!p-1';
   }
 
-  public tdClass(row: AirbnbRow & { __id: number }, field: string): string {
+  public tdClass(row: ViewerRow, field: string): string {
     const base = field === 'Valor' ? this.colClass(field) : this.rowClass(row);
     return base + ' !p-1';
   }
@@ -213,50 +209,23 @@ export class CsvViewerPage {
     return c ? `https://www.airbnb.com.br/hosting/reservations/details/${encodeURIComponent(c)}` : '';
   }
 
-  public colTooltip(row: AirbnbRow & { __id: number }, field: string): string {
-    if (this.isDerived(field)) {
-      if (this.isPessoa(field)) return this.personFromTipo(row['Tipo']);
-      const ini = row['Data de início'] ?? '';
-      const fim = row['Data de término'] ?? '';
-      return `${ini} - ${fim}`.trim();
-    }
-    const v = row[field as keyof AirbnbRow] as any;
-    return String(v ?? '');
-  }
+  public colTooltip(row: ViewerRow, field: string): string { return ct(row, field, this.inicioFimField, this.pessoaField); }
 
-  public isDerived(field: string): boolean {
-    return field === this.inicioFimField || field === this.pessoaField;
-  }
+  public isDerived(field: string): boolean { return idv(field, this.inicioFimField, this.pessoaField); }
 
-  public isPessoa(field: string): boolean {
-    return field === this.pessoaField;
-  }
+  public isPessoa(field: string): boolean { return ip(field, this.pessoaField); }
 
-  public renderDerived(row: AirbnbRow & { __id: number }, field: string): string {
-    if (field === this.inicioFimField) {
-      const ini = row['Data de início'] ?? '';
-      const fim = row['Data de término'] ?? '';
-      return `${ini} - ${fim}`;
-    }
-    if (field === this.pessoaField) {
-      return this.personFromTipo(row['Tipo']);
-    }
-    return '';
-  }
+  public renderDerived(row: ViewerRow, field: string): string { return rd(row, field, this.inicioFimField, this.pessoaField); }
 
-  private personFromTipo(tipo?: string): string {
-    const t = (tipo ?? '').trim();
-    if (t === 'Reserva') return 'Luiza';
-    if (t === 'Recebimento do coanfitrião') return 'Gelmer';
-    if (t === 'Pagamento da Resolução') return 'Luiza';
-    return '';
-  }
+  public getCellValue(row: ViewerRow, field: string): string { return this.isDerived(field) ? this.renderDerived(row, field) : gv(row, field); }
+
+  
 
 
-  public visibleRows(): (AirbnbRow & { __id: number })[] {
+  public visibleRows(): ViewerRow[] {
     const data = this.rows();
     return this.hidePayout()
-      ? data.filter((r) => (r['Tipo'] ?? '').trim() !== 'Payout')
+      ? data.filter((r) => (r.__norm.tipo ?? '').trim() !== 'Payout')
       : data;
   }
 
@@ -264,20 +233,28 @@ export class CsvViewerPage {
     const result = Papa.parse(text, { header: true, skipEmptyLines: true });
     const fields = (result.meta as any).fields || [];
     const data = Array.isArray(result.data) ? (result.data as any[]) : [];
-    for (let i = 0; i < data.length; i++) data[i] = { __id: i + 1, ...data[i] };
+    const enriched: ViewerRow[] = [];
+    for (let i = 0; i < data.length; i++) {
+      const __raw = data[i] as Record<string, string>;
+      const __norm = normalizeAirbnbRow(__raw as any);
+      enriched.push({ __id: i + 1, __raw, __norm });
+    }
     this.headers.set(fields);
-    this.rows.set(data as (AirbnbRow & { __id: number })[]);
-    this.recomputeGroupIndexMap(this.rows());
+    this.rows.set(enriched);
+    this.recomputeGroupIndexMap(enriched);
     this.applyColumnSizes(fields);
-    const mapped = fields.map((f: string) => ({ field: f, header: f }));
-    const derivedInicioFim = { field: this.inicioFimField, header: this.inicioFimHeader };
-    const derivedPessoa = { field: this.pessoaField, header: this.pessoaHeader };
+    const mapped = fields.map((f: string) => ({ field: f, headerFull: f, headerAbbr: f }));
+    const derivedInicioFim = { field: this.inicioFimField, headerFull: this.inicioFimHeader, headerAbbr: this.inicioFimHeader };
+    const derivedPessoa = { field: this.pessoaField, headerFull: this.pessoaHeader, headerAbbr: this.pessoaHeader };
     const mappedWithDerived = [...mapped, derivedInicioFim, derivedPessoa];
     this.cols.set(mappedWithDerived);
     const colFields = new Set(mappedWithDerived.map((c) => c.field));
     const initialSelected = this.preferredInitial
       .filter((n) => colFields.has(n))
-      .map((n) => ({ field: n, header: n }));
+      .map((n) => {
+        const m = mappedWithDerived.find((c) => c.field === n)!;
+        return { field: m.field, headerFull: m.headerFull, headerAbbr: m.headerAbbr };
+      });
     this.selectedColumns.set(
       initialSelected.length
         ? initialSelected

@@ -14,7 +14,7 @@
   </div>
 
   <!-- Área da tabela com scroll -->
-  <div class="p-2 flex-1 min-h-0 text-sm">
+  <div class="flex-1 min-h-0 text-sm">
     <!-- Configurações da tabela PrimeNG -->
     <p-table
       #dt
@@ -72,11 +72,12 @@
       </ng-template>
 
       <!-- Linha de cabeçalho do grupo (subheader) -->
+      <!-- groupheader template comentado -->
+      <!--
       <ng-template pTemplate="groupheader" let-row let-expanded="expanded" let-rowIndex="rowIndex">
         <tr pRowGroupHeader [ngClass]="groupClass(row['Data'])">
           <td [attr.colspan]="selectedColumns().length" [ngClass]="groupHeaderClass(row['Data'])">
             <div class="flex items-center gap-1 p-0">
-              <!-- Botão para expandir/recolher grupo -->
               <button
                 type="button"
                 pButton
@@ -88,7 +89,6 @@
                 class="!p-0 !min-h-0 h-5 w-5"
                 [icon]="isGroupExpanded(row['Data']) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
               ></button>
-              <!-- Título do grupo (data) e total de registros -->
               <img src="/airbnb_lite.svg" alt="Airbnb" class="inline-block h-4 w-4" />
               <span
                 [pTooltip]="'Data do pagamento'"
@@ -97,12 +97,11 @@
                 hideDelay="0"
                 >{{ row['Data'] }}</span
               >
-              <!-- <span>Registros: {{ calculateDateTotal(row['Data']) }}</span> -->
-              <span></span>
             </div>
           </td>
         </tr>
       </ng-template>
+      -->
 
       <!-- Cabeçalho das colunas (th) -->
       <ng-template pTemplate="header" let-columns>
@@ -114,7 +113,7 @@
             [style.width]="getColMaxWidth(col.field)"
             [ngClass]="colHeaderClass(col.field)"
           >
-            <span>{{ col.header }}</span>
+            <span [pTooltip]="col.headerFull" tooltipPosition="top" showDelay="200" hideDelay="0">{{ col.headerAbbr }}</span>
             <!-- Ícone de ordenação -->
             <p-sortIcon [field]="col.field"></p-sortIcon>
           </th>
@@ -125,7 +124,7 @@
       <!-- Corpo das linhas (td) -->
       <ng-template pTemplate="body" let-row let-columns="columns">
         <!-- Exibe linha apenas se o grupo estiver expandido -->
-        @if (isGroupExpanded(row['Data'])) {
+        @if (isGroupExpanded(getCellValue(row, 'Data'))) {
         <tr>
           @for (col of columns; track col.field) {
           <td
@@ -139,17 +138,17 @@
           >
             @if (col.field === 'Hóspede') {
             <a
-              [href]="reservationUrl(row['Código de Confirmação'])"
+              [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
               target="_blank"
               rel="noopener noreferrer"
               class="block truncate"
               [style.maxWidth]="getColMaxWidth(col.field)"
-              >{{ row[col.field] }}
+              >{{ getCellValue(row, col.field) }}
             </a>
 
             } @else if (col.field === 'Tipo') {
             <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-              row['Tipo']
+              getCellValue(row, col.field)
             }}</span>
             } @else if (isDerived(col.field)) {
             @if (isPessoa(col.field)) {
@@ -162,7 +161,7 @@
             }
             } @else {
             <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-              row[col.field]
+              getCellValue(row, col.field)
             }}</span>
             }
           </td>
