@@ -10,8 +10,8 @@
   <div class="flex flex-col gap-4">
     <!-- Quick Actions -->
     <div class="flex gap-2 flex-wrap">
+      @for (qt of quickExpenseTypes; track qt) {
       <button
-        *ngFor="let qt of quickExpenseTypes"
         pButton
         type="button"
         [label]="qt.label"
@@ -19,6 +19,7 @@
         class="p-button-outlined p-button-sm"
         (click)="applyQuickExpense(qt)"
       ></button>
+      }
     </div>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
@@ -53,10 +54,12 @@
             class="w-full"
           >
             <ng-template pTemplate="selectedItem" let-selectedOption>
-              <div class="flex items-center gap-2" *ngIf="selectedOption">
+              @if (selectedOption) {
+              <div class="flex items-center gap-2">
                 <i [class]="selectedOption.icon"></i>
                 <div>{{ selectedOption.label }}</div>
               </div>
+              }
             </ng-template>
             <ng-template let-type pTemplate="item">
               <div class="flex items-center gap-2">
@@ -81,50 +84,42 @@
       </div>
 
       <!-- Conditional Fields -->
-      <ng-container *ngIf="form.get('type')?.value === 'ELECTRICITY'">
+      @if (form.get('type')?.value === 'ELECTRICITY') {
+      <div class="flex flex-col gap-2">
+        <label for="kws">Kilowatts (KWs)</label>
+        <p-inputNumber id="kws" formControlName="kws" suffix=" kW"></p-inputNumber>
+      </div>
+      } @if (form.get('type')?.value === 'WATER') {
+      <div class="flex flex-col gap-2">
+        <label for="cubicMeters">Metros Cúbicos (m³)</label>
+        <p-inputNumber id="cubicMeters" formControlName="cubicMeters" suffix=" m³"></p-inputNumber>
+      </div>
+      } @if (form.get('type')?.value === 'CONDOMINIUM') {
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col gap-2">
-          <label for="kws">Kilowatts (KWs)</label>
-          <p-inputNumber id="kws" formControlName="kws" suffix=" kW"></p-inputNumber>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="form.get('type')?.value === 'WATER'">
-        <div class="flex flex-col gap-2">
-          <label for="cubicMeters">Metros Cúbicos (m³)</label>
+          <label for="association">Associação (R$)</label>
           <p-inputNumber
-            id="cubicMeters"
-            formControlName="cubicMeters"
-            suffix=" m³"
-          ></p-inputNumber>
+            id="association"
+            formControlName="association"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+          >
+          </p-inputNumber>
         </div>
-      </ng-container>
-
-      <ng-container *ngIf="form.get('type')?.value === 'CONDOMINIUM'">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div class="flex flex-col gap-2">
-            <label for="association">Associação (R$)</label>
-            <p-inputNumber
-              id="association"
-              formControlName="association"
-              mode="currency"
-              currency="BRL"
-              locale="pt-BR"
-            >
-            </p-inputNumber>
-          </div>
-          <div class="flex flex-col gap-2">
-            <label for="reserveFund">Fundo de Reserva (R$)</label>
-            <p-inputNumber
-              id="reserveFund"
-              formControlName="reserveFund"
-              mode="currency"
-              currency="BRL"
-              locale="pt-BR"
-            >
-            </p-inputNumber>
-          </div>
+        <div class="flex flex-col gap-2">
+          <label for="reserveFund">Fundo de Reserva (R$)</label>
+          <p-inputNumber
+            id="reserveFund"
+            formControlName="reserveFund"
+            mode="currency"
+            currency="BRL"
+            locale="pt-BR"
+          >
+          </p-inputNumber>
         </div>
-      </ng-container>
+      </div>
+      }
 
       <!-- Observation -->
       <div class="flex flex-col gap-2">

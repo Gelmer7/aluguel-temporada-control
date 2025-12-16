@@ -18,16 +18,18 @@
 
       <div class="mt-4">
         <h3>Lista de Gastos</h3>
-        <div *ngIf="expenses.length === 0">Nenhum gasto cadastrado.</div>
-        <ul *ngIf="expenses.length > 0" class="list-none p-0">
-          <li
-            *ngFor="let expense of expenses"
-            class="p-2 border-bottom-1 surface-border flex justify-content-between"
-          >
+        @if (expenses.length === 0) {
+        <div>Nenhum gasto cadastrado.</div>
+        } @if (expenses.length > 0) {
+        <ul class="list-none p-0">
+          @for (expense of expenses; track expense) {
+          <li class="p-2 border-bottom-1 surface-border flex justify-content-between">
             <span>{{ expense.description }}</span>
             <span class="font-bold">{{ expense.amount | currency }}</span>
           </li>
+          }
         </ul>
+        }
       </div>
     </div>
   </p-card>
