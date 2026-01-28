@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -7,15 +8,10 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 export class SupabaseService {
   private supabase: SupabaseClient;
 
-  // TODO: Move these to environment files
-  private supabaseUrl = 'https://ldbgfinipppckroxcqpa.supabase.co';
-  private supabaseKey =
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxkYmdmaW5pcHBwY2tyb3hjcXBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUzMjA1NDcsImV4cCI6MjA4MDg5NjU0N30.rNSbOAF3ILu6vYOxj-e8Krw1J5ZZYNqaHAshKg0Mp7A';
-
   constructor() {
-    this.supabase = createClient(this.supabaseUrl, this.supabaseKey, {
+    this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
       auth: {
-        persistSession: false, // Fixes NavigatorLockAcquireTimeoutError for basic test
+        persistSession: false,
       },
     });
   }
