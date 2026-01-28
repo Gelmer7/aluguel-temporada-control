@@ -1,6 +1,9 @@
-<p-toolbar class="toolbar-shell p-0" aria-label="Barra superior">
+<p-toolbar class="toolbar-shell !py-1 " aria-label="Barra superior">
   <ng-template pTemplate="start">
-    <span aria-label="Logo Airbnb"> <i class="pi pi-home mr-1"></i> Airbnb </span>
+    <span aria-label="Logo Airbnb" class="flex items-center">
+      <img src="airbnb_black.svg" alt="Airbnb Logo" class="h-6 mr-2" />
+      <span>Airbnb Control</span>
+    </span>
   </ng-template>
 
   <ng-template pTemplate="end">
@@ -26,40 +29,42 @@
         <!-- Custom Template for Items -->
         <!-- Case 1: Language Root Item -->
         @if (item.data?.isLanguage) {
-        <div class="p-menuitem-content flex items-center gap-2 p-2">
-          <!-- Show Flag and Name like the old Select -->
-          @if (item.data.currentLang?.flag) {
-          <img [src]="item.data.currentLang.flag" class="w-5 h-4 object-contain" alt="flag" />
-          }
-          <span>{{ 'TOOLBAR.LANGUAGE' | translate }} ({{ item.data.currentLang?.name }})</span>
-          <span class="ml-auto pi pi-angle-right"></span>
-        </div>
+          <div class="p-menuitem-content flex items-center gap-2 p-2">
+            <!-- Show Flag and Name like the old Select -->
+            @if (item.data.currentLang?.flag) {
+              <img [src]="item.data.currentLang.flag" class="w-5 h-4 object-contain" alt="flag" />
+            }
+            <span>{{ 'TOOLBAR.LANGUAGE' | translate }} ({{ item.data.currentLang?.name }})</span>
+            <span class="ml-auto pi pi-angle-right"></span>
+          </div>
         }
 
         <!-- Case 2: Language Options (Submenu items) -->
         @else if (item.data?.isLanguageOption) {
-        <div class="p-menuitem-content flex items-center gap-2 p-2">
-          @if (item.data.lang?.flag) {
-          <img [src]="item.data.lang.flag" class="w-5 h-4 object-contain" alt="flag" />
-          }
-          <span>{{ item.data.lang.name }}</span>
-        </div>
+          <div class="p-menuitem-content flex items-center gap-2 p-2">
+            @if (item.data.lang?.flag) {
+              <img [src]="item.data.lang.flag" class="w-5 h-4 object-contain" alt="flag" />
+            }
+            <span>{{ item.data.lang.name }}</span>
+          </div>
         }
 
         <!-- Case 3: Logout -->
         @else if (item.data?.isLogout) {
-        <div class="p-menuitem-content flex items-center gap-2 p-2">
-          <span [class]="item.icon"></span>
-          <span>{{ 'TOOLBAR.LOGOUT' | translate }}</span>
-        </div>
+          <div class="p-menuitem-content flex items-center gap-2 p-2">
+            <span [class]="item.icon"></span>
+            <span>{{ 'TOOLBAR.LOGOUT' | translate }}</span>
+          </div>
         }
 
         <!-- Case 4: Default fallback (if any) -->
         @else {
-        <div class="p-menuitem-content flex items-center gap-2 p-2">
-          @if (item.icon) { <span [class]="item.icon"></span> }
-          <span>{{ item.label }}</span>
-        </div>
+          <div class="p-menuitem-content flex items-center gap-2 p-2">
+            @if (item.icon) {
+              <span [class]="item.icon"></span>
+            }
+            <span>{{ item.label }}</span>
+          </div>
         }
       </ng-template>
     </p-tieredMenu>

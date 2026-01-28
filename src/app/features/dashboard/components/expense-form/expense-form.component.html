@@ -11,14 +11,13 @@
     <!-- Quick Actions -->
     <div class="flex gap-2 flex-wrap">
       @for (qt of quickExpenseTypes; track qt) {
-      <button
-        pButton
-        type="button"
-        [label]="qt.label"
-        [icon]="qt.icon"
-        class="p-button-outlined p-button-sm"
-        (click)="applyQuickExpense(qt)"
-      ></button>
+        <p-button
+          [label]="qt.label"
+          [icon]="qt.icon"
+          (click)="applyQuickExpense(qt)"
+          severity="secondary"
+          size="small"
+        ></p-button>
       }
     </div>
 
@@ -55,10 +54,10 @@
           >
             <ng-template pTemplate="selectedItem" let-selectedOption>
               @if (selectedOption) {
-              <div class="flex items-center gap-2">
-                <i [class]="selectedOption.icon"></i>
-                <div>{{ selectedOption.label }}</div>
-              </div>
+                <div class="flex items-center gap-2">
+                  <i [class]="selectedOption.icon"></i>
+                  <div>{{ selectedOption.label }}</div>
+                </div>
               }
             </ng-template>
             <ng-template let-type pTemplate="item">
@@ -85,40 +84,46 @@
 
       <!-- Conditional Fields -->
       @if (form.get('type')?.value === 'ELECTRICITY') {
-      <div class="flex flex-col gap-2">
-        <label for="kws">Kilowatts (KWs)</label>
-        <p-inputNumber id="kws" formControlName="kws" suffix=" kW"></p-inputNumber>
-      </div>
-      } @if (form.get('type')?.value === 'WATER') {
-      <div class="flex flex-col gap-2">
-        <label for="cubicMeters">Metros Cúbicos (m³)</label>
-        <p-inputNumber id="cubicMeters" formControlName="cubicMeters" suffix=" m³"></p-inputNumber>
-      </div>
-      } @if (form.get('type')?.value === 'CONDOMINIUM') {
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="flex flex-col gap-2">
-          <label for="association">Associação (R$)</label>
-          <p-inputNumber
-            id="association"
-            formControlName="association"
-            mode="currency"
-            currency="BRL"
-            locale="pt-BR"
-          >
-          </p-inputNumber>
+          <label for="kws">Kilowatts (KWs)</label>
+          <p-inputNumber id="kws" formControlName="kws" suffix=" kW"></p-inputNumber>
         </div>
+      }
+      @if (form.get('type')?.value === 'WATER') {
         <div class="flex flex-col gap-2">
-          <label for="reserveFund">Fundo de Reserva (R$)</label>
+          <label for="cubicMeters">Metros Cúbicos (m³)</label>
           <p-inputNumber
-            id="reserveFund"
-            formControlName="reserveFund"
-            mode="currency"
-            currency="BRL"
-            locale="pt-BR"
-          >
-          </p-inputNumber>
+            id="cubicMeters"
+            formControlName="cubicMeters"
+            suffix=" m³"
+          ></p-inputNumber>
         </div>
-      </div>
+      }
+      @if (form.get('type')?.value === 'CONDOMINIUM') {
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="flex flex-col gap-2">
+            <label for="association">Associação (R$)</label>
+            <p-inputNumber
+              id="association"
+              formControlName="association"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+            >
+            </p-inputNumber>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="reserveFund">Fundo de Reserva (R$)</label>
+            <p-inputNumber
+              id="reserveFund"
+              formControlName="reserveFund"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+            >
+            </p-inputNumber>
+          </div>
+        </div>
       }
 
       <!-- Observation -->
@@ -135,14 +140,8 @@
 
       <!-- Actions -->
       <div class="flex justify-end gap-2 mt-4">
-        <button
-          pButton
-          type="button"
-          label="Cancelar"
-          class="p-button-text"
-          (click)="onClose()"
-        ></button>
-        <button pButton type="submit" label="Salvar" [disabled]="form.invalid"></button>
+        <p-button label="Cancelar" (click)="onClose()" size="small" severity="secondary"></p-button>
+        <p-button type="submit" label="Salvar" [disabled]="form.invalid" size="small"></p-button>
       </div>
     </form>
   </div>

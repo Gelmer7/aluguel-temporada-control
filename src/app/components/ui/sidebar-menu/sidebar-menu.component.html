@@ -1,28 +1,32 @@
 <!-- Template do SidebarMenuComponent -->
 <aside
-  class="h-full"
-  [ngClass]="{ 'w-[3.5rem] overflow-hidden': collapsed, 'w-[15rem]': !collapsed }"
+  class="h-full transition-all duration-300 ease-in-out"
+  [ngClass]="{ 'w-[4rem]': collapsed(), 'w-[16rem]': !collapsed() }"
   aria-label="Menu lateral"
 >
-  <p-menu [model]="menuModel" [styleClass]="'h-full rounded-md '" [style]="{ width: '100%' }">
+  <p-menu [model]="menuModel()" [styleClass]="'h-full rounded-md border-r border-surface-200 dark:border-surface-700'" [style]="{ width: '100%', minWidth: '4rem' }">
     <!-- Cabeçalho menu -->
     <ng-template #start>
-      <div class="flex items-center justify-between w-full p-2" aria-label="Cabeçalho do menu">
-        @if (!collapsed) {
-        <span>{{ 'MENU.HEADER' | translate }}</span>
+      <div class="flex items-center justify-between w-full p-3 mb-2" [ngClass]="{ 'justify-center': collapsed() }">
+        @if (!collapsed()) {
+          <span class="font-bold text-lg text-primary">{{ 'MENU.HEADER' | translate }}</span>
         }
         <p-button
-          [icon]="collapsed ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
-          variant="text"
+          [icon]="collapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
+          [variant]="'text'"
+          [rounded]="true"
           aria-label="Alternar menu lateral"
           (click)="onToggle()"
+          class="flex-shrink-0"
         ></p-button>
       </div>
     </ng-template>
 
     <ng-template #submenuheader let-item>
-      @if (!collapsed) {
-      <span>{{ item.label | translate }}</span>
+      @if (!collapsed()) {
+        <span class="text-xs font-semibold uppercase text-surface-500 px-3 py-2">{{ item.label | translate }}</span>
+      } @else {
+        <div class="border-t border-surface-200 dark:border-surface-700 my-2 mx-2"></div>
       }
     </ng-template>
 
@@ -31,46 +35,45 @@
       <a
         pRipple
         [routerLink]="item.routerLink"
-        class="flex items-center p-menu-item-link"
-        [ngClass]="collapsed ? 'justify-center px-2' : 'px-2'"
-        [pTooltip]="item.label | translate"
-        [tooltipDisabled]="!collapsed"
-        tooltipPosition="top"
-        [attr.aria-label]="collapsed ? (item.label | translate) : null"
+        routerLinkActive="bg-primary-50 text-primary font-medium"
+        class="flex items-center p-3 mx-2 my-1 rounded-lg transition-colors duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 group relative"
+        [ngClass]="{ 'justify-center mx-1': collapsed() }"
+        [pTooltip]="collapsed() ? (item.label | translate) : ''"
+        tooltipPosition="right"
       >
-        <span [class]="item.icon" aria-hidden="true"></span>
-        @if (!collapsed) {
-        <span class="ml-2">{{ item.label | translate }}</span>
-        } @if (item.badge && !collapsed) {
-        <p-badge class="ml-auto" [value]="item.badge" />
-        } @if (item.shortcut && !collapsed) {
-        <span>
-          {{ item.shortcut }}
-        </span>
+        <span [class]="item.icon" class="text-xl flex-shrink-0" [ngClass]="{ 'text-primary': !collapsed() }"></span>
+
+        @if (!collapsed()) {
+          <span class="ml-3 transition-opacity duration-300 truncate">{{ item.label | translate }}</span>
+
+          @if (item.badge) {
+            <p-badge class="ml-auto" [value]="item.badge" severity="danger" />
+          }
         }
       </a>
     </ng-template>
 
     <!-- avatar com foto do usuário -->
     <ng-template #end>
-      @if (!collapsed) {
-      <p-button
-        variant="text"
-        pRipple
-        class="relative overflow-hidden w-full flex items-start p-2 pl-4 hover:bg-surface-100 dark:hover:bg-surface-800 rounded-none cursor-pointer transition-colors duration-200"
-        aria-label="Perfil"
-      >
-        <p-avatar
-          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-          class="mr-2"
-          shape="circle"
-        />
-        <span class="inline-flex flex-col items-start">
-          <span>Amy Elsner</span>
-          <span class="text-sm text-muted-color">Admin</span>
-        </span>
-      </p-button>
-      }
+      <div class="mt-auto border-t border-surface-200 dark:border-surface-700 p-2">
+        <div
+          class="flex items-center p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 cursor-pointer"
+          [ngClass]="{ 'justify-center': collapsed() }"
+        >
+          <p-avatar
+            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+            shape="circle"
+            class="flex-shrink-0"
+          />
+          @if (!collapsed()) {
+            <div class="ml-3 flex flex-col overflow-hidden">
+              <span class="font-semibold truncate">Amy Elsner</span>
+              <span class="text-xs text-surface-500 truncate">Admin</span>
+            </div>
+            <i class="pi pi-ellipsis-v ml-auto text-surface-400"></i>
+          }
+        </div>
+      </div>
     </ng-template>
   </p-menu>
 </aside>

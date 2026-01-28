@@ -14,7 +14,7 @@ import { Observable } from 'rxjs';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
-import material from '@primeuix/themes/material';
+import Aura from '@primeuix/themes/aura';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -34,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     ),
     providePrimeNG({
       theme: {
-        preset: material,
+        preset: Aura,
         options: {
           darkModeSelector: '.dark',
         },

@@ -1,5 +1,5 @@
 <!-- Container principal da página -->
-<div class="p-4 h-full flex flex-col">
+<div class="h-full flex flex-col">
   <!-- Cabeçalho do painel -->
   <ng-template pTemplate="header">
     <div class="flex items-center gap-2">
@@ -33,8 +33,8 @@
       [rowTrackBy]="rowTrackBy"
     >
       <!-- Barra de ferramentas superior (caption) -->
-      <ng-template pTemplate="caption">
-        <div class="flex items-center justify-between gap-2">
+      <ng-template pTemplate="caption" class="!p-1">
+        <div class="flex items-center justify-between">
           <!-- Campo de busca global -->
           <p-iconfield iconPosition="left">
             <p-inputicon>
