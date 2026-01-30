@@ -85,14 +85,14 @@ export class CsvViewerPage {
   ];
 
   constructor() {
-    this.loadFromAssets('/airbnb_12_2024-11_2025.csv');
+    this.loadFromAssets('/airbnb_INICIO__01_2026.csv');
   }
 
   private loadFromAssets(url: string): void {
     this.http.get(url, { responseType: 'text' }).subscribe({
       next: (text) => this.applyCsvText(text),
       error: () => {
-        const fallback = '/assets/airbnb_12_2024-11_2025.csv';
+        const fallback = '/assets/airbnb_INICIO__01_2026.csv';
         this.http
           .get(fallback, { responseType: 'text' })
           .subscribe((text) => this.applyCsvText(text));
