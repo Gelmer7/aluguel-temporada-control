@@ -18,7 +18,7 @@ export class TablePaginatorComponent {
   @Input() rows: number = 10;
   @Input() totalRecords: number = 0;
   @Input() rowsPerPageOptions: number[] = [10, 25, 50];
-  @Input() currentPageReportTemplate: string = 'Mostrando {first} a {last} de {totalRecords} registros';
+  @Input() currentPageReportTemplate: string = '{first} a {last} de {totalRecords} registros';
 
   @Output() onPageChange = new EventEmitter<PaginatorState>();
 }

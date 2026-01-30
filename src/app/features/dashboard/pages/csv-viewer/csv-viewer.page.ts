@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
+import { SelectModule } from 'primeng/select';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Papa from 'papaparse';
@@ -24,6 +25,7 @@ import {
   isPessoa as ip,
   colTooltip as ct,
   tipoHighlight as th,
+  personFromTipo,
 } from './csv-viewer.helpers';
 import { AppColors } from '../../../../shared/design/colors';
 import { TranslateModule } from '@ngx-translate/core';
@@ -46,6 +48,7 @@ import { TranslateModule } from '@ngx-translate/core';
     RippleModule,
     TagModule,
     CheckboxModule,
+    SelectModule,
     HttpClientModule,
     TranslateModule,
     TablePaginatorComponent,
@@ -69,6 +72,34 @@ export class CsvViewerPage {
   protected readonly expandedRowGroups = signal<string[]>([]);
   protected readonly hidePayout = signal<boolean>(true);
   protected readonly filterQuery = signal<string>('');
+  protected readonly selectedYear = signal<number | null>(null);
+  protected readonly selectedMonth = signal<number | null>(null);
+  protected readonly selectedType = signal<string | null>(null);
+
+  protected readonly years = computed(() => {
+    const years = this.rows().map((r) => this.parseAirbnbDate(r.__norm.data)?.getFullYear());
+    return Array.from(new Set(years.filter((y): y is number => !!y))).sort((a, b) => b - a);
+  });
+
+  protected readonly months = [
+    { label: 'Janeiro', value: 1 },
+    { label: 'Fevereiro', value: 2 },
+    { label: 'Março', value: 3 },
+    { label: 'Abril', value: 4 },
+    { label: 'Maio', value: 5 },
+    { label: 'Junho', value: 6 },
+    { label: 'Julho', value: 7 },
+    { label: 'Agosto', value: 8 },
+    { label: 'Setembro', value: 9 },
+    { label: 'Outubro', value: 10 },
+    { label: 'Novembro', value: 11 },
+    { label: 'Dezembro', value: 12 },
+  ];
+
+  protected readonly types = computed(() => {
+    const types = this.rows().map((r) => (r.__norm.tipo ?? '').trim());
+    return Array.from(new Set(types.filter((t) => !!t))).sort();
+  });
 
   // Pagination
   protected readonly first = signal<number>(0);
@@ -81,6 +112,30 @@ export class CsvViewerPage {
     // Filter by Payout
     if (this.hidePayout()) {
       data = data.filter((r) => (r.__norm.tipo ?? '').trim() !== 'Payout');
+    }
+
+    // Filter by Year
+    const year = this.selectedYear();
+    if (year) {
+      data = data.filter((r) => {
+        const date = this.parseAirbnbDate(r.__norm.data);
+        return date ? date.getFullYear() === year : false;
+      });
+    }
+
+    // Filter by Month
+    const month = this.selectedMonth();
+    if (month) {
+      data = data.filter((r) => {
+        const date = this.parseAirbnbDate(r.__norm.data);
+        return date ? date.getMonth() + 1 === month : false;
+      });
+    }
+
+    // Filter by Type
+    const type = this.selectedType();
+    if (type) {
+      data = data.filter((r) => (r.__norm.tipo ?? '').trim() === type);
     }
 
     // Filter by Global Query
@@ -96,12 +151,79 @@ export class CsvViewerPage {
     return data;
   });
 
+  private parseAirbnbDate(dateStr: string | undefined): Date | null {
+    if (!dateStr) return null;
+    // Airbnb standard is often "MM/DD/YYYY"
+    const parts = dateStr.split('/');
+    if (parts.length === 3) {
+      const month = parseInt(parts[0], 10) - 1;
+      const day = parseInt(parts[1], 10);
+      const year = parseInt(parts[2], 10);
+      return new Date(year, month, day);
+    }
+    return null;
+  }
+
   protected readonly pagedRows = computed(() => {
     const data = this.visibleRows();
     const start = this.first();
     const end = start + this.rowsPerPage();
     return data.slice(start, end);
   });
+
+  // Summary Totals
+  protected readonly summary = computed(() => {
+    const data = this.visibleRows();
+    let luizaValor = 0;
+    let gelmerValor = 0;
+    let totalLimpeza = 0;
+    let totalNoites = 0;
+
+    data.forEach((row) => {
+      const valor = this.parseCurrency(row.__norm.valor);
+      const limpeza = this.parseCurrency(row.__norm.taxaLimpeza);
+      const noites = this.parseNumber(row.__norm.noites);
+      const person = personFromTipo(row.__norm.tipo);
+
+      if (person === 'Luiza') {
+        luizaValor += valor;
+      } else if (person === 'Gelmer') {
+        gelmerValor += valor;
+      }
+
+      totalLimpeza += limpeza;
+      totalNoites += noites;
+    });
+
+    return {
+      luizaValor,
+      gelmerValor,
+      totalLimpeza,
+      totalNoites,
+    };
+  });
+
+  private parseCurrency(val: string | undefined): number {
+    if (!val) return 0;
+    // Remove non-numeric except comma and dot
+    const clean = val.replace(/[^\d,.-]/g, '');
+    if (!clean) return 0;
+
+    // Handle Brazilian format 1.234,56
+    if (clean.includes(',') && clean.includes('.')) {
+      return parseFloat(clean.replace(/\./g, '').replace(',', '.'));
+    }
+    // Handle format 1234,56
+    if (clean.includes(',')) {
+      return parseFloat(clean.replace(',', '.'));
+    }
+    return parseFloat(clean);
+  }
+
+  private parseNumber(val: string | undefined): number {
+    if (!val) return 0;
+    return parseInt(val.replace(/[^\d]/g, ''), 10) || 0;
+  }
 
   private readonly inicioFimField = 'Data Inicio-Fim';
   private readonly inicioFimHeader = 'Inicio-Fim';
@@ -153,6 +275,21 @@ export class CsvViewerPage {
   protected onFilter(query: string) {
     this.filterQuery.set(query);
     this.first.set(0); // Reset to first page on filter
+  }
+
+  protected onYearChange(year: number | null) {
+    this.selectedYear.set(year);
+    this.first.set(0);
+  }
+
+  protected onMonthChange(month: number | null) {
+    this.selectedMonth.set(month);
+    this.first.set(0);
+  }
+
+  protected onTypeChange(type: string | null) {
+    this.selectedType.set(type);
+    this.first.set(0);
   }
 
   protected onPageChange(event: any) {
