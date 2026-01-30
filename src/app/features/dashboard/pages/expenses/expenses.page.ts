@@ -13,6 +13,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { SelectModule } from 'primeng/select';
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -38,6 +39,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ConfirmDialogModule,
     ToastModule,
     SelectModule,
+    TablePaginatorComponent,
     ExpenseFormComponent,
     TranslateModule
   ],
@@ -101,6 +103,15 @@ export class ExpensesPage implements OnInit {
   selectedYear = signal<number | null>(null);
   selectedMonth = signal<number | null>(null);
   selectedType = signal<string | null>(null);
+
+  // Pagination
+  first = signal<number>(0);
+  rows = signal<number>(10);
+
+  onPageChange(event: any) {
+    this.first.set(event.first);
+    this.rows.set(event.rows);
+  }
 
   totalExpenses = computed(() => {
     return this.filteredExpenses().reduce((acc, curr) => acc + (curr.price || 0), 0);

@@ -1,174 +1,177 @@
 <!-- Container principal da página -->
-<div class="h-full flex flex-col">
-  <!-- Cabeçalho do painel -->
-  <ng-template pTemplate="header">
-    <div class="flex items-center gap-2">
-      <i class="pi pi-table"></i>
-      <span>{{ 'ACTIONS.VIEW_CSV' | translate }}</span>
+<div class="h-full flex flex-col p-2 bg-surface-50 dark:bg-surface-950 gap-2 overflow-hidden">
+  <!-- Header with Actions -->
+  <div
+    class="flex-none flex items-center justify-between bg-surface-0 dark:bg-surface-900 p-3 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+  >
+    <div class="flex items-center gap-3">
+      <div
+        class="w-10 h-10 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
+      >
+        <i class="pi pi-table text-primary text-xl"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold text-surface-900 dark:text-surface-0 m-0">
+          {{ 'ACTIONS.VIEW_CSV' | translate }}
+        </h1>
+        <p class="text-surface-500 dark:text-surface-400 text-xs mt-0.5">
+          Visualizador de transações do Airbnb
+        </p>
+      </div>
     </div>
-  </ng-template>
 
-  <!-- Nome do arquivo sendo exibido -->
-  <div class="p-2">
-    <span>Arquivo de exemplo: assets/airbnb_10_2025-10_2025.csv</span>
+    <div class="flex items-center gap-4 text-sm">
+      <div class="flex items-center gap-2">
+        <span class="text-surface-600 dark:text-surface-400">Esconder Payout</span>
+        <p-checkbox
+          [ngModel]="hidePayout()"
+          (ngModelChange)="onHidePayoutChange($event)"
+          binary="true"
+        ></p-checkbox>
+      </div>
+      <p-multiselect
+        display="chip"
+        [options]="cols()"
+        [ngModel]="selectedColumns()"
+        (ngModelChange)="onColumnsChange($event)"
+        optionLabel="headerFull"
+        selectedItemsLabel="{0} colunas"
+        [style]="{ 'min-width': '250px' }"
+        placeholder="Colunas Visíveis"
+        appendTo="body"
+      ></p-multiselect>
+    </div>
   </div>
 
   <!-- Área da tabela com scroll -->
-  <div class="flex-1 min-h-0 text-sm">
-    <!-- Configurações da tabela PrimeNG -->
-    <p-table
-      #dt
-      [columns]="selectedColumns()"
-      [value]="visibleRows()"
-      [scrollable]="true"
-      scrollHeight="flex"
-      sortMode="single"
-      sortField="Data"
-      rowGroupMode="subheader"
-      [groupRowsBy]="'Data'"
-      rowGroupExpandMode="multiple"
-      [globalFilterFields]="headers()"
-      [tableStyle]="{ 'min-width': '80rem', 'table-layout': 'fixed' }"
-      dataKey="Data"
-      [rowTrackBy]="rowTrackBy"
+  <div class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden">
+    <!-- Barra de ferramentas superior (caption) -->
+    <div
+      class="flex-none flex items-center justify-between p-3 border-b border-surface-200 dark:border-surface-700"
     >
-      <!-- Barra de ferramentas superior (caption) -->
-      <ng-template pTemplate="caption" class="!p-1">
-        <div class="flex items-center justify-between">
-          <!-- Campo de busca global -->
-          <p-iconfield iconPosition="left">
-            <p-inputicon>
-              <i class="pi pi-search"></i>
-            </p-inputicon>
-            <input
-              pInputText
-              type="text"
-              [(ngModel)]="globalQuery"
-              (ngModelChange)="dt.filterGlobal($event, 'contains')"
-              placeholder="Pesquisar"
-            />
-          </p-iconfield>
+      <p-iconfield iconPosition="left" class="w-full max-w-sm">
+        <p-inputicon>
+          <i class="pi pi-search"></i>
+        </p-inputicon>
+        <input
+          pInputText
+          type="text"
+          [ngModel]="filterQuery()"
+          (ngModelChange)="onFilter($event)"
+          placeholder="Pesquisar em todas as colunas..."
+          class="w-full"
+        />
+      </p-iconfield>
 
-          <div class="flex items-center gap-2">
-            <!-- Seletor de colunas visíveis -->
-            <p-multiselect
-              display="chip"
-              [options]="cols()"
-              [ngModel]="selectedColumns()"
-              (ngModelChange)="onColumnsChange($event)"
-              optionLabel="header"
-              selectedItemsLabel="{0} colunas selecionadas"
-              [style]="{ 'min-width': '200px' }"
-              placeholder="Escolher colunas"
-            ></p-multiselect>
-            <span class="p-2">Payout</span>
-            <p-checkbox
-              [ngModel]="hidePayout()"
-              (ngModelChange)="hidePayout.set($event)"
-              binary="true"
-            ></p-checkbox>
-          </div>
-        </div>
-      </ng-template>
+      <span class="text-xs text-surface-500 italic">
+        Arquivo: assets/airbnb_INICIO__01_2026.csv
+      </span>
+    </div>
 
-      <!-- Linha de cabeçalho do grupo (subheader) -->
-      <!-- groupheader template comentado -->
-      <!--
-      <ng-template pTemplate="groupheader" let-row let-expanded="expanded" let-rowIndex="rowIndex">
-        <tr pRowGroupHeader [ngClass]="groupClass(row['Data'])">
-          <td [attr.colspan]="selectedColumns().length" [ngClass]="groupHeaderClass(row['Data'])">
-            <div class="flex items-center gap-1 p-0">
-              <button
-                type="button"
-                pButton
-                pRipple
-                (click)="toggleGroup(row['Data'])"
-                text
-                rounded
-                plain
-                class="!p-0 !min-h-0 h-5 w-5"
-                [icon]="isGroupExpanded(row['Data']) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-              ></button>
-              <img src="/airbnb_lite.svg" alt="Airbnb" class="inline-block h-4 w-4" />
-              <span
-                [pTooltip]="'Data do pagamento'"
-                tooltipPosition="top"
-                showDelay="200"
-                hideDelay="0"
-                >{{ row['Data'] }}</span
-              >
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-      -->
-
-      <!-- Cabeçalho das colunas (th) -->
-      <ng-template pTemplate="header" let-columns>
-        <tr>
-          @for (col of columns; track col.field) {
-          <th
-            [pSortableColumn]="col.field"
-            [style.minWidth]="getColMinWidth(col.field)"
-            [style.width]="getColMaxWidth(col.field)"
-            [ngClass]="colHeaderClass(col.field)"
-          >
-            <span [pTooltip]="col.headerFull" tooltipPosition="top" showDelay="200" hideDelay="0">{{
-              col.headerAbbr
-            }}</span>
-            <!-- Ícone de ordenação -->
-            <p-sortIcon [field]="col.field"></p-sortIcon>
-          </th>
-          }
-        </tr>
-      </ng-template>
-
-      <!-- Corpo das linhas (td) -->
-      <ng-template pTemplate="body" let-row let-columns="columns">
-        <!-- Exibe linha apenas se o grupo estiver expandido -->
-        @if (isGroupExpanded(getCellValue(row, 'Data'))) {
-        <tr>
-          @for (col of columns; track col.field) {
-          <td
-            [pTooltip]="colTooltip(row, col.field)"
-            tooltipPosition="top"
-            [showDelay]="200"
-            [hideDelay]="0"
-            [style.minWidth]="getColMinWidth(col.field)"
-            [style.width]="getColMaxWidth(col.field)"
-            [ngClass]="tdClass(row, col.field)"
-          >
-            @if (col.field === 'Hóspede') {
-            <a
-              [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="block truncate"
-              [style.maxWidth]="getColMaxWidth(col.field)"
-              >{{ getCellValue(row, col.field) }}
-            </a>
-
-            } @else if (col.field === 'Tipo') {
-            <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-              getCellValue(row, col.field)
-            }}</span>
-            } @else if (isDerived(col.field)) { @if (isPessoa(col.field)) {
-            <i class="pi pi-user mr-2"></i>
-            <span>{{ renderDerived(row, col.field) }}</span>
-            } @else {
-            <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-              renderDerived(row, col.field)
-            }}</span>
-            } } @else {
-            <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-              getCellValue(row, col.field)
-            }}</span>
+    <div class="flex-1 min-h-0 w-full overflow-hidden flex flex-col">
+      <p-table
+        #dt
+        [columns]="selectedColumns()"
+        [value]="pagedRows()"
+        [scrollable]="true"
+        scrollHeight="flex"
+        sortMode="single"
+        sortField="Data"
+        rowGroupMode="subheader"
+        [groupRowsBy]="'Data'"
+        rowGroupExpandMode="multiple"
+        [globalFilterFields]="headers()"
+        [tableStyle]="{ 'min-width': '80rem', 'table-layout': 'fixed' }"
+        dataKey="__id"
+        [rowTrackBy]="rowTrackBy"
+        styleClass="p-datatable-sm h-full flex flex-col"
+      >
+        <!-- Cabeçalho das colunas (th) -->
+        <ng-template pTemplate="header" let-columns>
+          <tr>
+            @for (col of columns; track col.field) {
+            <th
+              [pSortableColumn]="col.field"
+              [style.minWidth]="getColMinWidth(col.field)"
+              [style.width]="getColMaxWidth(col.field)"
+              [ngClass]="colHeaderClass(col.field)"
+              class="bg-surface-50 dark:bg-surface-800"
+            >
+              <div class="flex items-center gap-1">
+                <span
+                  class="truncate"
+                  [pTooltip]="col.headerFull"
+                  tooltipPosition="top"
+                  showDelay="200"
+                  hideDelay="0"
+                  >{{ col.headerAbbr }}</span
+                >
+                <p-sortIcon [field]="col.field"></p-sortIcon>
+              </div>
+            </th>
             }
-          </td>
+          </tr>
+        </ng-template>
+
+        <!-- Corpo das linhas (td) -->
+        <ng-template pTemplate="body" let-row let-columns="columns">
+          @if (isGroupExpanded(getCellValue(row, 'Data'))) {
+          <tr
+            class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs"
+          >
+            @for (col of columns; track col.field) {
+            <td
+              [pTooltip]="colTooltip(row, col.field)"
+              tooltipPosition="top"
+              [showDelay]="200"
+              [hideDelay]="0"
+              [style.minWidth]="getColMinWidth(col.field)"
+              [style.width]="getColMaxWidth(col.field)"
+              [ngClass]="tdClass(row, col.field)"
+            >
+              @if (col.field === 'Hóspede') {
+              <a
+                [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary hover:underline block truncate"
+                [style.maxWidth]="getColMaxWidth(col.field)"
+                >{{ getCellValue(row, col.field) }}
+              </a>
+              } @else if (col.field === 'Tipo') {
+              <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                getCellValue(row, col.field)
+              }}</span>
+              } @else if (isDerived(col.field)) { @if (isPessoa(col.field)) {
+              <div class="flex items-center gap-2">
+                <i class="pi pi-user text-surface-400 text-xs"></i>
+                <span class="truncate">{{ renderDerived(row, col.field) }}</span>
+              </div>
+              } @else {
+              <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                renderDerived(row, col.field)
+              }}</span>
+              } } @else {
+              <span class="block truncate font-medium" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                getCellValue(row, col.field)
+              }}</span>
+              }
+            </td>
+            }
+          </tr>
           }
-        </tr>
-        }
-      </ng-template>
-    </p-table>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Paginador Reutilizável -->
+    <app-table-paginator
+      [first]="first()"
+      [rows]="rowsPerPage()"
+      [totalRecords]="visibleRows().length"
+      [rowsPerPageOptions]="[10, 20, 50, 100]"
+      (onPageChange)="onPageChange($event)"
+    />
   </div>
 </div>
+

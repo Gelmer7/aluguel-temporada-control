@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
 import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Papa from 'papaparse';
 import { AirbnbNormalizedRow, normalizeAirbnbRow } from '../../../../models/airbnb.model';
@@ -47,7 +48,11 @@ import { TranslateModule } from '@ngx-translate/core';
     CheckboxModule,
     HttpClientModule,
     TranslateModule,
+    TablePaginatorComponent,
   ],
+  host: {
+    class: 'block h-full overflow-hidden',
+  },
   templateUrl: './csv-viewer.page.html',
 })
 export class CsvViewerPage {
@@ -58,12 +63,46 @@ export class CsvViewerPage {
   protected readonly selectedColumns = signal<
     { field: string; headerFull: string; headerAbbr: string }[]
   >([]);
-  protected globalQuery = '';
   public readonly groupIndexMap = signal<Record<string, number>>({});
   public readonly columnMinWidth = signal<Record<string, string>>({ Noites: '6rem' });
   public readonly columnMaxWidth = signal<Record<string, string>>({ Noites: '10rem' });
   protected readonly expandedRowGroups = signal<string[]>([]);
   protected readonly hidePayout = signal<boolean>(true);
+  protected readonly filterQuery = signal<string>('');
+
+  // Pagination
+  protected readonly first = signal<number>(0);
+  protected readonly rowsPerPage = signal<number>(10);
+
+  // Computed Data
+  protected readonly visibleRows = computed(() => {
+    let data = this.rows();
+
+    // Filter by Payout
+    if (this.hidePayout()) {
+      data = data.filter((r) => (r.__norm.tipo ?? '').trim() !== 'Payout');
+    }
+
+    // Filter by Global Query
+    const query = this.filterQuery().toLowerCase().trim();
+    if (query) {
+      data = data.filter((row) => {
+        // Search in raw data values
+        const rawValues = row.__raw ? Object.values(row.__raw) : [];
+        return rawValues.some((val) => String(val).toLowerCase().includes(query));
+      });
+    }
+
+    return data;
+  });
+
+  protected readonly pagedRows = computed(() => {
+    const data = this.visibleRows();
+    const start = this.first();
+    const end = start + this.rowsPerPage();
+    return data.slice(start, end);
+  });
+
   private readonly inicioFimField = 'Data Inicio-Fim';
   private readonly inicioFimHeader = 'Inicio-Fim';
   private readonly pessoaField = 'Pessoa Pago';
@@ -104,6 +143,21 @@ export class CsvViewerPage {
 
   protected onColumnsChange(cols: { field: string; headerFull: string; headerAbbr: string }[]) {
     this.selectedColumns.set(cols || []);
+  }
+
+  protected onHidePayoutChange(hide: boolean) {
+    this.hidePayout.set(hide);
+    this.first.set(0);
+  }
+
+  protected onFilter(query: string) {
+    this.filterQuery.set(query);
+    this.first.set(0); // Reset to first page on filter
+  }
+
+  protected onPageChange(event: any) {
+    this.first.set(event.first);
+    this.rowsPerPage.set(event.rows);
   }
 
   protected calculateDateTotal(date: string): number {
@@ -245,11 +299,6 @@ export class CsvViewerPage {
 
   public getCellValue(row: ViewerRow, field: string): string {
     return this.isDerived(field) ? this.renderDerived(row, field) : gv(row, field);
-  }
-
-  public visibleRows(): ViewerRow[] {
-    const data = this.rows();
-    return this.hidePayout() ? data.filter((r) => (r.__norm.tipo ?? '').trim() !== 'Payout') : data;
   }
 
   private applyCsvText(text: string): void {
