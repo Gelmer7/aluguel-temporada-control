@@ -1,5 +1,5 @@
 <p-dialog
-  header="Novo Gasto"
+  [header]="isEdit ? 'Editar Gasto' : 'Novo Gasto'"
   [(visible)]="visible"
   [modal]="true"
   [style]="{ width: '50vw' }"

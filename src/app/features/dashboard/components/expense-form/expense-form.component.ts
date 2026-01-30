@@ -29,10 +29,34 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 })
 export class ExpenseFormComponent implements OnInit {
   @Input() visible: boolean = false;
+  @Input() set editData(value: any | null) {
+    if (value) {
+      this.isEdit = true;
+      this.form.patchValue({
+        description: value.description,
+        price: value.price,
+        type: value.type,
+        purchaseDate: new Date(value.purchase_date),
+        observation: value.observation,
+        kws: value.kws,
+        cubicMeters: value.cubic_meters,
+        association: value.association,
+        reserveFund: value.reserve_fund
+      });
+    } else {
+      this.isEdit = false;
+      this.form.reset({
+        type: 'OTHER',
+        purchaseDate: new Date(),
+        price: 0
+      });
+    }
+  }
   @Output() visibleChange = new EventEmitter<boolean>();
   @Output() save = new EventEmitter<any>();
 
   form: FormGroup;
+  isEdit: boolean = false;
 
   expenseTypes = [
     { label: 'Eletricidade', value: 'ELECTRICITY', icon: 'pi pi-bolt' },

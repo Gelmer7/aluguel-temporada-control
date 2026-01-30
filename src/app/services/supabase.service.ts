@@ -31,19 +31,75 @@ export class SupabaseService {
   }
 
   async getExpenses() {
-    return await this.supabase.from('expenses').select('*').order('date', { ascending: false });
+    const { data, error } = await this.supabase
+      .from('expenses')
+      .select('*')
+      .order('date', { ascending: false });
+
+    if (error) return { data: null, error };
+
+    const mappedData = data.map(item => ({
+      ...item,
+      price: item.amount,
+      type: item.category,
+      purchase_date: item.date
+    })) as Expense[];
+
+    return { data: mappedData, error: null };
   }
 
   async addExpense(expense: Omit<Expense, 'id' | 'created_at'>) {
-    return await this.supabase.from('expenses').insert(expense).select();
+    const dbPayload = this.mapToDb(expense);
+    return await this.supabase.from('expenses').insert(dbPayload).select();
+  }
+
+  async updateExpense(id: string, expense: Partial<Expense>) {
+    const dbPayload = this.mapToDb(expense);
+    return await this.supabase.from('expenses').update(dbPayload).eq('id', id).select();
+  }
+
+  async deleteExpense(id: string) {
+    return await this.supabase.from('expenses').delete().eq('id', id);
+  }
+
+  async bulkUploadExpenses(expenses: Omit<Expense, 'id' | 'created_at'>[]) {
+    const dbPayloads = expenses.map(e => this.mapToDb(e));
+    return await this.supabase.from('expenses').insert(dbPayloads).select();
+  }
+
+  private mapToDb(expense: any) {
+    const mapped: any = {};
+    if (expense.price !== undefined) mapped.amount = expense.price;
+    if (expense.description !== undefined) mapped.description = expense.description;
+    if (expense.type !== undefined) mapped.category = expense.type;
+    if (expense.purchase_date !== undefined) mapped.date = expense.purchase_date;
+
+    // These might fail if columns don't exist, but we keep them for parity
+    if (expense.observation !== undefined) mapped.observation = expense.observation;
+    if (expense.cubic_meters !== undefined) mapped.cubic_meters = expense.cubic_meters;
+    if (expense.reserve_fund !== undefined) mapped.reserve_fund = expense.reserve_fund;
+    if (expense.association !== undefined) mapped.association = expense.association;
+    if (expense.kws !== undefined) mapped.kws = expense.kws;
+    if (expense.create_user !== undefined) mapped.create_user = expense.create_user;
+
+    return mapped;
   }
 }
 
 export interface Expense {
   id: string;
+  price: number; // Maps to 'amount' in DB
+  amount?: number; // DB field
   description: string;
-  amount: number;
-  date: string;
-  category: string;
-  created_at: string;
+  observation?: string;
+  type: string; // Maps to 'category' in DB
+  category?: string; // DB field
+  purchase_date: string; // Maps to 'date' in DB
+  date?: string; // DB field
+  cubic_meters?: number;
+  reserve_fund?: number;
+  association?: number;
+  kws?: number;
+  create_user?: string;
+  created_at?: string;
 }

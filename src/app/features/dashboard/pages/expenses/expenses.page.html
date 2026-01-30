@@ -1,32 +1,258 @@
-<div class="p-4">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-arrow-up"></i>
-        <span>{{ 'TERMS.EXPENSES' | translate }}</span>
-        <p-button
-          label="Novo Gasto"
-          icon="pi pi-plus"
-          (click)="showExpenseForm = true"
-          size="small"
-        />
+<div class="p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
+  <!-- Header with Actions -->
+  <div
+    class="flex-none flex flex-col md:flex-row md:items-center justify-between gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+  >
+    <div class="flex items-center gap-3">
+      <div
+        class="w-12 h-12 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
+      >
+        <i class="pi pi-wallet text-primary text-2xl"></i>
       </div>
-    <div class="p-2">
-      <app-expense-form [(visible)]="showExpenseForm" (save)="onSaveExpense($event)">
-      </app-expense-form>
-
-      <div class="mt-4">
-        <h3>Lista de Gastos</h3>
-        @if (expenses.length === 0) {
-        <div>Nenhum gasto cadastrado.</div>
-        } @if (expenses.length > 0) {
-        <ul class="list-none p-0">
-          @for (expense of expenses; track expense) {
-          <li class="p-2 border-bottom-1 surface-border flex justify-content-between">
-            <span>{{ expense.description }}</span>
-            <span class="font-bold">{{ expense.amount | currency }}</span>
-          </li>
-          }
-        </ul>
-        }
+      <div>
+        <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0 m-0">
+          {{ 'TERMS.EXPENSES' | translate }}
+        </h1>
+        <p class="text-surface-500 dark:text-surface-400 text-sm mt-1">
+          Gerencie todos os custos e despesas do imóvel
+        </p>
       </div>
     </div>
+
+    <div class="flex items-center gap-3">
+      <p-button
+        label="Download JSON"
+        icon="pi pi-download"
+        severity="secondary"
+        variant="outlined"
+        size="small"
+        (click)="onDownloadJson()"
+      />
+      <p-button
+        label="Upload JSON"
+        icon="pi pi-upload"
+        severity="secondary"
+        variant="outlined"
+        size="small"
+        (click)="fileInput.click()"
+      />
+      <input #fileInput type="file" accept=".json" class="hidden" (change)="onUploadJson($event)" />
+      <p-button label="Novo Gasto" icon="pi pi-plus" (click)="onAddExpense()" size="small" />
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <div
+    class="flex-none grid grid-cols-1 md:grid-cols-4 gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+  >
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Tipo</label>
+      <p-select
+        [options]="typeOptions"
+        [(ngModel)]="selectedType"
+        (onChange)="onFilterChange()"
+        placeholder="Selecione o tipo"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Ano</label>
+      <p-select
+        [options]="yearOptions()"
+        [(ngModel)]="selectedYear"
+        (onChange)="onFilterChange()"
+        placeholder="Selecione o ano"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Mês</label>
+      <p-select
+        [options]="monthOptions"
+        [(ngModel)]="selectedMonth"
+        (onChange)="onFilterChange()"
+        [disabled]="!selectedYear()"
+        placeholder="Selecione o mês"
+        styleClass="w-full"
+      />
+    </div>
+
+    <div class="flex items-end">
+      <p-button
+        label="Limpar Filtros"
+        icon="pi pi-filter-slash"
+        severity="secondary"
+        variant="text"
+        (click)="
+          selectedType.set(null); selectedYear.set(null); selectedMonth.set(null); onFilterChange()
+        "
+      />
+    </div>
+  </div>
+
+  <!-- Summary Cards -->
+  <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-2">
+    <p-card styleClass="h-full border-none shadow-sm bg-primary-500 text-white">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-primary-100 text-sm font-medium">Total Acumulado</span>
+          <div class="text-3xl font-bold mt-1">{{ totalExpenses() | currency: 'BRL' }}</div>
+        </div>
+        <i class="pi pi-calculator text-4xl text-white/20"></i>
+      </div>
+    </p-card>
+
+    <p-card styleClass="h-full border-none shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-surface-500 dark:text-surface-400 text-sm font-medium">Quantidade</span>
+          <div class="text-3xl font-bold mt-1 text-surface-900 dark:text-surface-0">
+            {{ filteredExpenses().length }}
+          </div>
+        </div>
+        <i class="pi pi-list text-4xl text-surface-200 dark:text-surface-700"></i>
+      </div>
+    </p-card>
+
+    <p-card styleClass="h-full border-none shadow-sm">
+      <div class="flex items-center justify-between">
+        <div>
+          <span class="text-surface-500 dark:text-surface-400 text-sm font-medium"
+            >Média por Gasto</span
+          >
+          <div class="text-3xl font-bold mt-1 text-surface-900 dark:text-surface-0">
+            {{
+              (filteredExpenses().length > 0 ? totalExpenses() / filteredExpenses().length : 0)
+                | currency: 'BRL'
+            }}
+          </div>
+        </div>
+        <i class="pi pi-percentage text-4xl text-surface-200 dark:text-surface-700"></i>
+      </div>
+    </p-card>
+  </div>
+
+  <!-- Data Table -->
+  <p-card contentStyleClass="flex flex-col min-h-0">
+    <p-table
+      #dt
+      [value]="filteredExpenses()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="5"
+      [rowsPerPageOptions]="[10, 25, 50]"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} gastos"
+      [globalFilterFields]="['description', 'type', 'observation']"
+      [scrollHeight]="'flex'"
+      [alwaysShowPaginator]="true"
+    >
+      <ng-template pTemplate="caption">
+        <div class="justify-between items-center gap-2">
+          <span class="text-xl font-semibold text-surface-900 dark:text-surface-0"
+            >Histórico de Despesas</span
+          >
+          <p-iconfield>
+            <p-inputicon class="pi pi-search" />
+            <input
+              pInputText
+              type="text"
+              (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+              placeholder="Buscar gastos..."
+            />
+          </p-iconfield>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th pSortableColumn="purchase_date" class="bg-surface-50 dark:bg-surface-800">
+            Data <p-sortIcon field="purchase_date" />
+          </th>
+          <th pSortableColumn="description" class="bg-surface-50 dark:bg-surface-800">
+            Descrição <p-sortIcon field="description" />
+          </th>
+          <th pSortableColumn="type" class="bg-surface-50 dark:bg-surface-800">
+            Tipo <p-sortIcon field="type" />
+          </th>
+          <th pSortableColumn="price" class="bg-surface-50 dark:bg-surface-800 text-right">
+            Valor <p-sortIcon field="price" />
+          </th>
+          <th class="bg-surface-50 dark:bg-surface-800 text-center w-32">Ações</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-expense>
+        <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200">
+          <td>{{ expense.purchase_date | date: 'dd/MM/yyyy' }}</td>
+          <td>
+            <div class="flex flex-col">
+              <span class="font-medium text-surface-900 dark:text-surface-0">{{
+                expense.description
+              }}</span>
+              @if (expense.observation) {
+                <span
+                  class="text-xs text-surface-500 truncate max-w-xs"
+                  [pTooltip]="expense.observation"
+                >
+                  {{ expense.observation }}
+                </span>
+              }
+            </div>
+          </td>
+          <td>
+            <p-tag [value]="expense.type" [severity]="getSeverity(expense.type)" />
+          </td>
+          <td class="text-right font-bold text-surface-900 dark:text-surface-0">
+            {{ expense.price | currency: 'BRL' }}
+          </td>
+          <td>
+            <div class="flex justify-center gap-2">
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                (click)="onEditExpense(expense)"
+                pTooltip="Editar"
+              />
+              <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (click)="onDeleteExpense($event, expense)"
+                pTooltip="Excluir"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5" class="text-center p-8">
+            <div class="flex flex-col items-center gap-3">
+              <i class="pi pi-inbox text-4xl text-surface-300"></i>
+              <span class="text-surface-500">Nenhum gasto encontrado.</span>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+
+  <!-- Form Dialog -->
+  <app-expense-form
+    [visible]="showExpenseForm()"
+    (visibleChange)="showExpenseForm.set($event)"
+    [editData]="currentExpense()"
+    (save)="onSaveExpense($event)"
+  />
+
+  <!-- Confirmations and Toasts -->
+  <p-confirmdialog />
+  <p-toast position="bottom-right" />
 </div>

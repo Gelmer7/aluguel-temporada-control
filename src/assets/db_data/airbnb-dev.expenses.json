@@ -1,0 +1,2684 @@
+[{
+  "_id": {
+    "$oid": "680012f818f0ef34fb25d656"
+  },
+  "price": 243.75,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2025-01-04T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 259,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:28:40.626Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800140b18f0ef34fb25d677"
+  },
+  "price": 278.62,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-10-15T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 288,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:33:15.968Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800175e18f0ef34fb25d6aa"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:47:26.268Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-04-16T20:48:01.491Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6800193718f0ef34fb25d6fd"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2025-04-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:55:19.757Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010981e45bf6dd192abcc3"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-01-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:00:33.458Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010c52e45bf6dd192abd20"
+  },
+  "price": 22.38,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-05-10T00:00:00.000Z"
+  },
+  "cubicMeters": 3.31,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:12:34.326Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010cd9e45bf6dd192abd3b"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:14:49.136Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010d19e45bf6dd192abd59"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-11-11T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:15:53.391Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:20:54.819Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6837aee628cff911bb57fdaf"
+  },
+  "price": 529.99,
+  "description": "Carnê-Leão Dezembro/2024",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-01-30T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T00:48:38.406Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6837b5d728cff911bb57fe8d"
+  },
+  "price": 70.25,
+  "description": "Carnê-Leão Outubro/2024",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2024-12-11T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T01:18:15.075Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6837b62328cff911bb57fea1"
+  },
+  "price": 871.9,
+  "description": "Carnê-Leão Setembro/2024",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2024-10-29T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T01:19:31.709Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6837b68828cff911bb57fec9"
+  },
+  "price": 223.24,
+  "description": "Carnê-Leão Julho/2024",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2024-08-23T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T01:21:12.396Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838c6b7bfedbfeb90744358"
+  },
+  "price": 215.84,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2025-05-07T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 230,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:42:31.249Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838c97dbfedbfeb9074439f"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "Aqui mudou os valores:\nCotas do mês: 213,05\nAssociação: 61,50\nFundo de reserva: 10,65",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-12-11T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:54:21.636Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cacdbfedbfeb907443bf"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-10-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:59:57.496Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cbd4bfedbfeb907443dd"
+  },
+  "price": 35.47,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-08-07T00:00:00.000Z"
+  },
+  "cubicMeters": 5.63,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:04:20.305Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cc0ebfedbfeb907443e3"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:05:18.506Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cc67bfedbfeb907443ef"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-06-06T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:06:47.165Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cc83bfedbfeb907443f5"
+  },
+  "price": 37.93,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-06-06T00:00:00.000Z"
+  },
+  "cubicMeters": 6.02,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:07:15.567Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838ce02bfedbfeb9074440f"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "A partir de aqui Aumetou o condominio de 196,51 -> 213,05",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-05-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:13:38.175Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T02:16:45.560Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6838d1e2bfedbfeb907444ad"
+  },
+  "price": 105,
+  "description": "Carnê-Leão Abril/2025",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-05-29T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:30:10.725Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb864ecc03944ac6d2139"
+  },
+  "price": 108.17,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-04-10T00:00:00.000Z"
+  },
+  "cubicMeters": 17.17,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:18:12.887Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb8d4ecc03944ac6d2145"
+  },
+  "price": 43.04,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-03-10T00:00:00.000Z"
+  },
+  "cubicMeters": 7.32,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:20:04.122Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb937ecc03944ac6d2151"
+  },
+  "price": 33.4,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-02-09T00:00:00.000Z"
+  },
+  "cubicMeters": 5.68,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:21:43.519Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb98cecc03944ac6d215d"
+  },
+  "price": 22.81,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-01-10T00:00:00.000Z"
+  },
+  "cubicMeters": 3.88,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:23:08.413Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bbfa274cfd73308ae7393"
+  },
+  "price": 0,
+  "description": "Agua",
+  "observation": "Apartir de aqui o boleto está a nome de Luiza",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-05-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:49:06.159Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc22e74cfd73308ae73ed"
+  },
+  "price": 49.33,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-11-10T00:00:00.000Z"
+  },
+  "cubicMeters": 8.39,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:59:58.389Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc27e74cfd73308ae73f9"
+  },
+  "price": 58.51,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-12-12T00:00:00.000Z"
+  },
+  "cubicMeters": 9.95,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:01:18.134Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6846f45bf84955957a6ed26d"
+  },
+  "price": 235.59,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-06-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.78,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-09T14:48:59.605Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6846f785f84955957a6ed27f"
+  },
+  "price": 201.03,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2025-06-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 215,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-09T15:02:29.114Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68b5979e770b42ce08bec253"
+  },
+  "price": 20.22,
+  "description": "Carnê-Leão Julho/2025",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-09-01T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-01T12:54:54.076Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68dac4cd77ecb2c1fe28f30e"
+  },
+  "price": 235.59,
+  "description": "Condominio",
+  "observation": "aqui aumentou o valor da associação",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-09-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.78,
+  "association": 66.33,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-29T17:41:33.888Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68dac77977ecb2c1fe28f33c"
+  },
+  "price": 235.59,
+  "description": "Condominio",
+  "observation": "aumento, Associação: de 64,26 para 66,33",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-08-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.78,
+  "association": 66.33,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-29T17:52:57.441Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-09-29T17:53:33.135Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "68dac7d077ecb2c1fe28f369"
+  },
+  "price": 53.53,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-08-10T00:00:00.000Z"
+  },
+  "cubicMeters": 8.69,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-29T17:54:24.271Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67f8872fe43107d9c9e5006f"
+  },
+  "price": 44.16,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-03-05T00:00:00.000Z"
+  },
+  "cubicMeters": 6.67,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T03:06:23.228Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-04-11T12:21:09.491Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "67f91127e43107d9c9e500ae"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-02-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T12:55:03.922Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67f91217e43107d9c9e500d2"
+  },
+  "price": 63.81,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-04-09T00:00:00.000Z"
+  },
+  "cubicMeters": 9,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T12:59:03.255Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680011f118f0ef34fb25d64a"
+  },
+  "price": 340.48,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2025-03-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 361,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:24:17.091Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800153e18f0ef34fb25d69e"
+  },
+  "price": 117.07,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-05-14T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 50,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:38:22.244Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680018fc18f0ef34fb25d6ee"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "Aqui veio o desconto: R$ 103 pague neste mês",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2025-02-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:54:20.581Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680108d5e45bf6dd192abcb7"
+  },
+  "price": 50.42,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-12-06T00:00:00.000Z"
+  },
+  "cubicMeters": 7.47,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T13:57:41.235Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:20:10.938Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "680109fee45bf6dd192abccf"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-02-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:02:38.916Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010aa0e45bf6dd192abce1"
+  },
+  "price": 12.73,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-03-10T00:00:00.000Z"
+  },
+  "cubicMeters": 2.02,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:05:20.295Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010b24e45bf6dd192abced"
+  },
+  "price": 7.02,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-04-10T00:00:00.000Z"
+  },
+  "cubicMeters": 1.06,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:07:32.343Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010ba6e45bf6dd192abcf9"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "A partir de aqui aumentó de 213,05 para 224,77, de 10,65 para11,24",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-05-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:09:42.712Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-04-17T14:11:30.581Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "68010ce7e45bf6dd192abd41"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-08-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:15:03.761Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:26:50.972Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "68010cf1e45bf6dd192abd47"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-09-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:15:13.930Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6837af9728cff911bb57fdc3"
+  },
+  "price": 78.34,
+  "description": "Carnê-Leão Novembro/2024",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2024-12-11T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T00:51:35.652Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838c74bbfedbfeb90744364"
+  },
+  "price": 55.28,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-05-07T00:00:00.000Z"
+  },
+  "cubicMeters": 8,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:44:59.912Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-05-29T20:45:42.201Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6838c9b8bfedbfeb907443a5"
+  },
+  "price": 22.37,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-12-11T00:00:00.000Z"
+  },
+  "cubicMeters": 3.55,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:55:20.063Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838ca31bfedbfeb907443ab"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-11-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:57:21.473Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838ca5cbfedbfeb907443b1"
+  },
+  "price": 9.32,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-11-09T00:00:00.000Z"
+  },
+  "cubicMeters": 1.48,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:58:04.060Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838caf2bfedbfeb907443c5"
+  },
+  "price": 62.37,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-10-09T00:00:00.000Z"
+  },
+  "cubicMeters": 9.9,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:00:34.529Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cb71bfedbfeb907443d1"
+  },
+  "price": 70.94,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-09-28T00:00:00.000Z"
+  },
+  "cubicMeters": 11.26,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:02:41.607Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cc29bfedbfeb907443e9"
+  },
+  "price": 19.39,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 3.02,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:05:45.683Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb762ecc03944ac6d2127"
+  },
+  "price": 29.99,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2023-05-10T00:00:00.000Z"
+  },
+  "cubicMeters": 4.76,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:13:54.196Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb921ecc03944ac6d214b"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-02-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:21:21.780Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb971ecc03944ac6d2157"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-01-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:22:41.815Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bbf8b74cfd73308ae738a"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "Apartir de aqui o boleto está a nome de Luiza",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-05-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:48:43.465Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:13:28.187Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "683bbfe874cfd73308ae7399"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "No boleto está: R$ 267,88\npero en el Aplicativo dice: 273,50, deve ser del agua o la multa..",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-06-13T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:50:16.834Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:09:28.469Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "683bc00674cfd73308ae739f"
+  },
+  "price": 0,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-06-13T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:50:46.491Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:09:46.388Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "683bc0ba74cfd73308ae73b7"
+  },
+  "price": 0.18,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-08-08T00:00:00.000Z"
+  },
+  "cubicMeters": 0.03,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:53:46.042Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc0fc74cfd73308ae73bd"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-09-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:54:52.385Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc1fe74cfd73308ae73e7"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-11-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:59:10.910Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc75e74cfd73308ae74a9"
+  },
+  "price": 67.72,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-11-11T00:00:00.000Z"
+  },
+  "cubicMeters": 10.23,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:22:06.542Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc7c374cfd73308ae74b2"
+  },
+  "price": 54.28,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-10-10T00:00:00.000Z"
+  },
+  "cubicMeters": 8.2,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:23:47.327Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68b4bcebb134c3c1595f6787"
+  },
+  "price": 235.59,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.78,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-08-31T21:21:47.769Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67f88669e43107d9c9e50069"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-03-05T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T03:03:05.412Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-04-11T12:50:20.394Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "67f9109de43107d9c9e5009c"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-01-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T12:52:45.379Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67f910cbe43107d9c9e500a2"
+  },
+  "price": 49.63,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-01-09T00:00:00.000Z"
+  },
+  "cubicMeters": 7.32,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T12:53:31.025Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67f9115be43107d9c9e500b7"
+  },
+  "price": 47.27,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-02-10T00:00:00.000Z"
+  },
+  "cubicMeters": 7.14,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T12:55:55.018Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680011b918f0ef34fb25d644"
+  },
+  "price": 355.81,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2025-04-14T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 373,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:23:21.089Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800144718f0ef34fb25d680"
+  },
+  "price": 125.54,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-09-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 141,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:34:15.339Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800177318f0ef34fb25d6b0"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-08-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:47:47.225Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680017db18f0ef34fb25d6c9"
+  },
+  "price": 109.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-10-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:49:31.211Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800188018f0ef34fb25d6e2"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "Aqui este mes junto com a casa da Clarissa, paguei em total: 229,98",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-12-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:52:16.337Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680018c718f0ef34fb25d6e8"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "mesmo problema da desktop, paguei R$ 209,98 em conjunto",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2025-01-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:53:27.280Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680109abe45bf6dd192abcc9"
+  },
+  "price": 15.37,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-01-10T00:00:00.000Z"
+  },
+  "cubicMeters": 2.44,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:01:15.184Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010a19e45bf6dd192abcd5"
+  },
+  "price": 14.62,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-02-10T00:00:00.000Z"
+  },
+  "cubicMeters": 2.32,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:03:05.171Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010a80e45bf6dd192abcdb"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-03-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:04:48.814Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010d22e45bf6dd192abd5f"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-12-06T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:16:02.069Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T03:20:19.782Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6837763928cff911bb57fc93"
+  },
+  "price": 547.18,
+  "description": "Carnê-Leão Janeiro/2025",
+  "observation": "Pagamento com Multa\nMulta: R$ 43,33\nJuros: R$ 5,47",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-03-28T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-28T20:46:49.972Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-05-29T20:02:02.363Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6837b65f28cff911bb57feb5"
+  },
+  "price": 598.69,
+  "description": "Carnê-Leão Agosto/2024",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2024-09-19T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T01:20:31.074Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cb51bfedbfeb907443cb"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-09-28T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:02:09.705Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838cbb0bfedbfeb907443d7"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-08-07T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T21:03:44.934Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb7e3ecc03944ac6d212d"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-04-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:16:03.147Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc07074cfd73308ae73ab"
+  },
+  "price": 0.53,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0.09,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:52:32.251Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc0a474cfd73308ae73b1"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-08-08T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:53:24.504Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc1a674cfd73308ae73e1"
+  },
+  "price": 44.04,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-10-10T00:00:00.000Z"
+  },
+  "cubicMeters": 7.49,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:57:42.552Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc83174cfd73308ae74bb"
+  },
+  "price": 38.89,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-09-10T00:00:00.000Z"
+  },
+  "cubicMeters": 5.71,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:25:37.829Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc86c74cfd73308ae74c4"
+  },
+  "price": 59.12,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-08-12T00:00:00.000Z"
+  },
+  "cubicMeters": 8.93,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:26:36.476Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc8b674cfd73308ae74d3"
+  },
+  "price": 45.74,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 6.91,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:27:50.064Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "688932fbbcaae56ce451cf5c"
+  },
+  "price": 105,
+  "description": "Gas",
+  "observation": "",
+  "type": "GAS",
+  "purchaseDate": {
+    "$date": "2025-07-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-07-29T20:45:47.353Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68b594ef770b42ce08bec24b"
+  },
+  "price": 20.21,
+  "description": "Carnê-Leão Julho/2025",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-09-01T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-01T12:43:27.784Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68dac4fc77ecb2c1fe28f314"
+  },
+  "price": 35.17,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-09-10T00:00:00.000Z"
+  },
+  "cubicMeters": 5.09,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-29T17:42:20.124Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "67f911f9e43107d9c9e500cc"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-04-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-11T12:58:33.384Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680012b518f0ef34fb25d650"
+  },
+  "price": 180.41,
+  "description": "Eletricidade",
+  "observation": "foi pago em 06/03/2025, atrasado!, para que no haja conflito coloquei 14/02/2025",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2025-02-14T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 205,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:27:33.180Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800139418f0ef34fb25d66b"
+  },
+  "price": 174.33,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-12-11T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 186,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:31:16.453Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680013de18f0ef34fb25d671"
+  },
+  "price": 297.24,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-11-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 287,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:32:30.498Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800147a18f0ef34fb25d686"
+  },
+  "price": 207.07,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-08-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 219,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:35:06.987Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680014ae18f0ef34fb25d68c"
+  },
+  "price": 114.4,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-07-14T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 99,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:35:58.448Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-04-16T20:37:10.780Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "680014d418f0ef34fb25d692"
+  },
+  "price": 87.13,
+  "description": "Eletricidade",
+  "observation": "",
+  "type": "ELECTRICITY",
+  "purchaseDate": {
+    "$date": "2024-06-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 93,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:36:36.154Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800174b18f0ef34fb25d6a4"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-06-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:47:07.701Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "680017db18f0ef34fb25d6cb"
+  },
+  "price": 109.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-09-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:49:31.214Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-04-16T20:50:14.378Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6800184618f0ef34fb25d6dc"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2024-11-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:51:18.892Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6800192618f0ef34fb25d6f7"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2025-03-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-16T20:55:02.148Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010affe45bf6dd192abce7"
+  },
+  "price": 213.05,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-04-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 10.65,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:06:55.173Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010cbbe45bf6dd192abd2f"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-06-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:14:19.016Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68010d10e45bf6dd192abd53"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2024-10-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-04-17T14:15:44.924Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6837758f28cff911bb57fc7b"
+  },
+  "price": 158.78,
+  "description": "Carnê-Leão Março/2025",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-04-30T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-28T20:43:59.197Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6838bdc8bfedbfeb907442d6"
+  },
+  "price": 0,
+  "description": "Carnê-Leão Fevereiro/2024",
+  "observation": "Não teve pagamento, abaixo do minimo",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-03-01T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:04:24.896Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-05-29T20:04:54.365Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6838c725bfedbfeb9074435e"
+  },
+  "price": 224.77,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2025-05-07T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 11.24,
+  "association": 64.26,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:44:21.559Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-05-29T20:45:36.107Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "6838c7aabfedbfeb90744382"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2025-05-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-05-29T20:46:34.660Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bb8b2ecc03944ac6d213f"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2023-03-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:19:30.358Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc04074cfd73308ae73a5"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:51:44.327Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc11674cfd73308ae73c3"
+  },
+  "price": 10.7,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2022-09-12T00:00:00.000Z"
+  },
+  "cubicMeters": 1.82,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:55:18.301Z"
+  },
+  "__v": 0,
+  "updateDate": {
+    "$date": "2025-06-01T02:55:49.681Z"
+  },
+  "updateUser": "gelmer7@gmail.com"
+},
+{
+  "_id": {
+    "$oid": "683bc18d74cfd73308ae73db"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-10-10T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T02:57:17.698Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc26474cfd73308ae73f3"
+  },
+  "price": 196.51,
+  "description": "Condominio",
+  "observation": "",
+  "type": "CONDOMINIUM",
+  "purchaseDate": {
+    "$date": "2022-12-12T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 9.87,
+  "association": 61.5,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:00:52.983Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "683bc8ed74cfd73308ae74dc"
+  },
+  "price": 57.93,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2024-06-10T00:00:00.000Z"
+  },
+  "cubicMeters": 8.75,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-01T03:28:45.573Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6846f55af84955957a6ed273"
+  },
+  "price": 58.98,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-06-09T00:00:00.000Z"
+  },
+  "cubicMeters": 8.33,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-09T14:53:14.109Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6846f7b2f84955957a6ed288"
+  },
+  "price": 99.99,
+  "description": "Internet",
+  "observation": "",
+  "type": "INTERNET",
+  "purchaseDate": {
+    "$date": "2025-06-09T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-06-09T15:03:14.735Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "688bdd1c32e00442da21d6be"
+  },
+  "price": 19.98,
+  "description": "Carnê-Leão Junho/2025",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-07-31T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-07-31T21:16:12.782Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68b4bd34b134c3c1595f678d"
+  },
+  "price": 58.13,
+  "description": "Agua",
+  "observation": "",
+  "type": "WATER",
+  "purchaseDate": {
+    "$date": "2025-07-10T00:00:00.000Z"
+  },
+  "cubicMeters": 8.21,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-08-31T21:23:00.312Z"
+  },
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "68b5982e770b42ce08bec25f"
+  },
+  "price": 20.21,
+  "description": "Carnê-Leão Julho/2025",
+  "observation": "",
+  "type": "CARNE_LEAO",
+  "purchaseDate": {
+    "$date": "2025-09-01T00:00:00.000Z"
+  },
+  "cubicMeters": 0,
+  "reserveFund": 0,
+  "association": 0,
+  "kws": 0,
+  "createUser": "gelmer7@gmail.com",
+  "createDate": {
+    "$date": "2025-09-01T12:57:18.580Z"
+  },
+  "__v": 0
+}]
