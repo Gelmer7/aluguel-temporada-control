@@ -199,6 +199,32 @@
         [rowTrackBy]="rowTrackBy"
         styleClass="p-datatable-sm h-full flex flex-col"
       >
+        <!-- Sub-cabeçalho de grupo (Data) -->
+        <ng-template pTemplate="rowgroupheader" let-row>
+          <tr class="bg-surface-50 dark:bg-surface-800/50">
+            <td [attr.colspan]="selectedColumns().length" class="!p-2 border-b border-surface-200 dark:border-surface-700">
+              <div class="flex items-center gap-2">
+                <p-button
+                  [icon]="isGroupExpanded(getCellValue(row, 'Data')) ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="secondary"
+                  (click)="toggleGroup(getCellValue(row, 'Data'))"
+                  styleClass="w-8 h-8"
+                />
+                <span class="font-bold text-surface-900 dark:text-surface-0">
+                  {{ formatDateBR(getCellValue(row, 'Data')) }}
+                </span>
+                <p-tag
+                  [value]="calculateDateTotal(getCellValue(row, 'Data')) + ' transações'"
+                  severity="secondary"
+                  [rounded]="true"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+
         <!-- Cabeçalho das colunas (th) -->
         <ng-template pTemplate="header" let-columns>
           <tr>
@@ -254,6 +280,10 @@
               } @else if (col.field === 'Tipo') {
               <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
                 getCellValue(row, col.field)
+              }}</span>
+              } @else if (isDateField(col.field)) {
+              <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                formatDateBR(getCellValue(row, col.field))
               }}</span>
               } @else if (isDerived(col.field)) { @if (isPessoa(col.field)) {
               <div class="flex items-center gap-2">

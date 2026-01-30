@@ -164,6 +164,23 @@ export class CsvViewerPage {
     return null;
   }
 
+  protected formatDateBR(dateStr: string | undefined): string {
+    if (!dateStr) return '';
+    const date = this.parseAirbnbDate(dateStr);
+    if (!date) return dateStr;
+
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  }
+
+  protected isDateField(field: string): boolean {
+    const dateFields = ['Data', 'Data da reserva', 'Data de início', 'Data de término'];
+    return dateFields.includes(field);
+  }
+
   protected readonly pagedRows = computed(() => {
     const data = this.visibleRows();
     const start = this.first();
@@ -298,12 +315,17 @@ export class CsvViewerPage {
   }
 
   protected calculateDateTotal(date: string): number {
-    const data = this.visibleRows();
-    let count = 0;
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].__norm.data === date) count++;
-    }
-    return count;
+    return this.visibleRows().filter((r) => this.getCellValue(r, 'Data') === date).length;
+  }
+
+  protected isGroupExpanded(date: string): boolean {
+    return this.expandedRowGroups().includes(date);
+  }
+
+  protected toggleGroup(date: string): void {
+    const current = this.expandedRowGroups();
+    const next = current.includes(date) ? current.filter((d) => d !== date) : [...current, date];
+    this.expandedRowGroups.set(next);
   }
 
   private recomputeGroupIndexMap(data: ViewerRow[]) {
@@ -375,16 +397,6 @@ export class CsvViewerPage {
 
     this.columnMinWidth.set(min);
     this.columnMaxWidth.set(max);
-  }
-
-  protected isGroupExpanded(date: string): boolean {
-    return this.expandedRowGroups().includes(date);
-  }
-
-  protected toggleGroup(date: string): void {
-    const current = this.expandedRowGroups();
-    const next = current.includes(date) ? current.filter((d) => d !== date) : [...current, date];
-    this.expandedRowGroups.set(next);
   }
 
   public tipoHighlight(row: ViewerRow): string | undefined {

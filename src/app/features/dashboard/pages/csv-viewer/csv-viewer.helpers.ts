@@ -20,7 +20,14 @@ export function renderDerived(row: ViewerRow, field: string, inicioFimField: str
   if (field === inicioFimField) {
     const ini = row.__norm.dataInicio ?? '';
     const fim = row.__norm.dataTermino ?? '';
-    return `${ini} - ${fim}`;
+    
+    // Função interna simples para formatar MM/DD/YYYY para DD/MM/YYYY
+    const format = (d: string) => {
+      const p = d.split('/');
+      return p.length === 3 ? `${p[1].padStart(2, '0')}/${p[0].padStart(2, '0')}/${p[2]}` : d;
+    };
+    
+    return `${format(ini)} - ${format(fim)}`;
   }
   if (field === pessoaField) {
     return personFromTipo(row.__norm.tipo);
