@@ -103,14 +103,34 @@ export class ExpensesPage implements OnInit {
   selectedYear = signal<number | null>(null);
   selectedMonth = signal<number | null>(null);
   selectedType = signal<string | null>(null);
+  globalFilter = signal<string>('');
 
   // Pagination
   first = signal<number>(0);
   rows = signal<number>(10);
 
+  // Computed Data
+  pagedExpenses = computed(() => {
+    const data = this.filteredExpenses();
+    const start = this.first();
+    const end = start + this.rows();
+    return data.slice(start, end);
+  });
+
   onPageChange(event: any) {
     this.first.set(event.first);
     this.rows.set(event.rows);
+  }
+
+  onFilterGlobal(query: string) {
+    this.globalFilter.set(query.toLowerCase());
+    this.first.set(0); // Reset to first page on search
+    this.applyFilters();
+  }
+
+  onFilterChange() {
+    this.first.set(0); // Reset to first page on filter change
+    this.applyFilters();
   }
 
   totalExpenses = computed(() => {
@@ -164,12 +184,18 @@ export class ExpensesPage implements OnInit {
       filtered = filtered.filter(e => e.type === this.selectedType());
     }
 
+    const query = this.globalFilter();
+    if (query) {
+      filtered = filtered.filter(e =>
+        e.description?.toLowerCase().includes(query) ||
+        e.type?.toLowerCase().includes(query) ||
+        e.observation?.toLowerCase().includes(query)
+      );
+    }
+
     this.filteredExpenses.set(filtered);
   }
 
-  onFilterChange() {
-    this.applyFilters();
-  }
 
   onDownloadJson() {
     const data = this.expenses();
