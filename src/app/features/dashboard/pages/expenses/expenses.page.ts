@@ -1,18 +1,18 @@
 import { Component, ChangeDetectionStrategy, OnInit, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { TagModule } from 'primeng/tag';
-import { InputTextModule } from 'primeng/inputtext';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { Card } from 'primeng/card';
+import { Table, TableModule } from 'primeng/table';
+import { Button } from 'primeng/button';
+import { Tooltip } from 'primeng/tooltip';
+import { Tag } from 'primeng/tag';
+import { InputText } from 'primeng/inputtext';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { ToastModule } from 'primeng/toast';
-import { SelectModule } from 'primeng/select';
+import { Toast } from 'primeng/toast';
+import { Select } from 'primeng/select';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
@@ -28,17 +28,17 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     CommonModule,
     FormsModule,
-    CardModule,
+    Card,
     TableModule,
-    ButtonModule,
-    TooltipModule,
-    TagModule,
-    InputTextModule,
-    IconFieldModule,
-    InputIconModule,
-    ConfirmDialogModule,
-    ToastModule,
-    SelectModule,
+    Button,
+    Tooltip,
+    Tag,
+    InputText,
+    IconField,
+    InputIcon,
+    ConfirmDialog,
+    Toast,
+    Select,
     TablePaginatorComponent,
     ExpenseFormComponent,
     TranslateModule

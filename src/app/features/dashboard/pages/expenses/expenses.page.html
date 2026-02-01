@@ -1,90 +1,95 @@
-<div class="p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
+<div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
   <!-- Header with Actions -->
   <div
-    class="flex-none flex flex-col md:flex-row md:items-center justify-between gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+    class="flex-none flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-0 dark:bg-surface-900 p-2.5 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
   >
     <div class="flex items-center gap-3">
       <div
-        class="w-12 h-12 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
+        class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
       >
-        <i class="pi pi-wallet text-primary text-2xl"></i>
+        <i class="pi pi-wallet text-primary text-xl sm:text-2xl"></i>
       </div>
       <div>
-        <h1 class="text-2xl font-bold text-surface-900 dark:text-surface-0 m-0">
+        <h1 class="text-xl sm:text-2xl font-bold text-surface-900 dark:text-surface-0 m-0">
           {{ 'TERMS.EXPENSES' | translate }}
         </h1>
-        <p class="text-surface-500 dark:text-surface-400 text-sm mt-1">
+        <p class="text-surface-500 dark:text-surface-400 text-[10px] sm:text-sm mt-0.5">
           Gerencie todos os custos e despesas do imóvel
         </p>
       </div>
     </div>
 
-    <div class="flex items-center gap-3">
+    <div class="flex flex-wrap items-center gap-2">
       <p-button
-        label="Download JSON"
+        label="Download"
         icon="pi pi-download"
         severity="secondary"
         variant="outlined"
         size="small"
         (click)="onDownloadJson()"
+        class="flex-1 sm:flex-none"
       />
       <p-button
-        label="Upload JSON"
+        label="Upload"
         icon="pi pi-upload"
         severity="secondary"
         variant="outlined"
         size="small"
         (click)="fileInput.click()"
+        class="flex-1 sm:flex-none"
       />
       <input #fileInput type="file" accept=".json" class="hidden" (change)="onUploadJson($event)" />
-      <p-button label="Novo Gasto" icon="pi pi-plus" (click)="onAddExpense()" size="small" />
+      <p-button label="Novo Gasto" icon="pi pi-plus" (click)="onAddExpense()" size="small" class="w-full sm:w-auto" />
     </div>
   </div>
 
   <!-- Filters -->
   <div
-    class="flex-none grid grid-cols-1 md:grid-cols-4 gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+    class="flex-none grid grid-cols-2 md:grid-cols-4 gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
   >
-    <div class="flex flex-col gap-2">
-      <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Tipo</label>
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300">Tipo</label>
       <p-select
         [options]="typeOptions"
         [(ngModel)]="selectedType"
         (onChange)="onFilterChange()"
-        placeholder="Selecione o tipo"
-        styleClass="w-full"
+        placeholder="Tipo"
+        styleClass="w-full !h-8 sm:!h-10 text-xs sm:text-sm"
       />
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Ano</label>
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300">Ano</label>
       <p-select
         [options]="yearOptions()"
         [(ngModel)]="selectedYear"
         (onChange)="onFilterChange()"
-        placeholder="Selecione o ano"
-        styleClass="w-full"
+        placeholder="Ano"
+        styleClass="w-full !h-8 sm:!h-10 text-xs sm:text-sm"
       />
     </div>
 
-    <div class="flex flex-col gap-2">
-      <label class="text-sm font-medium text-surface-700 dark:text-surface-300">Mês</label>
+    <div class="flex flex-col gap-1">
+      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300">Mês</label>
       <p-select
         [options]="monthOptions"
         [(ngModel)]="selectedMonth"
         (onChange)="onFilterChange()"
         [disabled]="!selectedYear()"
-        placeholder="Selecione o mês"
-        styleClass="w-full"
+        placeholder="Mês"
+        styleClass="w-full !h-8 sm:!h-10 text-xs sm:text-sm"
       />
     </div>
 
     <div class="flex items-end">
       <p-button
-        label="Limpar Filtros"
+        label="Limpar"
         icon="pi pi-filter-slash"
         severity="secondary"
         variant="text"
+        size="small"
+        class="w-full sm:w-auto"
+        styleClass="!py-1 sm:!py-2 text-xs sm:text-sm"
         (click)="
           selectedType.set(null); selectedYear.set(null); selectedMonth.set(null); onFilterChange()
         "
@@ -93,43 +98,43 @@
   </div>
 
   <!-- Summary Cards -->
-  <div class="flex-none grid grid-cols-1 md:grid-cols-3 gap-2">
-    <p-card styleClass="h-full border-none shadow-sm bg-primary-500 text-white">
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-primary-100 text-sm font-medium">Total Acumulado</span>
-          <div class="text-3xl font-bold mt-1">{{ totalExpenses() | currency: 'BRL' }}</div>
+  <div class="flex-none grid grid-cols-2 md:grid-cols-3 gap-2">
+    <p-card styleClass="h-full border-none shadow-sm bg-primary-500 text-white !p-0 overflow-hidden">
+      <div class="flex items-center justify-between p-2 sm:p-4">
+        <div class="min-w-0">
+          <span class="text-primary-100 text-[10px] sm:text-xs font-medium uppercase">Total</span>
+          <div class="text-sm sm:text-2xl font-bold mt-0.5 truncate">{{ totalExpenses() | currency: 'BRL' }}</div>
         </div>
-        <i class="pi pi-calculator text-4xl text-white/20"></i>
+        <i class="pi pi-calculator text-xl sm:text-4xl text-white/20"></i>
       </div>
     </p-card>
 
-    <p-card styleClass="h-full border-none shadow-sm">
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-surface-500 dark:text-surface-400 text-sm font-medium">Quantidade</span>
-          <div class="text-3xl font-bold mt-1 text-surface-900 dark:text-surface-0">
+    <p-card styleClass="h-full border-none shadow-sm !p-0 overflow-hidden">
+      <div class="flex items-center justify-between p-2 sm:p-4">
+        <div class="min-w-0">
+          <span class="text-surface-500 dark:text-surface-400 text-[10px] sm:text-xs font-medium uppercase">Qtd</span>
+          <div class="text-sm sm:text-2xl font-bold mt-0.5 text-surface-900 dark:text-surface-0">
             {{ filteredExpenses().length }}
           </div>
         </div>
-        <i class="pi pi-list text-4xl text-surface-200 dark:text-surface-700"></i>
+        <i class="pi pi-list text-xl sm:text-4xl text-surface-200 dark:text-surface-700"></i>
       </div>
     </p-card>
 
-    <p-card styleClass="h-full border-none shadow-sm">
-      <div class="flex items-center justify-between">
-        <div>
-          <span class="text-surface-500 dark:text-surface-400 text-sm font-medium"
-            >Média por Gasto</span
+    <p-card styleClass="h-full border-none shadow-sm col-span-2 md:col-span-1 !p-0 overflow-hidden">
+      <div class="flex items-center justify-between p-2 sm:p-4">
+        <div class="min-w-0">
+          <span class="text-surface-500 dark:text-surface-400 text-[10px] sm:text-xs font-medium uppercase"
+            >Média</span
           >
-          <div class="text-3xl font-bold mt-1 text-surface-900 dark:text-surface-0">
+          <div class="text-sm sm:text-2xl font-bold mt-0.5 text-surface-900 dark:text-surface-0 truncate">
             {{
               (filteredExpenses().length > 0 ? totalExpenses() / filteredExpenses().length : 0)
                 | currency: 'BRL'
             }}
           </div>
         </div>
-        <i class="pi pi-percentage text-4xl text-surface-200 dark:text-surface-700"></i>
+        <i class="pi pi-percentage text-xl sm:text-4xl text-surface-200 dark:text-surface-700"></i>
       </div>
     </p-card>
   </div>
@@ -137,27 +142,27 @@
   <!-- Data Table Section -->
   <div class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden">
     <!-- Table Header Toolbar -->
-    <div class="flex-none flex items-center justify-between p-3 border-b border-surface-200 dark:border-surface-700">
-      <h2 class="text-xl font-semibold text-surface-900 dark:text-surface-0 m-0">
-        Histórico de Despesas
+    <div class="flex-none flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-2.5 border-b border-surface-200 dark:border-surface-700 gap-2">
+      <h2 class="text-sm sm:text-xl font-semibold text-surface-900 dark:text-surface-0 m-0">
+        Histórico
       </h2>
-      <p-iconfield iconPosition="left" class="w-full max-w-sm">
+      <p-iconfield iconPosition="left" class="w-full sm:max-w-xs">
         <p-inputicon>
-          <i class="pi pi-search"></i>
+          <i class="pi pi-search text-xs sm:text-base"></i>
         </p-inputicon>
         <input
           pInputText
           type="text"
           [ngModel]="globalFilter()"
           (ngModelChange)="onFilterGlobal($event)"
-          placeholder="Buscar descrição, tipo ou observação..."
-          class="w-full"
+          placeholder="Buscar..."
+          class="w-full !py-1 sm:!py-2 text-xs sm:text-sm"
         />
       </p-iconfield>
     </div>
 
     <!-- Scrollable Table Content -->
-    <div class="flex-1 min-h-0 w-full overflow-hidden flex flex-col">
+    <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
       <p-table
         #dt
         [value]="pagedExpenses()"
@@ -165,37 +170,38 @@
         [scrollable]="true"
         scrollHeight="flex"
         styleClass="p-datatable-sm h-full flex flex-col"
-        [responsiveLayout]="'scroll'"
+        [tableStyle]="{ 'min-width': '35rem' }"
       >
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="purchase_date" class="bg-surface-50 dark:bg-surface-800">
+            <th pSortableColumn="purchase_date" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm">
               Data <p-sortIcon field="purchase_date" />
             </th>
-            <th pSortableColumn="description" class="bg-surface-50 dark:bg-surface-800">
+            <th pSortableColumn="description" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm">
               Descrição <p-sortIcon field="description" />
             </th>
-            <th pSortableColumn="type" class="bg-surface-50 dark:bg-surface-800">
+            <th pSortableColumn="type" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm hidden sm:table-cell">
               Tipo <p-sortIcon field="type" />
             </th>
-            <th pSortableColumn="price" class="bg-surface-50 dark:bg-surface-800 text-right">
+            <th pSortableColumn="price" class="bg-surface-50 dark:bg-surface-800 text-right !py-1.5 sm:!py-3 text-[10px] sm:text-sm">
               Valor <p-sortIcon field="price" />
             </th>
-            <th class="bg-surface-50 dark:bg-surface-800 text-center w-32">Ações</th>
+            <th class="bg-surface-50 dark:bg-surface-800 text-center w-24 sm:w-32 !py-1.5 sm:!py-3 text-[10px] sm:text-sm">Ações</th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-expense>
           <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200">
-            <td class="!p-2">{{ expense.purchase_date | date: 'dd/MM/yyyy' }}</td>
-            <td class="!p-2">
+            <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">{{ expense.purchase_date | date: 'dd/MM/yy' }}</td>
+            <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">
               <div class="flex flex-col">
                 <span class="font-medium text-surface-900 dark:text-surface-0">{{
                   expense.description
                 }}</span>
+                <span class="sm:hidden text-[9px] text-surface-500 uppercase">{{ expense.type }}</span>
                 @if (expense.observation) {
                   <span
-                    class="text-xs text-surface-500 truncate max-w-xs"
+                    class="hidden sm:block text-[10px] text-surface-500 truncate max-w-[100px] md:max-w-xs"
                     [pTooltip]="expense.observation"
                   >
                     {{ expense.observation }}
@@ -203,14 +209,14 @@
                 }
               </div>
             </td>
-            <td class="!p-2">
-              <p-tag [value]="expense.type" [severity]="getSeverity(expense.type)" />
+            <td class="!p-1.5 sm:!p-2 hidden sm:table-cell">
+              <p-tag [value]="expense.type" [severity]="getSeverity(expense.type)" styleClass="text-[10px]" />
             </td>
-            <td class="!p-2 text-right font-bold text-surface-900 dark:text-surface-0">
+            <td class="!p-1.5 sm:!p-2 text-right font-bold text-surface-900 dark:text-surface-0 text-[10px] sm:text-sm">
               {{ expense.price | currency: 'BRL' }}
             </td>
-            <td class="!p-2">
-              <div class="flex justify-center gap-2">
+            <td class="!p-1.5 sm:!p-2">
+              <div class="flex justify-center gap-1 sm:gap-2">
                 <p-button
                   icon="pi pi-pencil"
                   [rounded]="true"
@@ -218,6 +224,7 @@
                   severity="secondary"
                   (click)="onEditExpense(expense)"
                   pTooltip="Editar"
+                  styleClass="!w-7 !h-7 sm:!w-8 sm:!h-8"
                 />
                 <p-button
                   icon="pi pi-trash"
@@ -226,6 +233,7 @@
                   severity="danger"
                   (click)="onDeleteExpense($event, expense)"
                   pTooltip="Excluir"
+                  styleClass="!w-7 !h-7 sm:!w-8 sm:!h-8"
                 />
               </div>
             </td>

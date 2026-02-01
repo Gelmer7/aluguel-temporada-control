@@ -1,4 +1,4 @@
-<div class="bg-surface-0 dark:bg-surface-900 border-t border-surface-200 dark:border-surface-700 px-4 py-2">
+<div class="bg-surface-0 dark:bg-surface-900 px-4 text-sm">
   <p-paginator
     [first]="first"
     [rows]="rows"
@@ -7,6 +7,6 @@
     [showCurrentPageReport]="true"
     [currentPageReportTemplate]="currentPageReportTemplate"
     (onPageChange)="onPageChange.emit($event)"
-    styleClass="bg-transparent border-none p-0"
+    class="bg-transparent border-none !p-2"
   />
 </div>

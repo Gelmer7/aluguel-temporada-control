@@ -209,7 +209,9 @@ export class CsvViewerPage {
       }
 
       totalLimpeza += limpeza;
-      totalNoites += noites;
+      if ((row.__norm.tipo ?? '').trim() === 'Reserva') {
+        totalNoites += noites;
+      }
     });
 
     return {

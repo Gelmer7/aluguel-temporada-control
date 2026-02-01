@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject, signal, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, effect, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ToolbarModule } from 'primeng/toolbar';
@@ -34,6 +34,8 @@ import { ThemeService } from '../../../services/theme.service';
 export class AppToolbarComponent {
   private languageService = inject(LanguageService);
   private themeService = inject(ThemeService);
+
+  toggleMenu = output<void>();
 
   themeOptions = this.themeService.themes;
   languages = this.languageService.languages;

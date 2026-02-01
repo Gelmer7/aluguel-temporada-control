@@ -1,14 +1,16 @@
-import { Component, EventEmitter, Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DialogModule } from 'primeng/dialog';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { InputNumberModule } from 'primeng/inputnumber';
-import { DatePickerModule } from 'primeng/datepicker';
-import { SelectModule } from 'primeng/select';
-import { TextareaModule } from 'primeng/textarea';
-import { SelectButtonModule } from 'primeng/selectbutton';
+import { Dialog } from 'primeng/dialog';
+import { Button } from 'primeng/button';
+import { InputText } from 'primeng/inputtext';
+import { InputNumber } from 'primeng/inputnumber';
+import { DatePicker } from 'primeng/datepicker';
+import { Select } from 'primeng/select';
+import { Textarea } from 'primeng/textarea';
+import { SelectButton } from 'primeng/selectbutton';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-expense-form',
@@ -16,18 +18,20 @@ import { SelectButtonModule } from 'primeng/selectbutton';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    DialogModule,
-    ButtonModule,
-    InputTextModule,
-    InputNumberModule,
-    DatePickerModule,
-    SelectModule,
-    TextareaModule,
-    SelectButtonModule
+    Dialog,
+    Button,
+    InputText,
+    InputNumber,
+    DatePicker,
+    Select,
+    Textarea,
   ],
   templateUrl: './expense-form.component.html',
 })
 export class ExpenseFormComponent implements OnInit {
+  private breakpointObserver = inject(BreakpointObserver);
+  isMobile = false;
+
   @Input() visible: boolean = false;
   @Input() set editData(value: any | null) {
     if (value) {
@@ -97,6 +101,11 @@ export class ExpenseFormComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
+      .subscribe(result => {
+        this.isMobile = result.matches;
+      });
+
     this.form.get('type')?.valueChanges.subscribe(type => {
       this.updateValidators(type);
     });
