@@ -1,15 +1,18 @@
-import { Component, ChangeDetectionStrategy, input, output, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavItem } from '../types';
-import { MenuModule } from 'primeng/menu';
-import { BadgeModule } from 'primeng/badge';
-import { RippleModule } from 'primeng/ripple';
-import { AvatarModule } from 'primeng/avatar';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
+import { Badge } from 'primeng/badge';
+import { Ripple } from 'primeng/ripple';
+import { Avatar } from 'primeng/avatar';
+import { Button } from 'primeng/button';
+import { Tooltip } from 'primeng/tooltip';
 import { MenuItem } from 'primeng/api';
 import { TranslateModule } from '@ngx-translate/core';
+import { Drawer } from 'primeng/drawer';
+import { TieredMenu } from 'primeng/tieredmenu';
+import { LanguageService } from '../../../services/language.service';
+import { ThemeService } from '../../../services/theme.service';
 
 @Component({
   selector: 'app-sidebar-menu',
@@ -18,17 +21,21 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     CommonModule,
     RouterModule,
-    MenuModule,
-    BadgeModule,
-    RippleModule,
-    AvatarModule,
-    ButtonModule,
-    TooltipModule,
+    Badge,
+    Ripple,
+    Avatar,
+    Button,
+    Tooltip,
     TranslateModule,
+    Drawer,
+    TieredMenu,
   ],
   templateUrl: './sidebar-menu.component.html',
 })
 export class SidebarMenuComponent {
+  private languageService = inject(LanguageService);
+  private themeService = inject(ThemeService);
+
   items = input.required<{
     id: string;
     label: string;
@@ -37,17 +44,23 @@ export class SidebarMenuComponent {
     badge?: string | number;
     shortcut?: string;
   }[]>();
-  
-  collapsed = input.required<boolean>();
-  
-  toggleSidebar = output<void>();
 
-  protected onToggle(): void {
-    this.toggleSidebar.emit();
+  visible = input.required<boolean>();
+  onVisibleChange = output<boolean>();
+
+  themeOptions = this.themeService.themes;
+  languages = this.languageService.languages;
+  userMenuItems = signal<MenuItem[]>([]);
+
+  constructor() {
+    effect(() => {
+      const lang = this.languageService.currentLang();
+      this.updateUserMenu(lang);
+    });
   }
 
   protected trackById = (_: number, item: NavItem) => item.id;
-  
+
   protected menuModel = computed<(MenuItem & { badge?: string | number; shortcut?: string })[]>(() => {
     return this.items().map((i) => ({
       label: i.label,
@@ -57,4 +70,53 @@ export class SidebarMenuComponent {
       shortcut: i.shortcut,
     }));
   });
+
+  get currentTheme() {
+    const code = this.themeService.currentTheme();
+    return this.themeOptions.find((t) => t.code === code) || this.themeOptions[0];
+  }
+
+  toggleTheme() {
+    const nextCode = this.currentTheme.code === 'light' ? 'dark' : 'light';
+    this.themeService.setTheme(nextCode);
+  }
+
+  private updateUserMenu(currentLangCode: string) {
+    const currentLangObj = this.languages.find((l) => l.code === currentLangCode);
+    const theme = this.currentTheme;
+
+    this.userMenuItems.set([
+      {
+        label: 'Settings',
+        icon: 'pi pi-cog',
+      },
+      {
+        label: 'Appearance',
+        icon: theme.icon,
+        data: { isTheme: true, currentTheme: theme },
+        command: () => this.toggleTheme(),
+      },
+      {
+        label: 'Language',
+        icon: 'pi pi-globe',
+        data: { isLanguage: true, currentLang: currentLangObj },
+        items: this.languages.map((l) => ({
+          label: l.name,
+          data: { isLanguageOption: true, lang: l },
+          command: () => this.languageService.setLanguage(l.code),
+        })),
+      },
+      { separator: true },
+      {
+        label: 'Logout',
+        icon: 'pi pi-sign-out',
+        data: { isLogout: true },
+        command: () => console.log('Logout clicked'),
+      },
+    ]);
+  }
+
+  protected closeDrawer(): void {
+    this.onVisibleChange.emit(false);
+  }
 }

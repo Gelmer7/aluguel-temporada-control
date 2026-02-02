@@ -1,79 +1,99 @@
-<!-- Template do SidebarMenuComponent -->
-<aside
-  class="h-full transition-all duration-300 ease-in-out"
-  [ngClass]="{ 'w-[4rem]': collapsed(), 'w-[16rem]': !collapsed() }"
-  aria-label="Menu lateral"
+<p-drawer
+  [visible]="visible()"
+  (visibleChange)="onVisibleChange.emit($event)"
+  [styleClass]="'!w-full sm:!w-[18rem] border-r border-surface-200 dark:border-surface-700'"
 >
-  <p-menu [model]="menuModel()" [styleClass]="'h-full rounded-md border-r border-surface-200 dark:border-surface-700'" [style]="{ width: '100%', minWidth: '4rem' }">
-    <!-- Cabeçalho menu -->
-    <ng-template #start>
-      <div class="flex items-center justify-between w-full p-3 mb-2" [ngClass]="{ 'justify-center': collapsed() }">
-        @if (!collapsed()) {
-          <span class="font-bold text-lg text-primary">{{ 'MENU.HEADER' | translate }}</span>
+  <ng-template #header>
+    <div class="flex items-center gap-2 px-2 py-1">
+      <span aria-label="Logo Airbnb" class="flex items-center">
+        <img src="airbnb_black.svg" alt="Airbnb Logo" class="h-6 mr-2" />
+        <span class="font-bold text-lg text-primary">Airbnb Control</span>
+      </span>
+    </div>
+  </ng-template>
+
+  <div class="flex flex-col h-full">
+    <!-- Menu Principal -->
+    <div class="flex-1 overflow-y-auto py-2">
+      <div class="flex flex-col gap-1 px-2">
+        @for (item of items(); track trackById($index, item)) {
+          <a
+            pRipple
+            [routerLink]="item.route"
+            routerLinkActive="bg-primary-50 text-primary font-medium"
+            class="flex items-center p-3 rounded-lg transition-colors duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 group"
+            (click)="closeDrawer()"
+          >
+            <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0 text-primary"></span>
+            <span class="ml-3 truncate">{{ item.label | translate }}</span>
+            @if (item.badge) {
+              <p-badge class="ml-auto" [value]="item.badge" severity="danger" />
+            }
+          </a>
         }
-        <p-button
-          [icon]="collapsed() ? 'pi pi-chevron-right' : 'pi pi-chevron-left'"
-          [variant]="'text'"
-          [rounded]="true"
-          aria-label="Alternar menu lateral"
-          (click)="onToggle()"
-          class="flex-shrink-0"
-        ></p-button>
       </div>
-    </ng-template>
+    </div>
 
-    <ng-template #submenuheader let-item>
-      @if (!collapsed()) {
-        <span class="text-xs font-semibold uppercase text-surface-500 px-3 py-2">{{ item.label | translate }}</span>
-      } @else {
-        <div class="border-t border-surface-200 dark:border-surface-700 my-2 mx-2"></div>
-      }
-    </ng-template>
-
-    <!-- Menu itens -->
-    <ng-template #item let-item>
-      <a
-        pRipple
-        [routerLink]="item.routerLink"
-        routerLinkActive="bg-primary-50 text-primary font-medium"
-        class="flex items-center p-3 mx-2 my-1 rounded-lg transition-colors duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 group relative"
-        [ngClass]="{ 'justify-center mx-1': collapsed() }"
-        [pTooltip]="collapsed() ? (item.label | translate) : ''"
-        tooltipPosition="right"
+    <!-- Rodapé com Perfil -->
+    <div class="mt-auto border-t border-surface-200 dark:border-surface-700 p-3">
+      <!-- Perfil do Usuário -->
+      <div
+        class="flex items-center p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 cursor-pointer"
+        (click)="userMenu.toggle($event)"
       >
-        <span [class]="item.icon" class="text-xl flex-shrink-0" [ngClass]="{ 'text-primary': !collapsed() }"></span>
-
-        @if (!collapsed()) {
-          <span class="ml-3 transition-opacity duration-300 truncate">{{ item.label | translate }}</span>
-
-          @if (item.badge) {
-            <p-badge class="ml-auto" [value]="item.badge" severity="danger" />
-          }
-        }
-      </a>
-    </ng-template>
-
-    <!-- avatar com foto do usuário -->
-    <ng-template #end>
-      <div class="mt-auto border-t border-surface-200 dark:border-surface-700 p-2">
-        <div
-          class="flex items-center p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 cursor-pointer"
-          [ngClass]="{ 'justify-center': collapsed() }"
-        >
-          <p-avatar
-            image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-            shape="circle"
-            class="flex-shrink-0"
-          />
-          @if (!collapsed()) {
-            <div class="ml-3 flex flex-col overflow-hidden">
-              <span class="font-semibold truncate">Amy Elsner</span>
-              <span class="text-xs text-surface-500 truncate">Admin</span>
-            </div>
-            <i class="pi pi-ellipsis-v ml-auto text-surface-400"></i>
-          }
+        <p-avatar
+          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
+          shape="circle"
+          class="flex-shrink-0"
+        />
+        <div class="ml-3 flex flex-col overflow-hidden">
+          <span class="font-semibold text-sm truncate">Gelmer Apaza</span>
+          <span class="text-xs text-surface-500 truncate">Administrador</span>
         </div>
+        <i class="pi pi-ellipsis-v ml-auto text-surface-400 text-xs"></i>
       </div>
-    </ng-template>
-  </p-menu>
-</aside>
+    </div>
+  </div>
+</p-drawer>
+
+<!-- Menu de Usuário (TieredMenu) -->
+<p-tieredMenu #userMenu [model]="userMenuItems()" [popup]="true" appendTo="body">
+  <ng-template pTemplate="item" let-item>
+    @if (item.data?.isTheme) {
+      <div class="p-menuitem-content flex items-center gap-2 p-2">
+        <span [class]="item.icon"></span>
+        <span class="text-sm">{{ 'TOOLBAR.THEME' | translate }} ({{ item.data.currentTheme?.name | translate }})</span>
+      </div>
+    }
+    @else if (item.data?.isLanguage) {
+      <div class="p-menuitem-content flex items-center gap-2 p-2">
+        @if (item.data.currentLang?.flag) {
+          <img [src]="item.data.currentLang.flag" class="w-5 h-4 object-contain" alt="flag" />
+        }
+        <span class="text-sm"
+          >{{ 'TOOLBAR.LANGUAGE' | translate }} ({{ item.data.currentLang?.name }})</span
+        >
+        <span class="ml-auto pi pi-angle-right text-xs"></span>
+      </div>
+    } @else if (item.data?.isLanguageOption) {
+      <div class="p-menuitem-content flex items-center gap-2 p-2">
+        @if (item.data.lang?.flag) {
+          <img [src]="item.data.lang.flag" class="w-5 h-4 object-contain" alt="flag" />
+        }
+        <span class="text-sm">{{ item.data.lang.name }}</span>
+      </div>
+    } @else if (item.data?.isLogout) {
+      <div class="p-menuitem-content flex items-center gap-2 p-2 text-red-500">
+        <span [class]="item.icon"></span>
+        <span class="text-sm">{{ 'TOOLBAR.LOGOUT' | translate }}</span>
+      </div>
+    } @else {
+      <div class="p-menuitem-content flex items-center gap-2 p-2">
+        @if (item.icon) {
+          <span [class]="item.icon"></span>
+        }
+        <span class="text-sm">{{ item.label }}</span>
+      </div>
+    }
+  </ng-template>
+</p-tieredMenu>

@@ -28,7 +28,6 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     CommonModule,
     FormsModule,
-    Card,
     TableModule,
     Button,
     Tooltip,

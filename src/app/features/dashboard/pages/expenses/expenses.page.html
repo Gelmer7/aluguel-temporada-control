@@ -13,9 +13,6 @@
         <h1 class="text-xl sm:text-2xl font-bold text-surface-900 dark:text-surface-0 m-0">
           {{ 'TERMS.EXPENSES' | translate }}
         </h1>
-        <p class="text-surface-500 dark:text-surface-400 text-[10px] sm:text-sm mt-0.5">
-          Gerencie todos os custos e despesas do imóvel
-        </p>
       </div>
     </div>
 
@@ -39,7 +36,13 @@
         class="flex-1 sm:flex-none"
       />
       <input #fileInput type="file" accept=".json" class="hidden" (change)="onUploadJson($event)" />
-      <p-button label="Novo Gasto" icon="pi pi-plus" (click)="onAddExpense()" size="small" class="w-full sm:w-auto" />
+      <p-button
+        label="Novo Gasto"
+        icon="pi pi-plus"
+        (click)="onAddExpense()"
+        size="small"
+        class="w-full sm:w-auto"
+      />
     </div>
   </div>
 
@@ -48,7 +51,9 @@
     class="flex-none grid grid-cols-2 md:grid-cols-4 gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
   >
     <div class="flex flex-col gap-1">
-      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300">Tipo</label>
+      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300"
+        >Tipo</label
+      >
       <p-select
         [options]="typeOptions"
         [(ngModel)]="selectedType"
@@ -59,7 +64,9 @@
     </div>
 
     <div class="flex flex-col gap-1">
-      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300">Ano</label>
+      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300"
+        >Ano</label
+      >
       <p-select
         [options]="yearOptions()"
         [(ngModel)]="selectedYear"
@@ -70,7 +77,9 @@
     </div>
 
     <div class="flex flex-col gap-1">
-      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300">Mês</label>
+      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300"
+        >Mês</label
+      >
       <p-select
         [options]="monthOptions"
         [(ngModel)]="selectedMonth"
@@ -97,52 +106,16 @@
     </div>
   </div>
 
-  <!-- Summary Cards -->
-  <div class="flex-none grid grid-cols-2 md:grid-cols-3 gap-2">
-    <p-card styleClass="h-full border-none shadow-sm bg-primary-500 text-white !p-0 overflow-hidden">
-      <div class="flex items-center justify-between p-2 sm:p-4">
-        <div class="min-w-0">
-          <span class="text-primary-100 text-[10px] sm:text-xs font-medium uppercase">Total</span>
-          <div class="text-sm sm:text-2xl font-bold mt-0.5 truncate">{{ totalExpenses() | currency: 'BRL' }}</div>
-        </div>
-        <i class="pi pi-calculator text-xl sm:text-4xl text-white/20"></i>
-      </div>
-    </p-card>
 
-    <p-card styleClass="h-full border-none shadow-sm !p-0 overflow-hidden">
-      <div class="flex items-center justify-between p-2 sm:p-4">
-        <div class="min-w-0">
-          <span class="text-surface-500 dark:text-surface-400 text-[10px] sm:text-xs font-medium uppercase">Qtd</span>
-          <div class="text-sm sm:text-2xl font-bold mt-0.5 text-surface-900 dark:text-surface-0">
-            {{ filteredExpenses().length }}
-          </div>
-        </div>
-        <i class="pi pi-list text-xl sm:text-4xl text-surface-200 dark:text-surface-700"></i>
-      </div>
-    </p-card>
-
-    <p-card styleClass="h-full border-none shadow-sm col-span-2 md:col-span-1 !p-0 overflow-hidden">
-      <div class="flex items-center justify-between p-2 sm:p-4">
-        <div class="min-w-0">
-          <span class="text-surface-500 dark:text-surface-400 text-[10px] sm:text-xs font-medium uppercase"
-            >Média</span
-          >
-          <div class="text-sm sm:text-2xl font-bold mt-0.5 text-surface-900 dark:text-surface-0 truncate">
-            {{
-              (filteredExpenses().length > 0 ? totalExpenses() / filteredExpenses().length : 0)
-                | currency: 'BRL'
-            }}
-          </div>
-        </div>
-        <i class="pi pi-percentage text-xl sm:text-4xl text-surface-200 dark:text-surface-700"></i>
-      </div>
-    </p-card>
-  </div>
 
   <!-- Data Table Section -->
-  <div class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden">
+  <div
+    class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden"
+  >
     <!-- Table Header Toolbar -->
-    <div class="flex-none flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-2.5 border-b border-surface-200 dark:border-surface-700 gap-2">
+    <div
+      class="flex-none flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-2.5 border-b border-surface-200 dark:border-surface-700 gap-2"
+    >
       <h2 class="text-sm sm:text-xl font-semibold text-surface-900 dark:text-surface-0 m-0">
         Histórico
       </h2>
@@ -174,31 +147,53 @@
       >
         <ng-template pTemplate="header">
           <tr>
-            <th pSortableColumn="purchase_date" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm">
+            <th
+              pSortableColumn="purchase_date"
+              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+            >
               Data <p-sortIcon field="purchase_date" />
             </th>
-            <th pSortableColumn="description" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm">
+            <th
+              pSortableColumn="description"
+              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+            >
               Descrição <p-sortIcon field="description" />
             </th>
-            <th pSortableColumn="type" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm hidden sm:table-cell">
+            <th
+              pSortableColumn="type"
+              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm hidden sm:table-cell"
+            >
               Tipo <p-sortIcon field="type" />
             </th>
-            <th pSortableColumn="price" class="bg-surface-50 dark:bg-surface-800 text-right !py-1.5 sm:!py-3 text-[10px] sm:text-sm">
+            <th
+              pSortableColumn="price"
+              class="bg-surface-50 dark:bg-surface-800 text-right !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+            >
               Valor <p-sortIcon field="price" />
             </th>
-            <th class="bg-surface-50 dark:bg-surface-800 text-center w-24 sm:w-32 !py-1.5 sm:!py-3 text-[10px] sm:text-sm">Ações</th>
+            <th
+              class="bg-surface-50 dark:bg-surface-800 text-center w-24 sm:w-32 !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+            >
+              Ações
+            </th>
           </tr>
         </ng-template>
 
         <ng-template pTemplate="body" let-expense>
-          <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200">
-            <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">{{ expense.purchase_date | date: 'dd/MM/yy' }}</td>
+          <tr
+            class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+          >
+            <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">
+              {{ expense.purchase_date | date: 'dd/MM/yy' }}
+            </td>
             <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">
               <div class="flex flex-col">
                 <span class="font-medium text-surface-900 dark:text-surface-0">{{
                   expense.description
                 }}</span>
-                <span class="sm:hidden text-[9px] text-surface-500 uppercase">{{ expense.type }}</span>
+                <span class="sm:hidden text-[9px] text-surface-500 uppercase">{{
+                  expense.type
+                }}</span>
                 @if (expense.observation) {
                   <span
                     class="hidden sm:block text-[10px] text-surface-500 truncate max-w-[100px] md:max-w-xs"
@@ -210,9 +205,15 @@
               </div>
             </td>
             <td class="!p-1.5 sm:!p-2 hidden sm:table-cell">
-              <p-tag [value]="expense.type" [severity]="getSeverity(expense.type)" styleClass="text-[10px]" />
+              <p-tag
+                [value]="expense.type"
+                [severity]="getSeverity(expense.type)"
+                styleClass="text-[10px]"
+              />
             </td>
-            <td class="!p-1.5 sm:!p-2 text-right font-bold text-surface-900 dark:text-surface-0 text-[10px] sm:text-sm">
+            <td
+              class="!p-1.5 sm:!p-2 text-right font-bold text-surface-900 dark:text-surface-0 text-[10px] sm:text-sm"
+            >
               {{ expense.price | currency: 'BRL' }}
             </td>
             <td class="!p-1.5 sm:!p-2">
