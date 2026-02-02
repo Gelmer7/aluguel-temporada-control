@@ -1,50 +1,12 @@
 <div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
   <!-- Header with Actions -->
-  <div
-    class="flex-none flex flex-col md:flex-row md:items-center justify-between gap-3 bg-surface-0 dark:bg-surface-900 p-2.5 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
-  >
-    <div class="flex items-center gap-3">
-      <div
-        class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
-      >
-        <i class="pi pi-wallet text-primary text-xl sm:text-2xl"></i>
-      </div>
-      <div>
-        <h1 class="text-xl sm:text-2xl font-bold text-surface-900 dark:text-surface-0 m-0">
-          {{ 'TERMS.EXPENSES' | translate }}
-        </h1>
-      </div>
-    </div>
-
-    <div class="flex flex-wrap items-center gap-2">
-      <p-button
-        label="Download"
-        icon="pi pi-download"
-        severity="secondary"
-        variant="outlined"
-        size="small"
-        (click)="onDownloadJson()"
-        class="flex-1 sm:flex-none"
-      />
-      <p-button
-        label="Upload"
-        icon="pi pi-upload"
-        severity="secondary"
-        variant="outlined"
-        size="small"
-        (click)="fileInput.click()"
-        class="flex-1 sm:flex-none"
-      />
-      <input #fileInput type="file" accept=".json" class="hidden" (change)="onUploadJson($event)" />
-      <p-button
-        label="Novo Gasto"
-        icon="pi pi-plus"
-        (click)="onAddExpense()"
-        size="small"
-        class="w-full sm:w-auto"
-      />
-    </div>
-  </div>
+  <app-page-header
+    [title]="'TERMS.EXPENSES'"
+    [icon]="'pi-wallet'"
+    [showAction]="true"
+    [actionTooltip]="'Novo Gasto'"
+    (onAction)="onAddExpense()"
+  />
 
   <!-- Filters -->
   <div
@@ -106,8 +68,6 @@
     </div>
   </div>
 
-
-
   <!-- Data Table Section -->
   <div
     class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden"
@@ -116,9 +76,6 @@
     <div
       class="flex-none flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-2.5 border-b border-surface-200 dark:border-surface-700 gap-2"
     >
-      <h2 class="text-sm sm:text-xl font-semibold text-surface-900 dark:text-surface-0 m-0">
-        Histórico
-      </h2>
       <p-iconfield iconPosition="left" class="w-full sm:max-w-xs">
         <p-inputicon>
           <i class="pi pi-search text-xs sm:text-base"></i>

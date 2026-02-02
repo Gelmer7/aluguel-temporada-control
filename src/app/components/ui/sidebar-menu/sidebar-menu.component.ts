@@ -5,8 +5,8 @@ import { NavItem } from '../types';
 import { Badge } from 'primeng/badge';
 import { Ripple } from 'primeng/ripple';
 import { Avatar } from 'primeng/avatar';
-import { Button } from 'primeng/button';
-import { Tooltip } from 'primeng/tooltip';
+import { Button, ButtonModule } from 'primeng/button';
+import { Tooltip, TooltipModule } from 'primeng/tooltip';
 import { MenuItem } from 'primeng/api';
 import { TranslateModule } from '@ngx-translate/core';
 import { Drawer } from 'primeng/drawer';
@@ -24,8 +24,8 @@ import { ThemeService } from '../../../services/theme.service';
     Badge,
     Ripple,
     Avatar,
-    Button,
-    Tooltip,
+    ButtonModule,
+    TooltipModule,
     TranslateModule,
     Drawer,
     TieredMenu,
@@ -89,6 +89,14 @@ export class SidebarMenuComponent {
       {
         label: 'Settings',
         icon: 'pi pi-cog',
+        items: [
+          {
+            label: 'Download/Upload',
+            icon: 'pi pi-database',
+            routerLink: '/dashboard/data-management',
+            command: () => this.closeDrawer(),
+          },
+        ],
       },
       {
         label: 'Appearance',

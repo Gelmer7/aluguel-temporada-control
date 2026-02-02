@@ -59,6 +59,11 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () => import('./pages/reports/reports.page').then((m) => m.ReportsPage),
       },
       {
+        path: 'data-management',
+        loadComponent: () =>
+          import('./pages/data-management/data-management.page').then((m) => m.DataManagementPage),
+      },
+      {
         path: 'suggestions',
         loadComponent: () =>
           import('./pages/suggestions/suggestions.page').then((m) => m.SuggestionsPage),

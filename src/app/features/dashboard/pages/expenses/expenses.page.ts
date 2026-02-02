@@ -14,6 +14,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { Select } from 'primeng/select';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
+import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -39,6 +40,7 @@ import { TranslateModule } from '@ngx-translate/core';
     Toast,
     Select,
     TablePaginatorComponent,
+    PageHeaderComponent,
     ExpenseFormComponent,
     TranslateModule
   ],
@@ -193,59 +195,6 @@ export class ExpensesPage implements OnInit {
     }
 
     this.filteredExpenses.set(filtered);
-  }
-
-
-  onDownloadJson() {
-    const data = this.expenses();
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `gastos-${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    window.URL.revokeObjectURL(url);
-  }
-
-  async onUploadJson(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = async (e: any) => {
-      try {
-        const jsonData = JSON.parse(e.target.result);
-        const transformedData = jsonData.map((item: any) => ({
-          price: item.price,
-          description: item.description,
-          observation: item.observation,
-          type: item.type,
-          purchase_date: item.purchaseDate?.$date || item.purchase_date,
-          cubic_meters: item.cubicMeters || item.cubic_meters,
-          reserve_fund: item.reserveFund || item.reserve_fund,
-          association: item.association,
-          kws: item.kws,
-          create_user: item.createUser || item.create_user || 'gelmer7@gmail.com'
-        }));
-
-        const { error } = await this.supabaseService.bulkUploadExpenses(transformedData);
-        if (error) throw error;
-
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Sucesso',
-          detail: 'Dados importados com sucesso!'
-        });
-        await this.loadExpenses();
-      } catch (error: any) {
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Erro',
-          detail: 'Erro ao importar JSON: ' + error.message
-        });
-      }
-    };
-    reader.readAsText(file);
   }
 
   onAddExpense() {

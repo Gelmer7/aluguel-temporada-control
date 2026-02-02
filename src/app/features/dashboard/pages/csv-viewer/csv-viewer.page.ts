@@ -13,7 +13,9 @@ import { RippleModule } from 'primeng/ripple';
 import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SelectModule } from 'primeng/select';
+import { Card } from 'primeng/card';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
+import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Papa from 'papaparse';
 import { AirbnbNormalizedRow, normalizeAirbnbRow } from '../../../../models/airbnb.model';
@@ -36,7 +38,7 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    CardModule,
+    Card,
     TableModule,
     TooltipModule,
     MultiSelectModule,
@@ -52,6 +54,7 @@ import { TranslateModule } from '@ngx-translate/core';
     HttpClientModule,
     TranslateModule,
     TablePaginatorComponent,
+    PageHeaderComponent,
   ],
   host: {
     class: 'block h-full overflow-hidden',
