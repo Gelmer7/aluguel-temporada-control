@@ -57,7 +57,6 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     TablePaginatorComponent,
     PageHeaderComponent,
-    Card
 ],
   host: {
     class: 'block h-full overflow-hidden',
