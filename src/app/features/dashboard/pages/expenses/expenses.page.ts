@@ -16,6 +16,7 @@ import { Select } from 'primeng/select';
 import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
+import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { TranslateModule } from '@ngx-translate/core';
@@ -43,6 +44,7 @@ import { TranslateModule } from '@ngx-translate/core';
     AccordionModule,
     TablePaginatorComponent,
     PageHeaderComponent,
+    FilterContainerComponent,
     ExpenseFormComponent,
     TranslateModule
   ],
@@ -134,6 +136,18 @@ export class ExpensesPage implements OnInit {
   onFilterChange() {
     this.first.set(0); // Reset to first page on filter change
     this.applyFilters();
+  }
+
+  protected getSelectedMonthLabel(): string {
+    const month = this.selectedMonth();
+    if (!month) return 'Todos';
+    return this.months.find(m => m.value === month)?.label || 'Todos';
+  }
+
+  protected getSelectedTypeLabel(): string {
+    const type = this.selectedType();
+    if (!type) return 'Todos';
+    return this.expenseTypes.find(t => t.value === type)?.label || 'Todos';
   }
 
   totalExpenses = computed(() => {

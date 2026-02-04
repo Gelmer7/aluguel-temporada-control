@@ -17,7 +17,7 @@ export class TablePaginatorComponent {
   @Input() first: number = 0;
   @Input() rows: number = 20;
   @Input() totalRecords: number = 0;
-  @Input() pageLinkSize: number = 2;
+  @Input() pageLinkSize: number = 1;
   @Input() rowsPerPageOptions: number[] = [10, 20, 50, 100];
   @Input() currentPageReportTemplate: string = '{first} a {last} de {totalRecords}';
 

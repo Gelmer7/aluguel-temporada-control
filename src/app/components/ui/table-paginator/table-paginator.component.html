@@ -1,6 +1,6 @@
 <div class="flex items-center justify-between overflow-x-auto overflow-y-hidden">
   <!-- Relatório de Registros Customizado -->
-  <span class="px-2">
+  <span class="pl-1 text-xs">
     {{ first + 1 }}-{{ first + rows > totalRecords ? totalRecords : first + rows }} de
     {{ totalRecords }}
   </span>
@@ -15,6 +15,6 @@
     [showCurrentPageReport]="false"
     (onPageChange)="onPageChange.emit($event)"
     appendTo="body"
-    class="!p-2 min-w-max"
+    class="!py-1 !pr-1 min-w-max text-xs"
   />
 </div>

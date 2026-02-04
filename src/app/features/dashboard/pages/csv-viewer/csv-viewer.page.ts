@@ -17,6 +17,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { Card } from 'primeng/card';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
+import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import Papa from 'papaparse';
 import { AirbnbNormalizedRow, normalizeAirbnbRow } from '../../../../models/airbnb.model';
@@ -57,7 +58,8 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule,
     TablePaginatorComponent,
     PageHeaderComponent,
-],
+    FilterContainerComponent,
+  ],
   host: {
     class: 'block h-full overflow-hidden',
   },
@@ -192,6 +194,12 @@ export class CsvViewerPage {
     const end = start + this.rowsPerPage();
     return data.slice(start, end);
   });
+
+  protected getSelectedMonthLabel(): string {
+    const month = this.selectedMonth();
+    if (!month) return 'Todos';
+    return this.months.find(m => m.value === month)?.label || 'Todos';
+  }
 
   // Summary Totals
   protected readonly summary = computed(() => {

@@ -3,149 +3,129 @@
   <!-- Header -->
   <app-page-header [title]="'ACTIONS.VIEW_CSV'" [icon]="'pi-table'" />
 
-  <!-- Filters Accordion -->
-  <p-accordion value="0" class="w-full">
-    <p-accordion-panel value="0">
-      <p-accordion-header>
-        <div class="flex items-center gap-2">
-          <i class="pi pi-filter text-sm"></i>
-          <span class="font-bold text-xs">Filtros</span>
+  <!-- Filtros Reutilizáveis -->
+  <app-filter-container>
+    <!-- Resumo dos filtros (aparece quando colapsado) -->
+    <ng-template #filterSummary>
+      <span
+        >Ano: <span class="text-primary">{{ selectedYear() || 'Todos' }}</span></span
+      >
+      <span
+        >Mês: <span class="text-primary">{{ getSelectedMonthLabel() }}</span></span
+      >
+      <span
+        >Tipo: <span class="text-primary">{{ selectedType() || 'Todos' }}</span></span
+      >
+    </ng-template>
+
+    <!-- Conteúdo dos filtros -->
+    <div class="flex flex-1 min-w-[150px] items-center gap-1.5">
+      <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
+      <p-select
+        [options]="years()"
+        [ngModel]="selectedYear()"
+        (ngModelChange)="onYearChange($event)"
+        placeholder="Todos"
+        [showClear]="true"
+        class="flex-1 !h-8"
+        appendTo="body"
+      ></p-select>
+    </div>
+    <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
+      <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
+      <p-select
+        [options]="months"
+        [ngModel]="selectedMonth()"
+        (ngModelChange)="onMonthChange($event)"
+        optionLabel="label"
+        optionValue="value"
+        placeholder="Todos"
+        [showClear]="true"
+        class="flex-1 !h-8"
+        appendTo="body"
+      ></p-select>
+    </div>
+    <div class="flex flex-1 min-w-[150px] items-center gap-1.5">
+      <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
+      <p-select
+        [options]="types()"
+        [ngModel]="selectedType()"
+        (ngModelChange)="onTypeChange($event)"
+        placeholder="Todos"
+        [showClear]="true"
+        class="flex-1 !h-8"
+        appendTo="body"
+      ></p-select>
+    </div>
+    <div
+      class="flex items-center gap-1.5 sm:border-l sm:border-surface-200 sm:dark:border-surface-700 sm:pl-3"
+    >
+      <span class="text-surface-600 dark:text-surface-400 font-medium whitespace-nowrap"
+        >Payout</span
+      >
+      <p-checkbox
+        [ngModel]="hidePayout()"
+        (ngModelChange)="onHidePayoutChange($event)"
+        binary="true"
+      ></p-checkbox>
+    </div>
+    <p-multiselect
+      display="chip"
+      [options]="cols()"
+      [ngModel]="selectedColumns()"
+      (ngModelChange)="onColumnsChange($event)"
+      optionLabel="headerFull"
+      selectedItemsLabel="{0} colunas"
+      [style]="{ 'min-width': '120px', height: '32px' }"
+      placeholder="Colunas"
+      appendTo="body"
+      class="w-full sm:w-auto"
+    ></p-multiselect>
+  </app-filter-container>
+
+  <!-- Summary Cards Agrupados -->
+  <div class="flex-none grid grid-cols-1 sm:grid-cols-2 gap-2">
+    <!-- Card 1: Financeiro (Luiza & Gelmer) -->
+    <div
+      class="bg-surface-0 dark:bg-surface-900 p-2 rounded-lg shadow-sm border border-surface-200 dark:border-surface-700 flex items-center justify-around gap-4"
+    >
+      <!-- Luiza -->
+      <div class="flex items-center gap-2">
+        <div
+          class="w-8 h-8 rounded bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center"
+        >
+          <i class="pi pi-user text-pink-500 text-xs"></i>
         </div>
-      </p-accordion-header>
-      <p-accordion-content>
-        <div class="flex flex-wrap items-center gap-3 text-xs">
-          <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-            <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
-            <p-select
-              [options]="years()"
-              [ngModel]="selectedYear()"
-              (ngModelChange)="onYearChange($event)"
-              placeholder="Todos"
-              [showClear]="true"
-              class="flex-1 !h-8"
-              appendTo="body"
-            ></p-select>
-          </div>
-          <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-            <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
-            <p-select
-              [options]="months"
-              [ngModel]="selectedMonth()"
-              (ngModelChange)="onMonthChange($event)"
-              optionLabel="label"
-              optionValue="value"
-              placeholder="Todos"
-              [showClear]="true"
-              class="flex-1 !h-8"
-              appendTo="body"
-            ></p-select>
-          </div>
-          <div class="flex flex-1 min-w-[120px] items-center gap-1.5">
-            <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
-            <p-select
-              [options]="types()"
-              [ngModel]="selectedType()"
-              (ngModelChange)="onTypeChange($event)"
-              placeholder="Todos"
-              [showClear]="true"
-              class="flex-1 !h-8"
-              appendTo="body"
-            ></p-select>
-          </div>
-          <div
-            class="flex items-center gap-1.5 sm:border-l sm:border-surface-200 sm:dark:border-surface-700 sm:pl-3"
-          >
-            <span class="text-surface-600 dark:text-surface-400 font-medium whitespace-nowrap"
-              >Esconder Payout</span
-            >
-            <p-checkbox
-              [ngModel]="hidePayout()"
-              (ngModelChange)="onHidePayoutChange($event)"
-              binary="true"
-            ></p-checkbox>
-          </div>
-          <p-multiselect
-            display="chip"
-            [options]="cols()"
-            [ngModel]="selectedColumns()"
-            (ngModelChange)="onColumnsChange($event)"
-            optionLabel="headerFull"
-            selectedItemsLabel="{0} colunas"
-            [style]="{ 'min-width': '120px', height: '32px' }"
-            placeholder="Colunas"
-            appendTo="body"
-            class="w-full sm:w-auto"
-          ></p-multiselect>
+        <div>
+          <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Luiza</p>
+          <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0">
+            {{ summary().luizaValor | currency: 'BRL' }}
+          </p>
         </div>
-      </p-accordion-content>
-    </p-accordion-panel>
-  </p-accordion>
-
-  <!-- Summary Cards -->
-  <div class="flex-none grid grid-cols-2 lg:grid-cols-4 gap-1.5">
-    <!-- Luiza Total -->
-    <div
-      class="bg-surface-0 dark:bg-surface-900 p-1.5 rounded-lg shadow-sm border border-surface-200 dark:border-surface-700 flex items-center gap-2"
-    >
-      <div
-        class="w-7 h-7 rounded bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center flex-none"
-      >
-        <i class="pi pi-user text-pink-500 text-xs"></i>
       </div>
-      <div class="min-w-0">
-        <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Luiza</p>
-        <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0 truncate">
-          {{ summary().luizaValor | currency: 'BRL' }}
-        </p>
+      <!-- Separador vertical -->
+      <div class="h-8 border-l border-surface-200 dark:border-surface-700"></div>
+      <!-- Gelmer -->
+      <div class="flex items-center gap-2">
+        <div
+          class="w-8 h-8 rounded bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center"
+        >
+          <i class="pi pi-user text-blue-500 text-xs"></i>
+        </div>
+        <div>
+          <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Gelmer</p>
+          <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0">
+            {{ summary().gelmerValor | currency: 'BRL' }}
+          </p>
+        </div>
       </div>
     </div>
 
-    <!-- Gelmer Total -->
-    <div
-      class="bg-surface-0 dark:bg-surface-900 p-1.5 rounded-lg shadow-sm border border-surface-200 dark:border-surface-700 flex items-center gap-2"
-    >
-      <div
-        class="w-7 h-7 rounded bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-none"
-      >
-        <i class="pi pi-user text-blue-500 text-xs"></i>
-      </div>
-      <div class="min-w-0">
-        <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Gelmer</p>
-        <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0 truncate">
-          {{ summary().gelmerValor | currency: 'BRL' }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Limpeza Total -->
-    <div
-      class="bg-surface-0 dark:bg-surface-900 p-1.5 rounded-lg shadow-sm border border-surface-200 dark:border-surface-700 flex items-center gap-2"
-    >
-      <div
-        class="w-7 h-7 rounded bg-green-50 dark:bg-green-900/20 flex items-center justify-center flex-none"
-      >
-        <i class="pi pi-sparkles text-green-500 text-xs"></i>
-      </div>
-      <div class="min-w-0">
-        <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Limpeza</p>
-        <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0 truncate">
-          {{ summary().totalLimpeza | currency: 'BRL' }}
-        </p>
-      </div>
-    </div>
-
-    <!-- Noites Total -->
-    <div
-      class="bg-surface-0 dark:bg-surface-900 p-1.5 rounded-lg shadow-sm border border-surface-200 dark:border-surface-700 flex items-center gap-2"
-    >
-      <div
-        class="w-7 h-7 rounded bg-orange-50 dark:bg-orange-900/20 flex items-center justify-center flex-none"
-      >
-        <i class="pi pi-moon text-orange-500 text-xs"></i>
-      </div>
-      <div class="min-w-0">
-        <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Noites</p>
-        <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0 truncate">
+    <!-- Limpeza/ Noites -->
+    <div class="flex items-center justify-end gap-2 px-2">
+      <div>
+        <p class="text-sm text-end">
+          Limpeza: {{ summary().totalLimpeza | currency: 'BRL' }} | Noites:
           {{ summary().totalNoites }}
         </p>
       </div>

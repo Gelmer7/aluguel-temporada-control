@@ -1,0 +1,29 @@
+<div class="border rounded-lg p-1">
+  <p-accordion [value]="filtersExpanded()" (valueChange)="filtersExpanded.set($event)" class="w-full">
+    <p-accordion-panel [value]="value()">
+      <p-accordion-header>
+        <div class="flex items-center justify-between w-full">
+          <div class="flex items-center gap-2">
+            <i class="pi pi-filter text-sm"></i>
+            <span class="font-bold text-xs">Filtros</span>
+          </div>
+
+          <!-- Resumo dos filtros (visível apenas quando colapsado) -->
+          @if (isFiltersCollapsed() && filterSummaryTemplate()) {
+            <div
+              class="flex items-center gap-3 text-[10px] text-surface-500 dark:text-surface-400 font-medium pr-2"
+            >
+              <ng-container *ngTemplateOutlet="filterSummaryTemplate()!"></ng-container>
+            </div>
+          }
+        </div>
+      </p-accordion-header>
+
+      <p-accordion-content>
+        <div class="flex flex-wrap items-center gap-3 text-xs">
+          <ng-content></ng-content>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+</div>
