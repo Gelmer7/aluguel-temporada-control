@@ -20,6 +20,7 @@ import { FilterContainerComponent } from '../../../../components/ui/filter-conta
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { StringUtils } from '../../../../shared/utils/string.utils';
 
 @Component({
   selector: 'app-expenses-page',
@@ -128,7 +129,7 @@ export class ExpensesPage implements OnInit {
   }
 
   onFilterGlobal(query: string) {
-    this.globalFilter.set(query.toLowerCase());
+    this.globalFilter.set(query);
     this.first.set(0); // Reset to first page on search
     this.applyFilters();
   }
@@ -201,12 +202,12 @@ export class ExpensesPage implements OnInit {
       filtered = filtered.filter(e => e.type === this.selectedType());
     }
 
-    const query = this.globalFilter();
+    const query = StringUtils.normalize(this.globalFilter());
     if (query) {
       filtered = filtered.filter(e =>
-        e.description?.toLowerCase().includes(query) ||
-        e.type?.toLowerCase().includes(query) ||
-        e.observation?.toLowerCase().includes(query)
+        StringUtils.normalize(e.description).includes(query) ||
+        StringUtils.normalize(e.type).includes(query) ||
+        StringUtils.normalize(e.observation).includes(query)
       );
     }
 

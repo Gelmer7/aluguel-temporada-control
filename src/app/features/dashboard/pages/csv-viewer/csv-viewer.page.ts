@@ -14,6 +14,7 @@ import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SelectModule } from 'primeng/select';
 import { AccordionModule } from 'primeng/accordion';
+import { PopoverModule } from 'primeng/popover';
 import { Card } from 'primeng/card';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
@@ -33,6 +34,8 @@ import {
 } from './csv-viewer.helpers';
 import { AppColors } from '../../../../shared/design/colors';
 import { TranslateModule } from '@ngx-translate/core';
+import { StringUtils } from '../../../../shared/utils/string.utils';
+import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
 
 @Component({
   selector: 'app-csv-viewer-page',
@@ -54,6 +57,7 @@ import { TranslateModule } from '@ngx-translate/core';
     CheckboxModule,
     SelectModule,
     AccordionModule,
+    PopoverModule,
     HttpClientModule,
     TranslateModule,
     TablePaginatorComponent,
@@ -146,12 +150,12 @@ export class CsvViewerPage {
     }
 
     // Filter by Global Query
-    const query = this.filterQuery().toLowerCase().trim();
+    const query = StringUtils.normalize(this.filterQuery());
     if (query) {
       data = data.filter((row) => {
         // Search in raw data values
         const rawValues = row.__raw ? Object.values(row.__raw) : [];
-        return rawValues.some((val) => String(val).toLowerCase().includes(query));
+        return rawValues.some((val) => StringUtils.normalize(val).includes(query));
       });
     }
 
@@ -202,17 +206,38 @@ export class CsvViewerPage {
   }
 
   // Summary Totals
+  protected readonly dateRange = computed(() => {
+    const data = this.rows();
+    if (data.length === 0) return { first: '', last: '' };
+
+    const dates = data
+      .map((r) => this.parseAirbnbDate(r.__norm.data))
+      .filter((d): d is Date => d !== null)
+      .sort((a, b) => a.getTime() - b.getTime());
+
+    if (dates.length === 0) return { first: '', last: '' };
+
+    const format = (d: Date) => {
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
+    return {
+      first: format(dates[0]),
+      last: format(dates[dates.length - 1]),
+    };
+  });
+
   protected readonly summary = computed(() => {
     const data = this.visibleRows();
     let luizaValor = 0;
     let gelmerValor = 0;
-    let totalLimpeza = 0;
-    let totalNoites = 0;
 
+    // Totais financeiros (soma tudo por pessoa)
     data.forEach((row) => {
-      const valor = this.parseCurrency(row.__norm.valor);
-      const limpeza = this.parseCurrency(row.__norm.taxaLimpeza);
-      const noites = this.parseNumber(row.__norm.noites);
+      const valor = AirbnbUtils.parseCurrency(row.__norm.valor);
       const person = personFromTipo(row.__norm.tipo);
 
       if (person === 'Luiza') {
@@ -220,12 +245,11 @@ export class CsvViewerPage {
       } else if (person === 'Gelmer') {
         gelmerValor += valor;
       }
-
-      totalLimpeza += limpeza;
-      if ((row.__norm.tipo ?? '').trim() === 'Reserva') {
-        totalNoites += noites;
-      }
     });
+
+    // Totais agrupados (Noites e Limpeza) usando utilitário global
+    const normalizedRows = data.map((r) => r.__norm);
+    const { totalNoites, totalLimpeza } = AirbnbUtils.calculateGroupedTotals(normalizedRows);
 
     return {
       luizaValor,
@@ -236,25 +260,11 @@ export class CsvViewerPage {
   });
 
   private parseCurrency(val: string | undefined): number {
-    if (!val) return 0;
-    // Remove non-numeric except comma and dot
-    const clean = val.replace(/[^\d,.-]/g, '');
-    if (!clean) return 0;
-
-    // Handle Brazilian format 1.234,56
-    if (clean.includes(',') && clean.includes('.')) {
-      return parseFloat(clean.replace(/\./g, '').replace(',', '.'));
-    }
-    // Handle format 1234,56
-    if (clean.includes(',')) {
-      return parseFloat(clean.replace(',', '.'));
-    }
-    return parseFloat(clean);
+    return AirbnbUtils.parseCurrency(val);
   }
 
   private parseNumber(val: string | undefined): number {
-    if (!val) return 0;
-    return parseInt(val.replace(/[^\d]/g, ''), 10) || 0;
+    return AirbnbUtils.parseNumber(val);
   }
 
   private readonly inicioFimField = 'Data Inicio-Fim';
