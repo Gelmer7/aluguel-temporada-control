@@ -13,6 +13,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { Select } from 'primeng/select';
+import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
@@ -39,6 +40,7 @@ import { TranslateModule } from '@ngx-translate/core';
     ConfirmDialog,
     Toast,
     Select,
+    AccordionModule,
     TablePaginatorComponent,
     PageHeaderComponent,
     ExpenseFormComponent,

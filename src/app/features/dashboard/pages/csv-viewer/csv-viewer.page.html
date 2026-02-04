@@ -3,73 +3,83 @@
   <!-- Header -->
   <app-page-header [title]="'ACTIONS.VIEW_CSV'" [icon]="'pi-table'" />
 
-  <!-- Filters Card -->
-  <p-card class="!p-0 border border-surface-200 dark:border-surface-700 shadow-sm overflow-hidden">
-    <div class="flex flex-wrap items-center gap-3 text-xs bg-surface-0 dark:bg-surface-900">
-      <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-        <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
-        <p-select
-          [options]="years()"
-          [ngModel]="selectedYear()"
-          (ngModelChange)="onYearChange($event)"
-          placeholder="Todos"
-          [showClear]="true"
-          class="flex-1 !h-8"
-          appendTo="body"
-        ></p-select>
-      </div>
-      <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-        <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
-        <p-select
-          [options]="months"
-          [ngModel]="selectedMonth()"
-          (ngModelChange)="onMonthChange($event)"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Todos"
-          [showClear]="true"
-          class="flex-1 !h-8"
-          appendTo="body"
-        ></p-select>
-      </div>
-      <div class="flex flex-1 min-w-[120px] items-center gap-1.5">
-        <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
-        <p-select
-          [options]="types()"
-          [ngModel]="selectedType()"
-          (ngModelChange)="onTypeChange($event)"
-          placeholder="Todos"
-          [showClear]="true"
-          class="flex-1 !h-8"
-          appendTo="body"
-        ></p-select>
-      </div>
-      <div
-        class="flex items-center gap-1.5 sm:border-l sm:border-surface-200 sm:dark:border-surface-700 sm:pl-3"
-      >
-        <span class="text-surface-600 dark:text-surface-400 font-medium whitespace-nowrap"
-          >Esconder Payout</span
-        >
-        <p-checkbox
-          [ngModel]="hidePayout()"
-          (ngModelChange)="onHidePayoutChange($event)"
-          binary="true"
-        ></p-checkbox>
-      </div>
-      <p-multiselect
-        display="chip"
-        [options]="cols()"
-        [ngModel]="selectedColumns()"
-        (ngModelChange)="onColumnsChange($event)"
-        optionLabel="headerFull"
-        selectedItemsLabel="{0} colunas"
-        [style]="{ 'min-width': '120px', height: '32px' }"
-        placeholder="Colunas"
-        appendTo="body"
-        class="w-full sm:w-auto"
-      ></p-multiselect>
-    </div>
-  </p-card>
+  <!-- Filters Accordion -->
+  <p-accordion value="0" class="w-full">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-filter text-sm"></i>
+          <span class="font-bold text-xs">Filtros</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="flex flex-wrap items-center gap-3 text-xs">
+          <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
+            <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
+            <p-select
+              [options]="years()"
+              [ngModel]="selectedYear()"
+              (ngModelChange)="onYearChange($event)"
+              placeholder="Todos"
+              [showClear]="true"
+              class="flex-1 !h-8"
+              appendTo="body"
+            ></p-select>
+          </div>
+          <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
+            <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
+            <p-select
+              [options]="months"
+              [ngModel]="selectedMonth()"
+              (ngModelChange)="onMonthChange($event)"
+              optionLabel="label"
+              optionValue="value"
+              placeholder="Todos"
+              [showClear]="true"
+              class="flex-1 !h-8"
+              appendTo="body"
+            ></p-select>
+          </div>
+          <div class="flex flex-1 min-w-[120px] items-center gap-1.5">
+            <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
+            <p-select
+              [options]="types()"
+              [ngModel]="selectedType()"
+              (ngModelChange)="onTypeChange($event)"
+              placeholder="Todos"
+              [showClear]="true"
+              class="flex-1 !h-8"
+              appendTo="body"
+            ></p-select>
+          </div>
+          <div
+            class="flex items-center gap-1.5 sm:border-l sm:border-surface-200 sm:dark:border-surface-700 sm:pl-3"
+          >
+            <span class="text-surface-600 dark:text-surface-400 font-medium whitespace-nowrap"
+              >Esconder Payout</span
+            >
+            <p-checkbox
+              [ngModel]="hidePayout()"
+              (ngModelChange)="onHidePayoutChange($event)"
+              binary="true"
+            ></p-checkbox>
+          </div>
+          <p-multiselect
+            display="chip"
+            [options]="cols()"
+            [ngModel]="selectedColumns()"
+            (ngModelChange)="onColumnsChange($event)"
+            optionLabel="headerFull"
+            selectedItemsLabel="{0} colunas"
+            [style]="{ 'min-width': '120px', height: '32px' }"
+            placeholder="Colunas"
+            appendTo="body"
+            class="w-full sm:w-auto"
+          ></p-multiselect>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 
   <!-- Summary Cards -->
   <div class="flex-none grid grid-cols-2 lg:grid-cols-4 gap-1.5">

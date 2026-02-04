@@ -13,6 +13,7 @@ import { RippleModule } from 'primeng/ripple';
 import { TagModule } from 'primeng/tag';
 import { CheckboxModule } from 'primeng/checkbox';
 import { SelectModule } from 'primeng/select';
+import { AccordionModule } from 'primeng/accordion';
 import { Card } from 'primeng/card';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
@@ -38,7 +39,7 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    Card,
+    CardModule,
     TableModule,
     TooltipModule,
     MultiSelectModule,
@@ -51,11 +52,13 @@ import { TranslateModule } from '@ngx-translate/core';
     TagModule,
     CheckboxModule,
     SelectModule,
+    AccordionModule,
     HttpClientModule,
     TranslateModule,
     TablePaginatorComponent,
     PageHeaderComponent,
-  ],
+    Card
+],
   host: {
     class: 'block h-full overflow-hidden',
   },

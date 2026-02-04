@@ -8,65 +8,74 @@
     (onAction)="onAddExpense()"
   />
 
-  <!-- Filters -->
-  <div
-    class="flex-none grid grid-cols-2 md:grid-cols-4 gap-2 bg-surface-0 dark:bg-surface-900 p-2 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
-  >
-    <div class="flex flex-col gap-1">
-      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300"
-        >Tipo</label
-      >
-      <p-select
-        [options]="typeOptions"
-        [(ngModel)]="selectedType"
-        (onChange)="onFilterChange()"
-        placeholder="Tipo"
-        styleClass="w-full !h-8 sm:!h-10 text-xs sm:text-sm"
-      />
-    </div>
+  <!-- Filters Accordion -->
+  <p-accordion value="0" class="w-full">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-filter text-sm"></i>
+          <span class="font-bold text-xs">Filtros</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="flex flex-wrap items-center gap-3 text-xs">
+          <div class="flex flex-1 min-w-[120px] items-center gap-1.5">
+            <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
+            <p-select
+              [options]="typeOptions"
+              [ngModel]="selectedType()"
+              (ngModelChange)="selectedType.set($event); onFilterChange()"
+              placeholder="Todos"
+              [showClear]="true"
+              class="flex-1 !h-8"
+              appendTo="body"
+            ></p-select>
+          </div>
 
-    <div class="flex flex-col gap-1">
-      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300"
-        >Ano</label
-      >
-      <p-select
-        [options]="yearOptions()"
-        [(ngModel)]="selectedYear"
-        (onChange)="onFilterChange()"
-        placeholder="Ano"
-        styleClass="w-full !h-8 sm:!h-10 text-xs sm:text-sm"
-      />
-    </div>
+          <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
+            <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
+            <p-select
+              [options]="yearOptions()"
+              [ngModel]="selectedYear()"
+              (ngModelChange)="selectedYear.set($event); onFilterChange()"
+              placeholder="Todos"
+              [showClear]="true"
+              class="flex-1 !h-8"
+              appendTo="body"
+            ></p-select>
+          </div>
 
-    <div class="flex flex-col gap-1">
-      <label class="text-[10px] sm:text-xs font-medium text-surface-700 dark:text-surface-300"
-        >Mês</label
-      >
-      <p-select
-        [options]="monthOptions"
-        [(ngModel)]="selectedMonth"
-        (onChange)="onFilterChange()"
-        [disabled]="!selectedYear()"
-        placeholder="Mês"
-        styleClass="w-full !h-8 sm:!h-10 text-xs sm:text-sm"
-      />
-    </div>
+          <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
+            <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
+            <p-select
+              [options]="monthOptions"
+              [ngModel]="selectedMonth()"
+              (ngModelChange)="selectedMonth.set($event); onFilterChange()"
+              [disabled]="!selectedYear()"
+              placeholder="Todos"
+              [showClear]="true"
+              class="flex-1 !h-8"
+              appendTo="body"
+            ></p-select>
+          </div>
 
-    <div class="flex items-end">
-      <p-button
-        label="Limpar"
-        icon="pi pi-filter-slash"
-        severity="secondary"
-        variant="text"
-        size="small"
-        class="w-full sm:w-auto"
-        styleClass="!py-1 sm:!py-2 text-xs sm:text-sm"
-        (click)="
-          selectedType.set(null); selectedYear.set(null); selectedMonth.set(null); onFilterChange()
-        "
-      />
-    </div>
-  </div>
+          <div class="flex items-center">
+            <p-button
+              label="Limpar Filtros"
+              icon="pi pi-filter-slash"
+              [text]="true"
+              severity="secondary"
+              size="small"
+              class="h-8"
+              (click)="
+                selectedType.set(null); selectedYear.set(null); selectedMonth.set(null); onFilterChange()
+              "
+            />
+          </div>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 
   <!-- Data Table Section -->
   <div
