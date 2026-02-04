@@ -1,12 +1,22 @@
-<div class="bg-surface-0 dark:bg-surface-900 px-4 text-sm">
+<div
+  class="bg-surface-0 dark:bg-surface-900 border-t border-surface-200 dark:border-surface-700 flex items-center justify-between overflow-x-auto overflow-y-hidden"
+>
+  <!-- Relatório de Registros Customizado -->
+  <span class="text-[10px] sm:text-xs text-surface-500 dark:text-surface-400 px-2">
+    {{ first + 1 }}-{{ first + rows > totalRecords ? totalRecords : first + rows }} de
+    {{ totalRecords }}
+  </span>
+
+  <!-- Paginador PrimeNG -->
   <p-paginator
     [first]="first"
     [rows]="rows"
     [totalRecords]="totalRecords"
+    [pageLinkSize]="pageLinkSize"
     [rowsPerPageOptions]="rowsPerPageOptions"
-    [showCurrentPageReport]="true"
-    [currentPageReportTemplate]="currentPageReportTemplate"
+    [showCurrentPageReport]="false"
     (onPageChange)="onPageChange.emit($event)"
-    class="bg-transparent border-none !p-2"
+    appendTo="body"
+    class="!p-2 min-w-max"
   />
 </div>
