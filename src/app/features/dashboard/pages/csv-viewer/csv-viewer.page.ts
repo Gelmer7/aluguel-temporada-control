@@ -1,26 +1,32 @@
 import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CardModule } from 'primeng/card';
-import { TableModule } from 'primeng/table';
-import { TooltipModule } from 'primeng/tooltip';
-import { MultiSelectModule } from 'primeng/multiselect';
 import { FormsModule } from '@angular/forms';
-import { InputTextModule } from 'primeng/inputtext';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { ButtonModule } from 'primeng/button';
-import { RippleModule } from 'primeng/ripple';
-import { TagModule } from 'primeng/tag';
-import { CheckboxModule } from 'primeng/checkbox';
-import { SelectModule } from 'primeng/select';
-import { AccordionModule } from 'primeng/accordion';
-import { PopoverModule } from 'primeng/popover';
-import { Card } from 'primeng/card';
-import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
-import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { TranslateModule } from '@ngx-translate/core';
+
+// PrimeNG Components
+import { TableModule } from 'primeng/table';
+import { Button } from 'primeng/button';
+import { Select } from 'primeng/select';
+import { Checkbox } from 'primeng/checkbox';
+import { MultiSelect } from 'primeng/multiselect';
+import { Tag } from 'primeng/tag';
+import { Tooltip } from 'primeng/tooltip';
+import { Popover } from 'primeng/popover';
+import { Toast } from 'primeng/toast';
+import { InputText } from 'primeng/inputtext';
+import { IconField } from 'primeng/iconfield';
+import { InputIcon } from 'primeng/inputicon';
+import { AccordionModule } from 'primeng/accordion';
+import { MessageService } from 'primeng/api';
+
+// Services & Utils
+import { SupabaseService } from '../../../../services/supabase.service';
+import { StringUtils } from '../../../../shared/utils/string.utils';
+import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
 import Papa from 'papaparse';
+
+// Models & Helpers
 import { AirbnbNormalizedRow, normalizeAirbnbRow } from '../../../../models/airbnb.model';
 import {
   ViewerRow,
@@ -32,10 +38,12 @@ import {
   tipoHighlight as th,
   personFromTipo,
 } from './csv-viewer.helpers';
+
+// Shared Components
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
+import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
+import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { AppColors } from '../../../../shared/design/colors';
-import { TranslateModule } from '@ngx-translate/core';
-import { StringUtils } from '../../../../shared/utils/string.utils';
-import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
 
 @Component({
   selector: 'app-csv-viewer-page',
@@ -43,27 +51,29 @@ import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    CardModule,
-    TableModule,
-    TooltipModule,
-    MultiSelectModule,
     FormsModule,
-    InputTextModule,
-    IconFieldModule,
-    InputIconModule,
-    ButtonModule,
-    RippleModule,
-    TagModule,
-    CheckboxModule,
-    SelectModule,
-    AccordionModule,
-    PopoverModule,
     HttpClientModule,
     TranslateModule,
+    // PrimeNG
+    TableModule,
+    Button,
+    Select,
+    Checkbox,
+    MultiSelect,
+    Tag,
+    Tooltip,
+    Popover,
+    Toast,
+    InputText,
+    IconField,
+    InputIcon,
+    AccordionModule,
+    // Shared
     TablePaginatorComponent,
     PageHeaderComponent,
     FilterContainerComponent,
   ],
+  providers: [MessageService],
   host: {
     class: 'block h-full overflow-hidden',
   },
@@ -71,6 +81,11 @@ import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
 })
 export class CsvViewerPage {
   private readonly http = inject(HttpClient);
+  private readonly supabase = inject(SupabaseService);
+  private readonly messageService = inject(MessageService);
+
+  protected readonly syncing = signal<boolean>(false);
+  protected readonly loading = signal<boolean>(false);
   protected readonly headers = signal<string[]>([]);
   protected readonly rows = signal<ViewerRow[]>([]);
   protected readonly cols = signal<{ field: string; headerFull: string; headerAbbr: string }[]>([]);
@@ -288,17 +303,106 @@ export class CsvViewerPage {
   ];
 
   constructor() {
-    this.loadFromAssets('/airbnb_INICIO__01_2026.csv');
+    this.loadFromDatabase();
+  }
+
+  protected async syncDatabase() {
+    if (this.rows().length === 0) return;
+
+    this.syncing.set(true);
+    try {
+      // Criar os registros para o banco
+      const allRecords = this.rows().map((row) => ({
+        unique_key: `${row.__norm.codigoConfirmacao || 'N/A'}_${row.__norm.data}_${row.__norm.tipo}_${
+          row.__norm.valor
+        }`,
+        data: row.__norm.data,
+        tipo: row.__norm.tipo,
+        codigo_confirmacao: row.__norm.codigoConfirmacao,
+        noites: AirbnbUtils.parseNumber(row.__norm.noites),
+        hospede: row.__norm.hospede,
+        anuncio: row.__norm.anuncio,
+        valor: AirbnbUtils.parseCurrency(row.__norm.valor),
+        taxa_limpeza: AirbnbUtils.parseCurrency(row.__norm.taxaLimpeza),
+        raw_data: row.__raw,
+      }));
+
+      // Deduplicar no frontend antes de enviar para o Supabase
+      // O erro "ON CONFLICT DO UPDATE command cannot affect row a second time" ocorre
+      // quando o mesmo unique_key aparece múltiplas vezes no mesmo lote de inserção.
+      const uniqueRecordsMap = new Map();
+      allRecords.forEach((record) => {
+        uniqueRecordsMap.set(record.unique_key, record);
+      });
+
+      const uniqueRecords = Array.from(uniqueRecordsMap.values());
+
+      const { error } = await this.supabase.upsertAirbnbRecords(uniqueRecords);
+
+      if (error) throw error;
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sincronizado',
+        detail: `Dados sincronizados! (${uniqueRecords.length} registros únicos)`,
+      });
+
+      // Recarregar do banco para garantir consistência
+      await this.loadFromDatabase();
+    } catch (error: any) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro na Sincronização',
+        detail: error.message,
+      });
+    } finally {
+      this.syncing.set(false);
+    }
+  }
+
+  protected async loadFromDatabase() {
+    this.loading.set(true);
+    try {
+      const { data, error } = await this.supabase.getAirbnbRecords();
+      if (error) throw error;
+
+      if (data && data.length > 0) {
+        const rows: ViewerRow[] = data.map((item: any, index: number) => ({
+          __id: index,
+          __raw: item.raw_data,
+          __norm: normalizeAirbnbRow(item.raw_data),
+        }));
+
+        this.rows.set(rows);
+        this.recomputeGroupIndexMap(rows);
+
+        if (rows.length > 0 && rows[0].__raw) {
+          this.setupColumns(Object.keys(rows[0].__raw));
+        }
+      } else {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Banco de Dados Vazio',
+          detail: 'Nenhum registro encontrado. Por favor, suba um arquivo CSV para começar.',
+        });
+      }
+    } catch (error: any) {
+      console.error('Erro ao carregar do banco:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro de Carregamento',
+        detail: 'Não foi possível carregar os dados do banco.',
+      });
+    } finally {
+      this.loading.set(false);
+    }
   }
 
   private loadFromAssets(url: string): void {
     this.http.get(url, { responseType: 'text' }).subscribe({
       next: (text) => this.applyCsvText(text),
       error: () => {
-        const fallback = '/assets/airbnb_INICIO__01_2026.csv';
-        this.http
-          .get(fallback, { responseType: 'text' })
-          .subscribe((text) => this.applyCsvText(text));
+        console.error('Erro ao carregar asset:', url);
       },
     });
   }
@@ -327,6 +431,23 @@ export class CsvViewerPage {
   protected onMonthChange(month: number | null) {
     this.selectedMonth.set(month);
     this.first.set(0);
+  }
+
+  protected onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        const text = e.target.result;
+        this.applyCsvText(text);
+        this.messageService.add({
+          severity: 'info',
+          summary: 'CSV Carregado',
+          detail: 'Clique em "Sincronizar" para salvar estes dados no banco.',
+        });
+      };
+      reader.readAsText(file);
+    }
   }
 
   protected onTypeChange(type: string | null) {
@@ -475,20 +596,10 @@ export class CsvViewerPage {
     return this.isDerived(field) ? this.renderDerived(row, field) : gv(row, field);
   }
 
-  private applyCsvText(text: string): void {
-    const result = Papa.parse(text, { header: true, skipEmptyLines: true });
-    const fields = (result.meta as any).fields || [];
-    const data = Array.isArray(result.data) ? (result.data as any[]) : [];
-    const enriched: ViewerRow[] = [];
-    for (let i = 0; i < data.length; i++) {
-      const __raw = data[i] as Record<string, string>;
-      const __norm = normalizeAirbnbRow(__raw as any);
-      enriched.push({ __id: i + 1, __raw, __norm });
-    }
+  private setupColumns(fields: string[]): void {
     this.headers.set(fields);
-    this.rows.set(enriched);
-    this.recomputeGroupIndexMap(enriched);
     this.applyColumnSizes(fields);
+
     const mapped = fields.map((f: string) => ({ field: f, headerFull: f, headerAbbr: f }));
     const derivedInicioFim = {
       field: this.inicioFimField,
@@ -502,6 +613,7 @@ export class CsvViewerPage {
     };
     const mappedWithDerived = [...mapped, derivedInicioFim, derivedPessoa];
     this.cols.set(mappedWithDerived);
+
     const colFields = new Set(mappedWithDerived.map((c) => c.field));
     const initialSelected = this.preferredInitial
       .filter((n) => colFields.has(n))
@@ -509,10 +621,26 @@ export class CsvViewerPage {
         const m = mappedWithDerived.find((c) => c.field === n)!;
         return { field: m.field, headerFull: m.headerFull, headerAbbr: m.headerAbbr };
       });
+
     this.selectedColumns.set(
       initialSelected.length
         ? initialSelected
         : mappedWithDerived.slice(0, Math.min(8, mappedWithDerived.length))
     );
+  }
+
+  private applyCsvText(text: string): void {
+    const result = Papa.parse(text, { header: true, skipEmptyLines: true });
+    const fields = (result.meta as any).fields || [];
+    const data = Array.isArray(result.data) ? (result.data as any[]) : [];
+    const enriched: ViewerRow[] = [];
+    for (let i = 0; i < data.length; i++) {
+      const __raw = data[i] as Record<string, string>;
+      const __norm = normalizeAirbnbRow(__raw as any);
+      enriched.push({ __id: i + 1, __raw, __norm });
+    }
+    this.rows.set(enriched);
+    this.recomputeGroupIndexMap(enriched);
+    this.setupColumns(fields);
   }
 }

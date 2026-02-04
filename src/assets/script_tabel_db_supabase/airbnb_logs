@@ -1,0 +1,22 @@
+-- Criar a tabela de logs do Airbnb
+CREATE TABLE airbnb_logs (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    unique_key TEXT UNIQUE NOT NULL, -- Chave para evitar duplicatas
+    data TEXT NOT NULL,
+    tipo TEXT,
+    codigo_confirmacao TEXT,
+    noites INTEGER,
+    hospede TEXT,
+    anuncio TEXT,
+    valor NUMERIC,
+    taxa_limpeza NUMERIC,
+    raw_data JSONB, -- Armazena a linha original completa por segurança
+    created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Habilitar RLS (opcional, mas recomendado)
+ALTER TABLE airbnb_logs ENABLE ROW LEVEL SECURITY;
+
+-- Criar política de acesso total para usuários autenticados (ajuste conforme sua necessidade)
+CREATE POLICY "Acesso total airbnb_logs" ON airbnb_logs
+FOR ALL USING (true) WITH CHECK (true);

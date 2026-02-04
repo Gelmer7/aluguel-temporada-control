@@ -6,7 +6,7 @@ export const DASHBOARD_ROUTES: Routes = [
     path: '',
     component: DashboardLayoutPage,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'airbnb-payments' },
+      { path: '', pathMatch: 'full', redirectTo: 'csv-reports/viewer' },
 
       {
         path: 'csv-reports/upload',

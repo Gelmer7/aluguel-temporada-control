@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
+import { AirbnbNormalizedRow } from '../models/airbnb.model';
 
 @Injectable({
   providedIn: 'root',
@@ -20,15 +21,47 @@ export class SupabaseService {
     return this.supabase;
   }
 
-  // Check connection by getting the current session (doesn't require tables)
+  /**
+   * Verifica a conexão com o Supabase
+   */
   async checkConnection() {
-    return await this.supabase.auth.getSession();
+    try {
+      const { data, error } = await this.supabase.auth.getSession();
+      return { data, error };
+    } catch (error) {
+      return { data: null, error };
+    }
   }
 
-  // Example method to test connection
-  async getProperties() {
-    return await this.supabase.from('properties').select('*');
+  // --- Airbnb Methods ---
+
+  /**
+   * Busca todos os registros do Airbnb do banco de dados
+   */
+  async getAirbnbRecords() {
+    const { data, error } = await this.supabase
+      .from('airbnb_logs')
+      .select('*')
+      .order('data', { ascending: false });
+
+    return { data, error };
   }
+
+  /**
+   * Realiza o Upsert (Insert ou Update) de registros do Airbnb.
+   * Usa a coluna 'unique_key' para identificar duplicatas.
+   */
+  async upsertAirbnbRecords(records: any[]) {
+    return await this.supabase
+      .from('airbnb_logs')
+      .upsert(records, {
+        onConflict: 'unique_key',
+        ignoreDuplicates: false
+      })
+      .select();
+  }
+
+  // --- Expense Methods ---
 
   async getExpenses() {
     const { data, error } = await this.supabase
@@ -38,11 +71,11 @@ export class SupabaseService {
 
     if (error) return { data: null, error };
 
-    const mappedData = data.map(item => ({
+    const mappedData = data.map((item) => ({
       ...item,
       price: item.amount,
       type: item.category,
-      purchase_date: item.date
+      purchase_date: item.date,
     })) as Expense[];
 
     return { data: mappedData, error: null };
