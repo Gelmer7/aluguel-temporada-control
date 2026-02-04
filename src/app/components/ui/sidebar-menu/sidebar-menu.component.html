@@ -62,10 +62,11 @@
     @if (item.data?.isTheme) {
       <div class="p-menuitem-content flex items-center gap-2 p-2">
         <span [class]="item.icon"></span>
-        <span class="text-sm">{{ 'TOOLBAR.THEME' | translate }} ({{ item.data.currentTheme?.name | translate }})</span>
+        <span class="text-sm"
+          > {{ item.data.currentTheme?.name | translate }}</span
+        >
       </div>
-    }
-    @else if (item.data?.isLanguage) {
+    } @else if (item.data?.isLanguage) {
       <div class="p-menuitem-content flex items-center gap-2 p-2">
         @if (item.data.currentLang?.flag) {
           <img [src]="item.data.currentLang.flag" class="w-5 h-4 object-contain" alt="flag" />

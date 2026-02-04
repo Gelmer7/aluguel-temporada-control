@@ -106,7 +106,7 @@ export class CsvViewerPage {
 
   // Pagination
   protected readonly first = signal<number>(0);
-  protected readonly rowsPerPage = signal<number>(10);
+  protected readonly rowsPerPage = signal<number>(20);
 
   // Computed Data
   protected readonly visibleRows = computed(() => {

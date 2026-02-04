@@ -108,7 +108,7 @@ export class ExpensesPage implements OnInit {
 
   // Pagination
   first = signal<number>(0);
-  rows = signal<number>(10);
+  rows = signal<number>(20);
 
   // Computed Data
   pagedExpenses = computed(() => {
