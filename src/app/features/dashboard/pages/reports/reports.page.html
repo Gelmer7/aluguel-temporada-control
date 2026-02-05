@@ -1,137 +1,175 @@
 <div class="flex flex-col gap-2 p-2 overflow-auto max-h-[calc(100vh)]">
   <app-page-header [title]="'TERMS.REPORTS' | translate" icon="pi pi-chart-bar" />
 
-  <!-- Gráfico e Filtros -->
-  <span>
-    {{ 'REPORTS.CHART_TITLE' | translate }}
-  </span>
-  <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
-    <div class="lg:col-span-3 border rounded-lg">
-      <div class="h-64">
-        @if (loading()) {
-          <p-skeleton width="100%" height="100%" />
-        } @else {
-          <div echarts [options]="chartOptions()" class="w-full h-full"></div>
-        }
-      </div>
-    </div>
-    <!-- Resumo em Cards -->
-    <div class="grid gap-3">
-      @if (loading()) {
-        @for (i of [1, 2, 3]; track i) {
-          <p-card>
-            <div class="flex flex-col gap-1">
-              <p-skeleton width="40%" height="0.875rem" />
-              <p-skeleton width="60%" height="1.5rem" />
-            </div>
-          </p-card>
-        }
-      } @else {
-        <p-card>
-          <ng-template pTemplate="subtitle">
-              <div class="grid gap-2 text-xs">
-                <div>
-                  <i class="pi pi-arrow-up-right"></i> {{ 'REPORTS.GROSS' | translate }}:
-                  <span>{{ summary().totalGross | currency: 'BRL' }}</span>
+  <!-- 1. Gráfico -->
+  <p-accordion [value]="[]" class="w-full">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-chart-line"></i>
+          <span>{{ 'REPORTS.CHART_TITLE' | translate }}</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="border rounded-lg p-2">
+          <div class="h-70">
+            @if (loading()) {
+              <p-skeleton width="100%" height="100%" />
+            } @else {
+              <div echarts [options]="chartOptions()" class="w-full h-full"></div>
+            }
+          </div>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
+
+  <!-- 2. Resultados Totais -->
+  <p-accordion [value]="['0']" [multiple]="true" class="w-full">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-calculator"></i>
+          <span>{{ 'REPORTS.SUMMARY' | translate }}</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+          @if (loading()) {
+            @for (i of [1,2,3]; track i) {
+              <p-card>
+                <div class="flex flex-col gap-1">
+                  <p-skeleton width="40%" height="1rem" />
+                  <p-skeleton width="60%" height="1.5rem" />
                 </div>
-                <div>
-                  <i class="pi pi-arrow-down-right"></i> {{ 'REPORTS.EXPENSES' | translate }}:
-                  <span>{{ summary().totalExpenses | currency: 'BRL' }}</span>
+              </p-card>
+            }
+          } @else {
+            <p-card>
+              <ng-template pTemplate="subtitle">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-arrow-up-right"></i>
+                  <span>{{ 'REPORTS.GROSS' | translate }}</span>
                 </div>
-                <div>
-                  <i class="pi pi-wallet"></i> {{ 'REPORTS.NET' | translate }}:
-                  <span>{{ summary().totalNet | currency: 'BRL' }}</span>
+                <span>{{ summary().totalGross | currency: 'BRL' }}</span>
+              </ng-template>
+            </p-card>
+
+            <p-card>
+              <ng-template pTemplate="subtitle">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-arrow-down-right"></i>
+                  <span>{{ 'REPORTS.EXPENSES' | translate }}</span>
                 </div>
-              </div>
-          </ng-template>
-        </p-card>
-      }
-    </div>
-  </div>
+                <span>{{ summary().totalExpenses | currency: 'BRL' }}</span>
+              </ng-template>
+            </p-card>
 
-  <!-- Tabela de Detalhamento -->
-  <div>
-    <span>
-      {{ 'REPORTS.DETAILS' | translate }}
-    </span>
+            <p-card>
+              <ng-template pTemplate="subtitle">
+                <div class="flex items-center gap-2">
+                  <i class="pi pi-wallet"></i>
+                  <span>{{ 'REPORTS.NET' | translate }}</span>
+                </div>
+                <span>{{ summary().totalNet | currency: 'BRL' }}</span>
+              </ng-template>
+            </p-card>
+          }
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 
-    <div class="overflow-hidden border border-surface rounded-lg text-xs">
-      <p-table
-        [value]="flattenedData()"
-        [loading]="loading()"
-        sortField="year"
-        sortMode="single"
-        dataKey="year"
-        rowGroupMode="subheader"
-        groupRowsBy="year"
-        [scrollable]="true"
-        class="p-datatable-sm"
-      >
-        <ng-template #header>
-          <tr>
-            <th>{{ 'TERMS.MONTH' | translate }}</th>
-            @if (showGross()) {
-              <th>{{ 'TERMS.GROSS' | translate }}</th>
-            }
-            @if (showExpenses()) {
-              <th>{{ 'TERMS.EXPENSES' | translate }}</th>
-            }
-            @if (showNet()) {
-              <th>{{ 'TERMS.NET' | translate }}</th>
-            }
-          </tr>
-        </ng-template>
+  <!-- 3. Tabela de Detalhamento -->
+  <p-accordion [value]="['0']" [multiple]="true" class="w-full">
+    <p-accordion-panel value="0">
+      <p-accordion-header>
+        <div class="flex items-center gap-2">
+          <i class="pi pi-list"></i>
+          <span>{{ 'REPORTS.DETAILS' | translate }}</span>
+        </div>
+      </p-accordion-header>
+      <p-accordion-content>
+        <div class="overflow-hidden border border-surface rounded-lg">
+          <p-table
+            [value]="flattenedData()"
+            [loading]="loading()"
+            sortField="year"
+            [sortOrder]="-1"
+            sortMode="single"
+            dataKey="year"
+            rowGroupMode="subheader"
+            groupRowsBy="year"
+            [scrollable]="true"
+            class="p-datatable-sm"
+          >
+            <ng-template #header>
+              <tr>
+                <th>{{ 'TERMS.MONTH' | translate }}</th>
+                @if (showGross()) {
+                  <th>{{ 'TERMS.GROSS' | translate }}</th>
+                }
+                @if (showExpenses()) {
+                  <th>{{ 'TERMS.EXPENSES' | translate }}</th>
+                }
+                @if (showNet()) {
+                  <th>{{ 'TERMS.NET' | translate }}</th>
+                }
+              </tr>
+            </ng-template>
 
-        <ng-template #groupheader let-item let-rowIndex="rowIndex" let-expanded="expanded">
-          <tr class="bg-surface-50 dark:bg-surface-900">
-            <td [attr.colspan]="colSpan()">
-              <div class="flex items-center gap-2">
-                <button
-                  type="button"
-                  pButton
-                  pRipple
-                  [pRowToggler]="item"
-                  [text]="true"
-                  [rounded]="true"
-                  [plain]="true"
-                  [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
-                ></button>
-                <span class="font-bold">{{ item.year }}</span>
-              </div>
-            </td>
-          </tr>
-        </ng-template>
+            <ng-template #groupheader let-item let-rowIndex="rowIndex" let-expanded="expanded">
+              <tr class="bg-surface-50 dark:bg-surface-900">
+                <td [attr.colspan]="colSpan()">
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      pButton
+                      pRipple
+                      [pRowToggler]="item"
+                      [text]="true"
+                      [rounded]="true"
+                      [plain]="true"
+                      [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
+                    ></button>
+                    <span>{{ item.year }}</span>
+                  </div>
+                </td>
+              </tr>
+            </ng-template>
 
-        <ng-template #groupfooter let-item>
-          <tr class="bg-surface-100/50 dark:bg-surface-800/50 font-bold">
-            <td>{{ 'TERMS.TOTAL' | translate }} {{ item.year }}</td>
-            @if (showGross()) {
-              <td>{{ item.yearTotalGross | currency: 'BRL' }}</td>
-            }
-            @if (showExpenses()) {
-              <td>{{ item.yearTotalExpenses | currency: 'BRL' }}</td>
-            }
-            @if (showNet()) {
-              <td>{{ item.yearTotalNet | currency: 'BRL' }}</td>
-            }
-          </tr>
-        </ng-template>
+            <ng-template #groupfooter let-item>
+              <tr class="bg-surface-100/50 dark:bg-surface-800/50">
+                <td>{{ 'TERMS.TOTAL' | translate }} {{ item.year }}</td>
+                @if (showGross()) {
+                  <td>{{ item.yearTotalGross === 0 ? '-' : (item.yearTotalGross | currency: 'BRL') }}</td>
+                }
+                @if (showExpenses()) {
+                  <td>{{ item.yearTotalExpenses === 0 ? '-' : (item.yearTotalExpenses | currency: 'BRL') }}</td>
+                }
+                @if (showNet()) {
+                  <td>{{ item.yearTotalNet === 0 ? '-' : (item.yearTotalNet | currency: 'BRL') }}</td>
+                }
+              </tr>
+            </ng-template>
 
-        <ng-template #expandedrow let-month let-i="rowIndex">
-          <tr>
-            <td>{{ 'MONTHS.' + month.monthIndex | translate }}</td>
-            @if (showGross()) {
-              <td>{{ month.gross | currency: 'BRL' }}</td>
-            }
-            @if (showExpenses()) {
-              <td>{{ month.expenses | currency: 'BRL' }}</td>
-            }
-            @if (showNet()) {
-              <td>{{ month.net | currency: 'BRL' }}</td>
-            }
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
-  </div>
+            <ng-template #expandedrow let-month let-i="rowIndex">
+              <tr>
+                <td>{{ 'MONTHS.' + month.monthIndex | translate }}</td>
+                @if (showGross()) {
+                  <td>{{ month.gross === 0 ? '-' : (month.gross | currency: 'BRL') }}</td>
+                }
+                @if (showExpenses()) {
+                  <td>{{ month.expenses === 0 ? '-' : (month.expenses | currency: 'BRL') }}</td>
+                }
+                @if (showNet()) {
+                  <td>{{ month.net === 0 ? '-' : (month.net | currency: 'BRL') }}</td>
+                }
+              </tr>
+            </ng-template>
+          </p-table>
+        </div>
+      </p-accordion-content>
+    </p-accordion-panel>
+  </p-accordion>
 </div>

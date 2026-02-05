@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // PrimeNG
+import { AccordionModule } from 'primeng/accordion';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -27,6 +28,7 @@ import { PageHeaderComponent } from '../../../../components/ui/page-header/page-
   imports: [
     CommonModule,
     FormsModule,
+    AccordionModule,
     CardModule,
     TableModule,
     CheckboxModule,
@@ -174,12 +176,12 @@ export class ReportsPage implements OnInit {
       legend: {
         data: series.map(s => s.name),
         textStyle: { color: '#4b5563' },
-        bottom: 0
+        bottom: 0,
       },
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '10%',
+        bottom: '23%',
         containLabel: true
       },
       xAxis: {
