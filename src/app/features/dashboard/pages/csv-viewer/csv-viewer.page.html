@@ -16,7 +16,13 @@
         pTooltip="Carregar novo relatório do Airbnb"
         tooltipPosition="left"
       />
-      <input #fileInput type="file" (change)="onFileSelected($event)" accept=".csv" class="hidden" />
+      <input
+        #fileInput
+        type="file"
+        (change)="onFileSelected($event)"
+        accept=".csv"
+        class="hidden"
+      />
 
       <p-button
         icon="pi pi-sync"
@@ -47,44 +53,46 @@
     </ng-template>
 
     <!-- Conteúdo dos filtros -->
-    <div class="flex flex-1 min-w-[150px] items-center gap-1.5">
-      <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
       <p-select
+        inputId="year_select"
         [options]="years()"
         [ngModel]="selectedYear()"
         (ngModelChange)="onYearChange($event)"
-        placeholder="Todos"
         [showClear]="true"
-        class="flex-1 !h-8"
+        class="w-full"
         appendTo="body"
       ></p-select>
-    </div>
-    <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-      <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
+      <label for="year_select">Ano</label>
+    </p-floatlabel>
+
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
       <p-select
+        inputId="month_select"
         [options]="months"
         [ngModel]="selectedMonth()"
         (ngModelChange)="onMonthChange($event)"
         optionLabel="label"
         optionValue="value"
-        placeholder="Todos"
         [showClear]="true"
-        class="flex-1 !h-8"
+        class="w-full"
         appendTo="body"
       ></p-select>
-    </div>
-    <div class="flex flex-1 min-w-[150px] items-center gap-1.5">
-      <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
+      <label for="month_select">Mês</label>
+    </p-floatlabel>
+
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
       <p-select
+        inputId="type_select"
         [options]="types()"
         [ngModel]="selectedType()"
         (ngModelChange)="onTypeChange($event)"
-        placeholder="Todos"
         [showClear]="true"
-        class="flex-1 !h-8"
+        class="w-full"
         appendTo="body"
       ></p-select>
-    </div>
+      <label for="type_select">Tipo</label>
+    </p-floatlabel>
     <div
       class="flex items-center gap-1.5 sm:border-l sm:border-surface-200 sm:dark:border-surface-700 sm:pl-3"
     >
@@ -97,18 +105,21 @@
         binary="true"
       ></p-checkbox>
     </div>
-    <p-multiselect
-      display="chip"
-      [options]="cols()"
-      [ngModel]="selectedColumns()"
-      (ngModelChange)="onColumnsChange($event)"
-      optionLabel="headerFull"
-      selectedItemsLabel="{0} colunas"
-      [style]="{ 'min-width': '120px', height: '32px' }"
-      placeholder="Colunas"
-      appendTo="body"
-      class="w-full sm:w-auto"
-    ></p-multiselect>
+    <p-floatlabel class="w-full" variant="in">
+      <p-multiselect
+        inputId="cols_select"
+        display="chip"
+        [options]="cols()"
+        [ngModel]="selectedColumns()"
+        (ngModelChange)="onColumnsChange($event)"
+        optionLabel="headerFull"
+        selectedItemsLabel="{0} colunas"
+        appendTo="body"
+        class="w-full"
+        [maxSelectedLabels]="3"
+      ></p-multiselect>
+      <label for="cols_select">Colunas</label>
+    </p-floatlabel>
   </app-filter-container>
 
   <!-- Summary Cards Agrupados -->
@@ -213,7 +224,9 @@
                 class="inline-block w-2 h-2 rounded-full"
                 [ngClass]="rows().length > 0 ? 'bg-green-500' : 'bg-yellow-500'"
               ></span>
-              <span>Status: {{ rows().length > 0 ? 'Sincronizado' : 'Aguardando Sincronização' }}</span>
+              <span
+                >Status: {{ rows().length > 0 ? 'Sincronizado' : 'Aguardando Sincronização' }}</span
+              >
             </div>
           </div>
         </div>

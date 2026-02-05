@@ -1,10 +1,14 @@
 <div class="border rounded-lg p-1">
-  <p-accordion [value]="filtersExpanded()" (valueChange)="filtersExpanded.set($event)" class="w-full">
+  <p-accordion
+    [value]="filtersExpanded()"
+    (valueChange)="filtersExpanded.set($event)"
+    class="w-full"
+  >
     <p-accordion-panel [value]="value()">
-      <p-accordion-header>
+      <p-accordion-header class="!p-1">
         <div class="flex items-center justify-between w-full">
-          <div class="flex items-center gap-2">
-            <i class="pi pi-filter text-sm"></i>
+          <div class="flex items-center gap-1">
+            <i class="pi pi-filter text-xs"></i>
             <span class="font-bold text-xs">Filtros</span>
           </div>
 
@@ -19,8 +23,14 @@
         </div>
       </p-accordion-header>
 
-      <p-accordion-content>
-        <div class="flex flex-wrap items-center gap-3 text-xs">
+      <p-accordion-content
+        [dt]="{
+          content: {
+            padding: '0.2rem',
+          },
+        }"
+      >
+        <div class="flex flex-wrap items-center gap-1 text-xs">
           <ng-content></ng-content>
         </div>
       </p-accordion-content>

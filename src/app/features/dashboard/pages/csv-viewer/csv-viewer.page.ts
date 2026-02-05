@@ -8,6 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
 import { Select } from 'primeng/select';
+import { FloatLabel } from 'primeng/floatlabel';
 import { Checkbox } from 'primeng/checkbox';
 import { MultiSelect } from 'primeng/multiselect';
 import { Tag } from 'primeng/tag';
@@ -58,6 +59,7 @@ import { AppColors } from '../../../../shared/design/colors';
     TableModule,
     Button,
     Select,
+    FloatLabel,
     Checkbox,
     MultiSelect,
     Tag,
@@ -98,16 +100,18 @@ export class CsvViewerPage {
   protected readonly expandedRowGroups = signal<string[]>([]);
   protected readonly hidePayout = signal<boolean>(true);
   protected readonly filterQuery = signal<string>('');
-  protected readonly selectedYear = signal<number | null>(null);
-  protected readonly selectedMonth = signal<number | null>(null);
-  protected readonly selectedType = signal<string | null>(null);
+  protected readonly selectedYear = signal<number | string | null>('Todos');
+  protected readonly selectedMonth = signal<number | string | null>('Todos');
+  protected readonly selectedType = signal<string | null>('Todos');
 
   protected readonly years = computed(() => {
     const years = this.rows().map((r) => this.parseAirbnbDate(r.__norm.data)?.getFullYear());
-    return Array.from(new Set(years.filter((y): y is number => !!y))).sort((a, b) => b - a);
+    const uniqueYears = Array.from(new Set(years.filter((y): y is number => !!y))).sort((a, b) => b - a);
+    return ['Todos', ...uniqueYears];
   });
 
   protected readonly months = [
+    { label: 'Todos', value: 'Todos' },
     { label: 'Janeiro', value: 1 },
     { label: 'Fevereiro', value: 2 },
     { label: 'Março', value: 3 },
@@ -124,7 +128,8 @@ export class CsvViewerPage {
 
   protected readonly types = computed(() => {
     const types = this.rows().map((r) => (r.__norm.tipo ?? '').trim());
-    return Array.from(new Set(types.filter((t) => !!t))).sort();
+    const uniqueTypes = Array.from(new Set(types.filter((t) => !!t))).sort();
+    return ['Todos', ...uniqueTypes];
   });
 
   // Pagination
@@ -142,7 +147,7 @@ export class CsvViewerPage {
 
     // Filter by Year
     const year = this.selectedYear();
-    if (year) {
+    if (year && year !== 'Todos') {
       data = data.filter((r) => {
         const date = this.parseAirbnbDate(r.__norm.data);
         return date ? date.getFullYear() === year : false;
@@ -151,7 +156,7 @@ export class CsvViewerPage {
 
     // Filter by Month
     const month = this.selectedMonth();
-    if (month) {
+    if (month && month !== 'Todos') {
       data = data.filter((r) => {
         const date = this.parseAirbnbDate(r.__norm.data);
         return date ? date.getMonth() + 1 === month : false;
@@ -160,7 +165,7 @@ export class CsvViewerPage {
 
     // Filter by Type
     const type = this.selectedType();
-    if (type) {
+    if (type && type !== 'Todos') {
       data = data.filter((r) => (r.__norm.tipo ?? '').trim() === type);
     }
 
@@ -216,7 +221,7 @@ export class CsvViewerPage {
 
   protected getSelectedMonthLabel(): string {
     const month = this.selectedMonth();
-    if (!month) return 'Todos';
+    if (!month || month === 'Todos') return 'Todos';
     return this.months.find(m => m.value === month)?.label || 'Todos';
   }
 
@@ -423,12 +428,12 @@ export class CsvViewerPage {
     this.first.set(0); // Reset to first page on filter
   }
 
-  protected onYearChange(year: number | null) {
+  protected onYearChange(year: number | string | null) {
     this.selectedYear.set(year);
     this.first.set(0);
   }
 
-  protected onMonthChange(month: number | null) {
+  protected onMonthChange(month: number | string | null) {
     this.selectedMonth.set(month);
     this.first.set(0);
   }

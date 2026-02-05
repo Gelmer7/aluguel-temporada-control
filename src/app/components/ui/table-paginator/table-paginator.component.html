@@ -1,8 +1,7 @@
 <div class="flex items-center justify-between overflow-x-auto overflow-y-hidden">
   <!-- Relatório de Registros Customizado -->
   <span class="pl-1 text-[10px]">
-    {{ first + 1 }}-{{ first + rows > totalRecords ? totalRecords : first + rows }} de
-    {{ totalRecords }}
+    {{ first + 1 }}-{{ first + rows > totalRecords ? totalRecords : first + rows }} ({{ totalRecords }})
   </span>
 
   <!-- Paginador PrimeNG -->
