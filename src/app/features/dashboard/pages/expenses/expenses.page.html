@@ -12,62 +12,100 @@
   <app-filter-container>
     <!-- Resumo dos filtros (aparece quando colapsado) -->
     <ng-template #filterSummary>
-      <span>Ano: <span class="text-primary">{{ selectedYear() || 'Todos' }}</span></span>
-      <span>Mês: <span class="text-primary">{{ getSelectedMonthLabel() }}</span></span>
-      <span>Tipo: <span class="text-primary">{{ getSelectedTypeLabel() }}</span></span>
+      <span
+        >{{ 'TERMS.YEAR' | translate }}:
+        <span class="text-primary">{{
+          getSelectedYearLabel() | translate
+        }}</span></span
+      >
+      <span
+        >{{ 'TERMS.MONTH' | translate }}:
+        <span class="text-primary">{{ getSelectedMonthLabel() | translate }}</span></span
+      >
+      <span
+        >{{ 'TERMS.TYPE' | translate }}:
+        <span class="text-primary">{{ getSelectedTypeLabel() | translate }}</span></span
+      >
     </ng-template>
 
     <!-- Conteúdo dos filtros -->
-    <div class="flex flex-1 min-w-[120px] items-center gap-1.5">
-      <span class="text-surface-600 dark:text-surface-400 font-medium">Tipo</span>
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
       <p-select
+        inputId="type_select"
         [options]="typeOptions"
         [ngModel]="selectedType()"
-        (ngModelChange)="selectedType.set($event); onFilterChange()"
-        placeholder="Todos"
+        (ngModelChange)="selectedType.set($event || 'ALL'); onFilterChange()"
         [showClear]="true"
-        class="flex-1 !h-8"
+        class="w-full"
         appendTo="body"
-      ></p-select>
-    </div>
+        optionLabel="label"
+        optionValue="value"
+      >
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          {{ selectedOption.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-option>
+          {{ option.label | translate }}
+        </ng-template>
+      </p-select>
+      <label for="type_select">{{ 'TERMS.TYPE' | translate }}</label>
+    </p-floatlabel>
 
-    <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-      <span class="text-surface-600 dark:text-surface-400 font-medium">Ano</span>
+    <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
       <p-select
+        inputId="year_select"
         [options]="yearOptions()"
         [ngModel]="selectedYear()"
-        (ngModelChange)="selectedYear.set($event); onFilterChange()"
-        placeholder="Todos"
+        (ngModelChange)="selectedYear.set($event || 'ALL'); onFilterChange()"
         [showClear]="true"
-        class="flex-1 !h-8"
+        class="w-full"
         appendTo="body"
-      ></p-select>
-    </div>
+        optionLabel="label"
+        optionValue="value"
+      >
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          {{ selectedOption.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-option>
+          {{ option.label | translate }}
+        </ng-template>
+      </p-select>
+      <label for="year_select">{{ 'TERMS.YEAR' | translate }}</label>
+    </p-floatlabel>
 
-    <div class="flex flex-1 min-w-[100px] items-center gap-1.5">
-      <span class="text-surface-600 dark:text-surface-400 font-medium">Mês</span>
+    <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
       <p-select
+        inputId="month_select"
         [options]="monthOptions"
         [ngModel]="selectedMonth()"
-        (ngModelChange)="selectedMonth.set($event); onFilterChange()"
-        [disabled]="!selectedYear()"
-        placeholder="Todos"
+        (ngModelChange)="selectedMonth.set($event || 'ALL'); onFilterChange()"
+        [disabled]="selectedYear() === 'ALL'"
         [showClear]="true"
-        class="flex-1 !h-8"
+        class="w-full"
         appendTo="body"
-      ></p-select>
-    </div>
+        optionLabel="label"
+        optionValue="value"
+      >
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          {{ selectedOption.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-option>
+          {{ option.label | translate }}
+        </ng-template>
+      </p-select>
+      <label for="month_select">{{ 'TERMS.MONTH' | translate }}</label>
+    </p-floatlabel>
 
     <div class="flex items-center">
       <p-button
-        label="Limpar Filtros"
+        [label]="'ACTIONS.CLEAR_FILTERS' | translate"
         icon="pi pi-filter-slash"
         [text]="true"
         severity="secondary"
         size="small"
         class="h-8"
         (click)="
-          selectedType.set(null); selectedYear.set(null); selectedMonth.set(null); onFilterChange()
+          selectedType.set('ALL'); selectedYear.set('ALL'); selectedMonth.set('ALL'); onFilterChange()
         "
       />
     </div>
@@ -90,7 +128,7 @@
           type="text"
           [ngModel]="globalFilter()"
           (ngModelChange)="onFilterGlobal($event)"
-          placeholder="Buscar..."
+          [placeholder]="'TERMS.SEARCH' | translate"
           class="w-full !py-1 sm:!py-2 text-xs sm:text-sm"
         />
       </p-iconfield>
@@ -104,38 +142,35 @@
         [loading]="loading()"
         [scrollable]="true"
         scrollHeight="flex"
-        styleClass="p-datatable-sm h-full flex flex-col"
-        [tableStyle]="{ 'min-width': '35rem' }"
+        class="p-datatable-sm h-full flex flex-col"
       >
         <ng-template pTemplate="header">
           <tr>
             <th
               pSortableColumn="purchase_date"
-              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3"
             >
               Data <p-sortIcon field="purchase_date" />
             </th>
             <th
               pSortableColumn="description"
-              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3"
             >
               Descrição <p-sortIcon field="description" />
             </th>
             <th
               pSortableColumn="type"
-              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 text-[10px] sm:text-sm hidden sm:table-cell"
+              class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 hidden sm:table-cell"
             >
               Tipo <p-sortIcon field="type" />
             </th>
             <th
               pSortableColumn="price"
-              class="bg-surface-50 dark:bg-surface-800 text-right !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
+              class="bg-surface-50 dark:bg-surface-800 text-right !py-1.5 sm:!py-3"
             >
               Valor <p-sortIcon field="price" />
             </th>
-            <th
-              class="bg-surface-50 dark:bg-surface-800 text-center w-24 sm:w-32 !py-1.5 sm:!py-3 text-[10px] sm:text-sm"
-            >
+            <th class="bg-surface-50 dark:bg-surface-800 text-center w-24 sm:w-32 !py-1.5 sm:!py-3">
               Ações
             </th>
           </tr>
@@ -145,10 +180,10 @@
           <tr
             class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
           >
-            <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">
+            <td class="!p-1.5 sm:!p-2">
               {{ expense.purchase_date | date: 'dd/MM/yy' }}
             </td>
-            <td class="!p-1.5 sm:!p-2 text-[10px] sm:text-sm">
+            <td class="!p-1.5 sm:!p-2">
               <div class="flex flex-col">
                 <span class="font-medium text-surface-900 dark:text-surface-0">{{
                   expense.description
@@ -173,9 +208,7 @@
                 styleClass="text-[10px]"
               />
             </td>
-            <td
-              class="!p-1.5 sm:!p-2 text-right font-bold text-surface-900 dark:text-surface-0 text-[10px] sm:text-sm"
-            >
+            <td class="!p-1.5 sm:!p-2 text-right font-bold text-surface-900 dark:text-surface-0">
               {{ expense.price | currency: 'BRL' }}
             </td>
             <td class="!p-1.5 sm:!p-2">

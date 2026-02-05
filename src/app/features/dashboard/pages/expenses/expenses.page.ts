@@ -13,13 +13,14 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { Select } from 'primeng/select';
+import { FloatLabel } from 'primeng/floatlabel';
 import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StringUtils } from '../../../../shared/utils/string.utils';
 
 @Component({
@@ -42,6 +43,7 @@ import { StringUtils } from '../../../../shared/utils/string.utils';
     ConfirmDialog,
     Toast,
     Select,
+    FloatLabel,
     AccordionModule,
     TablePaginatorComponent,
     PageHeaderComponent,
@@ -56,6 +58,7 @@ export class ExpensesPage implements OnInit {
   private supabaseService = inject(SupabaseService);
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
+  private translateService = inject(TranslateService);
 
   expenses = signal<Expense[]>([]);
   filteredExpenses = signal<Expense[]>([]);
@@ -66,49 +69,49 @@ export class ExpensesPage implements OnInit {
   // Filters
   years = signal<number[]>([]);
   months = [
-    { label: 'Janeiro', value: 1 },
-    { label: 'Fevereiro', value: 2 },
-    { label: 'Março', value: 3 },
-    { label: 'Abril', value: 4 },
-    { label: 'Maio', value: 5 },
-    { label: 'Junho', value: 6 },
-    { label: 'Julho', value: 7 },
-    { label: 'Agosto', value: 8 },
-    { label: 'Setembro', value: 9 },
-    { label: 'Outubro', value: 10 },
-    { label: 'Novembro', value: 11 },
-    { label: 'Dezembro', value: 12 }
+    { label: 'MONTHS.0', value: 1 },
+    { label: 'MONTHS.1', value: 2 },
+    { label: 'MONTHS.2', value: 3 },
+    { label: 'MONTHS.3', value: 4 },
+    { label: 'MONTHS.4', value: 5 },
+    { label: 'MONTHS.5', value: 6 },
+    { label: 'MONTHS.6', value: 7 },
+    { label: 'MONTHS.7', value: 8 },
+    { label: 'MONTHS.8', value: 9 },
+    { label: 'MONTHS.9', value: 10 },
+    { label: 'MONTHS.10', value: 11 },
+    { label: 'MONTHS.11', value: 12 }
   ];
 
   expenseTypes = [
-    { label: 'Eletricidade', value: 'ELECTRICITY' },
-    { label: 'Água', value: 'WATER' },
-    { label: 'Condomínio', value: 'CONDOMINIUM' },
-    { label: 'Internet', value: 'INTERNET' },
-    { label: 'Gás', value: 'GAS' },
-    { label: 'Manutenção', value: 'MAINTENANCE' },
-    { label: 'Limpeza', value: 'CLEANING' },
-    { label: 'Outros', value: 'OTHER' }
+    { label: 'EXPENSES_FORM.TYPES.ELECTRICITY', value: 'ELECTRICITY' },
+    { label: 'EXPENSES_FORM.TYPES.WATER', value: 'WATER' },
+    { label: 'EXPENSES_FORM.TYPES.CONDOMINIUM', value: 'CONDOMINIUM' },
+    { label: 'EXPENSES_FORM.TYPES.INTERNET', value: 'INTERNET' },
+    { label: 'EXPENSES_FORM.TYPES.GAS', value: 'GAS' },
+    { label: 'EXPENSES_FORM.TYPES.MAINTENANCE', value: 'MAINTENANCE' },
+    { label: 'EXPENSES_FORM.TYPES.CLEANING', value: 'CLEANING' },
+    { label: 'EXPENSES_FORM.TYPES.OTHER', value: 'OTHER' }
   ];
 
   yearOptions = computed(() => [
-    { label: 'Todos', value: null },
+    { label: 'TERMS.ALL', value: 'ALL' },
     ...this.years().map(y => ({ label: y.toString(), value: y }))
   ]);
 
   monthOptions = [
-    { label: 'Todos', value: null },
+    { label: 'TERMS.ALL', value: 'ALL' },
     ...this.months
   ];
 
   typeOptions = [
-    { label: 'Todos', value: null },
+    { label: 'TERMS.ALL', value: 'ALL' },
     ...this.expenseTypes
   ];
 
-  selectedYear = signal<number | null>(null);
-  selectedMonth = signal<number | null>(null);
-  selectedType = signal<string | null>(null);
+  selectedYear = signal<number | string>('ALL');
+  selectedMonth = signal<number | string>('ALL');
+  selectedType = signal<string>('ALL');
   globalFilter = signal<string>('');
 
   // Pagination
@@ -139,16 +142,21 @@ export class ExpensesPage implements OnInit {
     this.applyFilters();
   }
 
+  protected getSelectedYearLabel(): string {
+    const year = this.selectedYear();
+    return year === 'ALL' ? 'TERMS.ALL' : year.toString();
+  }
+
   protected getSelectedMonthLabel(): string {
     const month = this.selectedMonth();
-    if (!month) return 'Todos';
-    return this.months.find(m => m.value === month)?.label || 'Todos';
+    if (month === 'ALL') return 'TERMS.ALL';
+    return this.months.find(m => m.value === month)?.label || 'TERMS.ALL';
   }
 
   protected getSelectedTypeLabel(): string {
     const type = this.selectedType();
-    if (!type) return 'Todos';
-    return this.expenseTypes.find(t => t.value === type)?.label || 'Todos';
+    if (type === 'ALL') return 'TERMS.ALL';
+    return this.expenseTypes.find(t => t.value === type)?.label || 'TERMS.ALL';
   }
 
   totalExpenses = computed(() => {
@@ -190,16 +198,19 @@ export class ExpensesPage implements OnInit {
   applyFilters() {
     let filtered = [...this.expenses()];
 
-    if (this.selectedYear()) {
-      filtered = filtered.filter(e => new Date(e.purchase_date).getFullYear() === this.selectedYear());
+    const year = this.selectedYear();
+    if (year !== 'ALL') {
+      filtered = filtered.filter(e => new Date(e.purchase_date).getFullYear() === year);
     }
 
-    if (this.selectedMonth()) {
-      filtered = filtered.filter(e => new Date(e.purchase_date).getMonth() + 1 === this.selectedMonth());
+    const month = this.selectedMonth();
+    if (month !== 'ALL') {
+      filtered = filtered.filter(e => new Date(e.purchase_date).getMonth() + 1 === month);
     }
 
-    if (this.selectedType()) {
-      filtered = filtered.filter(e => e.type === this.selectedType());
+    const type = this.selectedType();
+    if (type !== 'ALL') {
+      filtered = filtered.filter(e => e.type === type);
     }
 
     const query = StringUtils.normalize(this.globalFilter());

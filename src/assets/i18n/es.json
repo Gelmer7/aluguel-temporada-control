@@ -19,7 +19,11 @@
     "HEADER": "Menú"
   },
   "ACTIONS": {
-    "VIEW_CSV": "Visor CSV"
+    "VIEW_CSV": "Visor CSV",
+    "CANCEL": "Cancelar",
+    "SAVE": "Guardar",
+    "SAVE_EXPENSE": "Guardar Gasto",
+    "CLEAR_FILTERS": "Limpiar Filtros"
   },
   "TERMS": {
     "ENTRIES": "Entradas",
@@ -33,6 +37,9 @@
     "SUGGESTIONS": "Sugerencias",
     "YEAR": "Año",
     "MONTH": "Mes",
+    "TYPE": "Tipo",
+    "ALL": "Todos",
+    "SEARCH": "Buscar...",
     "TOTAL": "Total",
     "GROSS": "Bruto",
     "NET": "Neto"
@@ -61,5 +68,41 @@
     "9": "Octubre",
     "10": "Noviembre",
     "11": "Diciembre"
+  },
+  "EXPENSES_FORM": {
+    "NEW": "Nuevo Gasto",
+    "EDIT": "Editar Gasto",
+    "DESCRIPTION": "Descripción",
+    "PRICE": "Valor",
+    "TYPE": "Tipo",
+    "DATE": "Fecha de Pago",
+    "KWS": "Kilovatios (KWs)",
+    "CUBIC_METERS": "Metros Cúbicos (m³)",
+    "ASSOCIATION": "Asociación",
+    "RESERVE_FUND": "Fondo de Reserva",
+    "OBSERVATION": "Observación",
+    "PLACEHOLDER_DESCRIPTION": "Ej: Factura de Luz",
+    "PLACEHOLDER_OBSERVATION": "Detalles adicionales...",
+    "SUGGESTIONS": "Sugerencias",
+    "TYPES": {
+      "ELECTRICITY": "Electricidad",
+      "WATER": "Agua",
+      "CONDOMINIUM": "Condominio",
+      "INTERNET": "Internet",
+      "GAS": "Gas",
+      "MAINTENANCE": "Mantenimiento",
+      "CLEANING": "Limpieza",
+      "OTHER": "Otros"
+    },
+    "QUICK": {
+      "ELECTRICITY": "Luz",
+      "WATER": "Agua",
+      "CONDOMINIUM": "Condo",
+      "INTERNET": "Internet",
+      "DESC_ELECTRICITY": "Factura de Luz",
+      "DESC_WATER": "Factura de Agua",
+      "DESC_CONDOMINIUM": "Condominio Mensual",
+      "DESC_INTERNET": "Internet Fibra"
+    }
   }
 }

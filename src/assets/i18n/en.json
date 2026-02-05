@@ -19,7 +19,11 @@
     "HEADER": "Menu"
   },
   "ACTIONS": {
-    "VIEW_CSV": "CSV Viewer"
+    "VIEW_CSV": "CSV Viewer",
+    "CANCEL": "Cancel",
+    "SAVE": "Save",
+    "SAVE_EXPENSE": "Save Expense",
+    "CLEAR_FILTERS": "Clear Filters"
   },
   "TERMS": {
     "ENTRIES": "Entries",
@@ -33,6 +37,9 @@
     "SUGGESTIONS": "Suggestions",
     "YEAR": "Year",
     "MONTH": "Month",
+    "TYPE": "Type",
+    "ALL": "All",
+    "SEARCH": "Search...",
     "TOTAL": "Total",
     "GROSS": "Gross",
     "NET": "Net"
@@ -61,5 +68,41 @@
     "9": "October",
     "10": "November",
     "11": "December"
+  },
+  "EXPENSES_FORM": {
+    "NEW": "New Expense",
+    "EDIT": "Edit Expense",
+    "DESCRIPTION": "Description",
+    "PRICE": "Price",
+    "TYPE": "Type",
+    "DATE": "Payment Date",
+    "KWS": "Kilowatts (KWs)",
+    "CUBIC_METERS": "Cubic Meters (m³)",
+    "ASSOCIATION": "Association",
+    "RESERVE_FUND": "Reserve Fund",
+    "OBSERVATION": "Observation",
+    "PLACEHOLDER_DESCRIPTION": "e.g. Electricity Bill",
+    "PLACEHOLDER_OBSERVATION": "Additional details...",
+    "SUGGESTIONS": "Suggestions",
+    "TYPES": {
+      "ELECTRICITY": "Electricity",
+      "WATER": "Water",
+      "CONDOMINIUM": "Condominium",
+      "INTERNET": "Internet",
+      "GAS": "Gas",
+      "MAINTENANCE": "Maintenance",
+      "CLEANING": "Cleaning",
+      "OTHER": "Other"
+    },
+    "QUICK": {
+      "ELECTRICITY": "Light",
+      "WATER": "Water",
+      "CONDOMINIUM": "Condo",
+      "INTERNET": "Internet",
+      "DESC_ELECTRICITY": "Electricity Bill",
+      "DESC_WATER": "Water Bill",
+      "DESC_CONDOMINIUM": "Monthly Condominium",
+      "DESC_INTERNET": "Fiber Internet"
+    }
   }
 }

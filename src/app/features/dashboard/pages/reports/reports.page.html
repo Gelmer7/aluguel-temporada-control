@@ -25,7 +25,11 @@
   </p-accordion>
 
   <!-- 2. Resultados Totais -->
-  <p-accordion [value]="['0']" [multiple]="true" class="w-full">
+  <p-accordion
+    [value]="['0']"
+    [multiple]="true"
+    class="w-full [&_.p-accordioncontent-content]:!p-0"
+  >
     <p-accordion-panel value="0">
       <p-accordion-header>
         <div class="flex items-center gap-2">
@@ -34,54 +38,35 @@
         </div>
       </p-accordion-header>
       <p-accordion-content>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          @if (loading()) {
-            @for (i of [1,2,3]; track i) {
-              <p-card>
-                <div class="flex flex-col gap-1">
-                  <p-skeleton width="40%" height="1rem" />
-                  <p-skeleton width="60%" height="1.5rem" />
-                </div>
-              </p-card>
-            }
-          } @else {
-            <p-card>
-              <ng-template pTemplate="subtitle">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-arrow-up-right"></i>
-                  <span>{{ 'REPORTS.GROSS' | translate }}</span>
-                </div>
-                <span>{{ summary().totalGross | currency: 'BRL' }}</span>
-              </ng-template>
-            </p-card>
-
-            <p-card>
-              <ng-template pTemplate="subtitle">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-arrow-down-right"></i>
-                  <span>{{ 'REPORTS.EXPENSES' | translate }}</span>
-                </div>
-                <span>{{ summary().totalExpenses | currency: 'BRL' }}</span>
-              </ng-template>
-            </p-card>
-
-            <p-card>
-              <ng-template pTemplate="subtitle">
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-wallet"></i>
-                  <span>{{ 'REPORTS.NET' | translate }}</span>
-                </div>
-                <span>{{ summary().totalNet | currency: 'BRL' }}</span>
-              </ng-template>
-            </p-card>
-          }
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border rounded-lg p-2 text-xs">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="flex items-center gap-2">
+              <i class="pi pi-arrow-up-right"></i>
+              <span>{{ 'REPORTS.GROSS' | translate }}:</span>
+            </div>
+            <span>{{ summary().totalGross | currency: 'BRL' }}</span>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-arrow-down-right"></i>
+              <span>{{ 'REPORTS.EXPENSES' | translate }}:</span>
+            </div>
+            <span>{{ summary().totalExpenses | currency: 'BRL' }}</span>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-wallet"></i>
+              <span>{{ 'REPORTS.NET' | translate }}:</span>
+            </div>
+            <span>{{ summary().totalNet | currency: 'BRL' }}</span>
+          </div>
         </div>
       </p-accordion-content>
     </p-accordion-panel>
   </p-accordion>
 
   <!-- 3. Tabela de Detalhamento -->
-  <p-accordion [value]="['0']" [multiple]="true" class="w-full">
+  <p-accordion
+    [value]="['0']"
+    [multiple]="true"
+    class="w-full [&_.p-accordioncontent-content]:!p-0"
+  >
     <p-accordion-panel value="0">
       <p-accordion-header>
         <div class="flex items-center gap-2">
@@ -90,7 +75,7 @@
         </div>
       </p-accordion-header>
       <p-accordion-content>
-        <div class="overflow-hidden border border-surface rounded-lg">
+        <div class="overflow-hidden border border-surface rounded-lg p-2 text-xs">
           <p-table
             [value]="flattenedData()"
             [loading]="loading()"
@@ -142,13 +127,23 @@
               <tr class="bg-surface-100/50 dark:bg-surface-800/50">
                 <td>{{ 'TERMS.TOTAL' | translate }} {{ item.year }}</td>
                 @if (showGross()) {
-                  <td>{{ item.yearTotalGross === 0 ? '-' : (item.yearTotalGross | currency: 'BRL') }}</td>
+                  <td>
+                    {{ item.yearTotalGross === 0 ? '-' : (item.yearTotalGross | currency: 'BRL') }}
+                  </td>
                 }
                 @if (showExpenses()) {
-                  <td>{{ item.yearTotalExpenses === 0 ? '-' : (item.yearTotalExpenses | currency: 'BRL') }}</td>
+                  <td>
+                    {{
+                      item.yearTotalExpenses === 0
+                        ? '-'
+                        : (item.yearTotalExpenses | currency: 'BRL')
+                    }}
+                  </td>
                 }
                 @if (showNet()) {
-                  <td>{{ item.yearTotalNet === 0 ? '-' : (item.yearTotalNet | currency: 'BRL') }}</td>
+                  <td>
+                    {{ item.yearTotalNet === 0 ? '-' : (item.yearTotalNet | currency: 'BRL') }}
+                  </td>
                 }
               </tr>
             </ng-template>

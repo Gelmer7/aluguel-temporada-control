@@ -8,7 +8,8 @@ import { InputNumber } from 'primeng/inputnumber';
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
-import { SelectButton } from 'primeng/selectbutton';
+import { ToolbarModule } from 'primeng/toolbar';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 
@@ -25,11 +26,14 @@ import { map } from 'rxjs/operators';
     DatePicker,
     Select,
     Textarea,
+    ToolbarModule,
+    TranslateModule,
   ],
   templateUrl: './expense-form.component.html',
 })
 export class ExpenseFormComponent implements OnInit {
   private breakpointObserver = inject(BreakpointObserver);
+  private translate = inject(TranslateService);
   isMobile = false;
 
   @Input() visible: boolean = false;
@@ -63,21 +67,21 @@ export class ExpenseFormComponent implements OnInit {
   isEdit: boolean = false;
 
   expenseTypes = [
-    { label: 'Eletricidade', value: 'ELECTRICITY', icon: 'pi pi-bolt' },
-    { label: 'Água', value: 'WATER', icon: 'pi pi-tint' },
-    { label: 'Condomínio', value: 'CONDOMINIUM', icon: 'pi pi-building' },
-    { label: 'Internet', value: 'INTERNET', icon: 'pi pi-wifi' },
-    { label: 'Gás', value: 'GAS', icon: 'pi pi-fire' },
-    { label: 'Manutenção', value: 'MAINTENANCE', icon: 'pi pi-wrench' },
-    { label: 'Limpeza', value: 'CLEANING', icon: 'pi pi-trash' },
-    { label: 'Outros', value: 'OTHER', icon: 'pi pi-box' }
+    { label: 'EXPENSES_FORM.TYPES.ELECTRICITY', value: 'ELECTRICITY', icon: 'pi pi-bolt' },
+    { label: 'EXPENSES_FORM.TYPES.WATER', value: 'WATER', icon: 'pi pi-tint' },
+    { label: 'EXPENSES_FORM.TYPES.CONDOMINIUM', value: 'CONDOMINIUM', icon: 'pi pi-building' },
+    { label: 'EXPENSES_FORM.TYPES.INTERNET', value: 'INTERNET', icon: 'pi pi-wifi' },
+    { label: 'EXPENSES_FORM.TYPES.GAS', value: 'GAS', icon: 'pi pi-fire' },
+    { label: 'EXPENSES_FORM.TYPES.MAINTENANCE', value: 'MAINTENANCE', icon: 'pi pi-wrench' },
+    { label: 'EXPENSES_FORM.TYPES.CLEANING', value: 'CLEANING', icon: 'pi pi-trash' },
+    { label: 'EXPENSES_FORM.TYPES.OTHER', value: 'OTHER', icon: 'pi pi-box' }
   ];
 
   quickExpenseTypes = [
-    { label: 'Luz', value: 'ELECTRICITY', description: 'Conta de Luz', icon: 'pi pi-bolt' },
-    { label: 'Água', value: 'WATER', description: 'Conta de Água', icon: 'pi pi-tint' },
-    { label: 'Condomínio', value: 'CONDOMINIUM', description: 'Condomínio Mensal', icon: 'pi pi-building' },
-    { label: 'Internet', value: 'INTERNET', description: 'Internet Fibra', icon: 'pi pi-wifi' }
+    { label: 'EXPENSES_FORM.QUICK.ELECTRICITY', value: 'ELECTRICITY', description: 'EXPENSES_FORM.QUICK.DESC_ELECTRICITY', icon: 'pi pi-bolt' },
+    { label: 'EXPENSES_FORM.QUICK.WATER', value: 'WATER', description: 'EXPENSES_FORM.QUICK.DESC_WATER', icon: 'pi pi-tint' },
+    { label: 'EXPENSES_FORM.QUICK.CONDOMINIUM', value: 'CONDOMINIUM', description: 'EXPENSES_FORM.QUICK.DESC_CONDOMINIUM', icon: 'pi pi-building' },
+    { label: 'EXPENSES_FORM.QUICK.INTERNET', value: 'INTERNET', description: 'EXPENSES_FORM.QUICK.DESC_INTERNET', icon: 'pi pi-wifi' }
   ];
 
   condominiumDefaults = {
@@ -118,7 +122,7 @@ export class ExpenseFormComponent implements OnInit {
 
   applyQuickExpense(quickType: any) {
     const patchData: any = {
-      description: quickType.description,
+      description: this.translate.instant(quickType.description),
       type: quickType.value,
       price: 0,
       kws: 0,
