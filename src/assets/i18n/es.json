@@ -30,6 +30,36 @@
     "CONTRACTS": "Contratos",
     "CHARTS": "Gráficos",
     "REPORTS": "Reportes",
-    "SUGGESTIONS": "Sugerencias"
+    "SUGGESTIONS": "Sugerencias",
+    "YEAR": "Año",
+    "MONTH": "Mes",
+    "TOTAL": "Total",
+    "GROSS": "Bruto",
+    "NET": "Neto"
+  },
+  "REPORTS": {
+    "SUMMARY": "Resumen Financiero",
+    "GROSS": "Ganancias Brutas",
+    "EXPENSES": "Gastos Totales",
+    "NET": "Saldo Neto",
+    "CHART_TITLE": "Tendencia Financiera",
+    "SHOW_GROSS": "Ver Ganancias",
+    "SHOW_EXPENSES": "Ver Gastos",
+    "SHOW_NET": "Ver Neto",
+    "DETAILS": "Detalle Mensual"
+  },
+  "MONTHS": {
+    "0": "Enero",
+    "1": "Febrero",
+    "2": "Marzo",
+    "3": "Abril",
+    "4": "Mayo",
+    "5": "Junio",
+    "6": "Julio",
+    "7": "Agosto",
+    "8": "Septiembre",
+    "9": "Octubre",
+    "10": "Noviembre",
+    "11": "Diciembre"
   }
 }

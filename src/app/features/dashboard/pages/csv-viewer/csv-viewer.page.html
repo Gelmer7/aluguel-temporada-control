@@ -249,7 +249,8 @@
         dataKey="__id"
         [rowTrackBy]="rowTrackBy"
         [loading]="loading()"
-        styleClass="p-datatable-sm h-full flex flex-col"
+        class="p-datatable-sm h-full flex flex-col"
+        rowGroupMode="rowspan"
       >
         <!-- Sub-cabeçalho de grupo (Data) -->
         <ng-template pTemplate="rowgroupheader" let-row>

@@ -9,7 +9,7 @@ import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
 import { SelectButton } from 'primeng/selectbutton';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -102,7 +102,7 @@ export class ExpenseFormComponent implements OnInit {
 
   ngOnInit() {
     this.breakpointObserver.observe([Breakpoints.XSmall, Breakpoints.Small])
-      .subscribe(result => {
+      .subscribe((result: BreakpointState) => {
         this.isMobile = result.matches;
       });
 

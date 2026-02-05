@@ -15,6 +15,8 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
+import { provideEchartsCore } from 'ngx-echarts';
+import * as echarts from 'echarts';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +25,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
+    provideEchartsCore({ echarts }),
     importProvidersFrom(
       TranslateModule.forRoot({
         loader: {
