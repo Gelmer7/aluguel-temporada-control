@@ -19,12 +19,10 @@
     "HEADER": "Menu"
   },
   "ACTIONS": {
-    "UPLOAD_CSV": "CSV Upload",
     "VIEW_CSV": "CSV Viewer"
   },
   "TERMS": {
     "ENTRIES": "Entries",
-    "CSV_LIST": "CSV List",
     "EXPENSES": "Expenses",
     "EARNINGS": "Earnings",
     "CARNE_LEAO": "Carnê-Leão",

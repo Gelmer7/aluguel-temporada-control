@@ -9,11 +9,6 @@ export const DASHBOARD_ROUTES: Routes = [
       { path: '', pathMatch: 'full', redirectTo: 'csv-reports/viewer' },
 
       {
-        path: 'csv-reports/upload',
-        loadComponent: () =>
-          import('./pages/upload-csv/upload-csv.page').then((m) => m.UploadCsvPage),
-      },
-      {
         path: 'csv-reports/viewer',
         loadComponent: () =>
           import('./pages/csv-viewer/csv-viewer.page').then((m) => m.CsvViewerPage),
@@ -22,11 +17,6 @@ export const DASHBOARD_ROUTES: Routes = [
         path: 'airbnb-payments',
         loadComponent: () =>
           import('./pages/airbnb-payments/airbnb-payments.page').then((m) => m.AirbnbPaymentsPage),
-      },
-      {
-        path: 'csv-reports',
-        loadComponent: () =>
-          import('./pages/csv-reports/csv-reports.page').then((m) => m.CsvReportsPage),
       },
       {
         path: 'expenses',

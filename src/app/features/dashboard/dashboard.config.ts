@@ -7,12 +7,6 @@ import { NavItem } from '../../components/ui/types';
  */
 export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   {
-    id: 'upload',
-    label: 'ACTIONS.UPLOAD_CSV',
-    icon: 'pi-file',
-    route: '/dashboard/csv-reports/upload',
-  },
-  {
     id: 'csv-viewer',
     label: 'ACTIONS.VIEW_CSV',
     icon: 'pi-table',
@@ -23,12 +17,6 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     label: 'TERMS.ENTRIES',
     icon: 'pi-download',
     route: '/dashboard/airbnb-payments',
-  },
-  {
-    id: 'csv-list',
-    label: 'TERMS.CSV_LIST',
-    icon: 'pi-list',
-    route: '/dashboard/csv-reports',
   },
   {
     id: 'expenses',

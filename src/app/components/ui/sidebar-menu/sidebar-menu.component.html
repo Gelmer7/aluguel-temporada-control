@@ -41,11 +41,7 @@
         class="flex items-center p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 cursor-pointer"
         (click)="userMenu.toggle($event)"
       >
-        <p-avatar
-          image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png"
-          shape="circle"
-          class="flex-shrink-0"
-        />
+        <p-avatar label="G" shape="circle" />
         <div class="ml-3 flex flex-col overflow-hidden">
           <span class="font-semibold text-sm truncate">Gelmer Apaza</span>
           <span class="text-xs text-surface-500 truncate">Administrador</span>
@@ -62,9 +58,7 @@
     @if (item.data?.isTheme) {
       <div class="p-menuitem-content flex items-center gap-2 p-2">
         <span [class]="item.icon"></span>
-        <span class="text-sm"
-          > {{ item.data.currentTheme?.name | translate }}</span
-        >
+        <span class="text-sm"> {{ item.data.currentTheme?.name | translate }}</span>
       </div>
     } @else if (item.data?.isLanguage) {
       <div class="p-menuitem-content flex items-center gap-2 p-2">
