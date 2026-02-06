@@ -121,6 +121,35 @@ export class SupabaseService {
     return await this.supabase.from('expenses').insert(dbPayloads).select();
   }
 
+  // --- Tithe Methods ---
+
+  async getTithes() {
+    const { data, error } = await this.supabase
+      .from('tithes')
+      .select('*')
+      .eq('house_code', this.houseService.currentHouseCode())
+      .order('month_year', { ascending: false });
+
+    return { data, error };
+  }
+
+  async addTithe(tithe: Omit<Tithe, 'id' | 'created_at'>) {
+    const payload = {
+      ...tithe,
+      house_code: this.houseService.currentHouseCode(),
+      created_by: 'admin' // Temporário até ter login
+    };
+    return await this.supabase.from('tithes').insert(payload).select();
+  }
+
+  async updateTithe(id: string, tithe: Partial<Tithe>) {
+    return await this.supabase.from('tithes').update(tithe).eq('id', id).select();
+  }
+
+  async deleteTithe(id: string) {
+    return await this.supabase.from('tithes').delete().eq('id', id);
+  }
+
   private mapToDb(expense: any) {
     const mapped: any = {};
     if (expense.price !== undefined) mapped.amount = expense.price;
@@ -138,6 +167,19 @@ export class SupabaseService {
 
     return mapped;
   }
+}
+
+export interface Tithe {
+  id: string;
+  month_year: string; // ISO format YYYY-MM-01
+  airbnb_gross: number;
+  tithe_value: number;
+  offer_value: number;
+  total_paid: number;
+  observation?: string;
+  created_at?: string;
+  house_code?: string;
+  created_by?: string;
 }
 
 export interface Expense {

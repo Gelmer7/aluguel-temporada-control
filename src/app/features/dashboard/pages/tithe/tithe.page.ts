@@ -8,22 +8,28 @@ import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
 import { InputNumberModule } from 'primeng/inputnumber';
-import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { FloatLabel } from 'primeng/floatlabel';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 // Components
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
+import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 
 // Services & Models
-import { SupabaseService, Expense } from '../../../../services/supabase.service';
+import { SupabaseService, Expense, Tithe } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
+import { IftaLabelModule } from 'primeng/iftalabel';
+import { ButtonModule } from 'primeng/button';
+import { TextareaModule } from 'primeng/textarea';
 
 @Component({
   selector: 'app-tithe-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [MessageService],
   imports: [
     CommonModule,
     FormsModule,
@@ -35,8 +41,12 @@ import { HouseService } from '../../../../services/house.service';
     TooltipModule,
     TranslateModule,
     FloatLabel,
+    ToastModule,
     PageHeaderComponent,
     DialogComponent,
+    FilterContainerComponent,
+    IftaLabelModule,
+    TextareaModule
   ],
   templateUrl: './tithe.page.html',
 })
@@ -44,6 +54,7 @@ export class TithePage implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly translate = inject(TranslateService);
   private readonly houseService = inject(HouseService);
+  private readonly messageService = inject(MessageService);
 
   // Filtros
   protected readonly selectedYear = signal<number>(new Date().getFullYear());
@@ -61,13 +72,16 @@ export class TithePage implements OnInit {
 
   // Dados
   protected readonly loading = signal<boolean>(true);
+  protected readonly saving = signal<boolean>(false);
   protected readonly payments = signal<any[]>([]);
   protected readonly expenses = signal<Expense[]>([]);
+  protected readonly titheHistory = signal<Tithe[]>([]);
 
   // Modal
   protected readonly showAddDialog = signal<boolean>(false);
   protected readonly titheValueToPay = signal<number>(0);
   protected readonly offerValueToPay = signal<number>(0);
+  protected readonly titheObservation = signal<string>('');
 
   // Opções de Filtro
   protected readonly years = signal<number[]>([]);
@@ -134,13 +148,15 @@ export class TithePage implements OnInit {
   private async loadData() {
     this.loading.set(true);
     try {
-      const [paymentsRes, expensesRes] = await Promise.all([
+      const [paymentsRes, expensesRes, tithesRes] = await Promise.all([
         this.supabase.getAirbnbRecords(),
         this.supabase.getExpenses(),
+        this.supabase.getTithes(),
       ]);
 
       if (paymentsRes.data) this.payments.set(paymentsRes.data);
       if (expensesRes.data) this.expenses.set(expensesRes.data);
+      if (tithesRes.data) this.titheHistory.set(tithesRes.data);
     } finally {
       this.loading.set(false);
     }
@@ -149,12 +165,71 @@ export class TithePage implements OnInit {
   protected onAddTithe() {
     this.titheValueToPay.set(this.titheValue());
     this.offerValueToPay.set(this.offerValue());
+    this.titheObservation.set('');
     this.showAddDialog.set(true);
   }
 
-  protected onSaveTithe() {
-    // Aqui implementaria a lógica de salvar se houvesse uma tabela
-    // Por enquanto apenas fechamos o modal
-    this.showAddDialog.set(false);
+  protected async onSaveTithe() {
+    const month = this.selectedMonth() + 1;
+    const monthStr = month < 10 ? `0${month}` : month;
+    const monthYear = `${this.selectedYear()}-${monthStr}-01`;
+
+    const titheData: Omit<Tithe, 'id' | 'created_at'> = {
+      month_year: monthYear,
+      airbnb_gross: this.totalAirbnb(),
+      tithe_value: this.titheValueToPay(),
+      offer_value: this.offerValueToPay(),
+      total_paid: this.titheValueToPay() + this.offerValueToPay(),
+      observation: this.titheObservation(),
+    };
+
+    this.saving.set(true);
+    try {
+      const { error } = await this.supabase.addTithe(titheData);
+
+      if (error) {
+        this.messageService.add({
+          severity: 'error',
+          summary: this.translate.instant('COMMON.ERROR'),
+          detail: error.message
+        });
+      } else {
+        this.messageService.add({
+          severity: 'success',
+          summary: this.translate.instant('COMMON.SUCCESS'),
+          detail: this.translate.instant('TITHE_MANAGEMENT.SAVE_SUCCESS')
+        });
+        this.showAddDialog.set(false);
+        await this.loadData();
+      }
+    } catch (err: any) {
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translate.instant('COMMON.ERROR'),
+        detail: err.message
+      });
+    } finally {
+      this.saving.set(false);
+    }
+  }
+
+  protected async onDeleteTithe(id: string) {
+    try {
+      const { error } = await this.supabase.deleteTithe(id);
+      if (!error) {
+        this.messageService.add({
+          severity: 'success',
+          summary: this.translate.instant('COMMON.SUCCESS'),
+          detail: this.translate.instant('COMMON.DELETE_SUCCESS')
+        });
+        await this.loadData();
+      }
+    } catch (err: any) {
+      this.messageService.add({
+        severity: 'error',
+        summary: this.translate.instant('COMMON.ERROR'),
+        detail: err.message
+      });
+    }
   }
 }

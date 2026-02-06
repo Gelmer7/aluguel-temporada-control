@@ -147,8 +147,8 @@
   },
   "TITHE_MANAGEMENT": {
     "ADD_TITHE": "Agregar Diezmo",
-    "TITHE_PERCENTAGE": "Porcentaje del Diezmo (%)",
-    "OFFER_PERCENTAGE": "Porcentaje de la Ofrenda (%)",
+    "TITHE_PERCENTAGE": "Diezmo (%)",
+    "OFFER_PERCENTAGE": "Ofrenda (%)",
     "AIRBNB_PAYMENTS": "Pagos Airbnb",
     "TOTAL_EXPENSES": "Total de Gastos",
     "TITHE_VALUE": "Diezmo ({{percentage}}%)",

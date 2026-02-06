@@ -147,8 +147,8 @@
   },
   "TITHE_MANAGEMENT": {
     "ADD_TITHE": "Add Tithe",
-    "TITHE_PERCENTAGE": "Tithe Percentage (%)",
-    "OFFER_PERCENTAGE": "Offer Percentage (%)",
+    "TITHE_PERCENTAGE": "Tithe (%)",
+    "OFFER_PERCENTAGE": "Offer (%)",
     "AIRBNB_PAYMENTS": "Airbnb Payments",
     "TOTAL_EXPENSES": "Total Expenses",
     "TITHE_VALUE": "Tithe ({{percentage}}%)",

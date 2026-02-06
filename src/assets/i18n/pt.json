@@ -172,8 +172,8 @@
   },
   "TITHE_MANAGEMENT": {
     "ADD_TITHE": "Adicionar Dízimo",
-    "TITHE_PERCENTAGE": "Porcentagem do Dízimo (%)",
-    "OFFER_PERCENTAGE": "Porcentagem da Oferta (%)",
+    "TITHE_PERCENTAGE": "Dízimo (%)",
+    "OFFER_PERCENTAGE": "Oferta (%)",
     "AIRBNB_PAYMENTS": "Pagamentos Airbnb",
     "TOTAL_EXPENSES": "Total de Despesas",
     "TITHE_VALUE": "Dízimo ({{percentage}}%)",
@@ -182,6 +182,14 @@
     "CALCULATED_VALUES": "Valores Calculados",
     "TITHE_AND_OFFER": "Dízimo e Oferta",
     "PAYMENTS_LIST": "Lista de Pagamentos",
-    "EXPENSES_LIST": "Lista de Despesas"
+    "EXPENSES_LIST": "Lista de Despesas",
+    "HISTORY": "Histórico de Dízimos",
+    "NO_HISTORY": "Nenhum histórico de dízimo encontrado.",
+    "SAVE_SUCCESS": "Dízimo salvo com sucesso!"
+  },
+  "COMMON": {
+    "SUCCESS": "Sucesso",
+    "ERROR": "Erro",
+    "DELETE_SUCCESS": "Excluído com sucesso"
   }
 }
