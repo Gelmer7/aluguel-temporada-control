@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { AirbnbNormalizedRow } from '../models/airbnb.model';
+import { HouseService } from './house.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private houseService = inject(HouseService);
 
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
@@ -42,6 +44,7 @@ export class SupabaseService {
     const { data, error } = await this.supabase
       .from('airbnb_logs')
       .select('*')
+      .eq('house_code', this.houseService.currentHouseCode())
       .order('data', { ascending: false });
 
     return { data, error };
@@ -52,9 +55,16 @@ export class SupabaseService {
    * Usa a coluna 'unique_key' para identificar duplicatas.
    */
   async upsertAirbnbRecords(records: any[]) {
+    // Adicionar metadados a cada registro
+    const recordsWithMetadata = records.map(record => ({
+      ...record,
+      house_code: this.houseService.currentHouseCode(),
+      created_by: 'admin' // Temporário até ter login
+    }));
+
     return await this.supabase
       .from('airbnb_logs')
-      .upsert(records, {
+      .upsert(recordsWithMetadata, {
         onConflict: 'unique_key',
         ignoreDuplicates: false
       })
@@ -67,6 +77,7 @@ export class SupabaseService {
     const { data, error } = await this.supabase
       .from('expenses')
       .select('*')
+      .eq('house_code', this.houseService.currentHouseCode())
       .order('date', { ascending: false });
 
     if (error) return { data: null, error };
@@ -82,7 +93,12 @@ export class SupabaseService {
   }
 
   async addExpense(expense: Omit<Expense, 'id' | 'created_at'>) {
-    const dbPayload = this.mapToDb(expense);
+    const payload = {
+      ...expense,
+      house_code: this.houseService.currentHouseCode(),
+      created_by: 'admin' // Temporário até ter login
+    };
+    const dbPayload = this.mapToDb(payload);
     return await this.supabase.from('expenses').insert(dbPayload).select();
   }
 
@@ -96,7 +112,12 @@ export class SupabaseService {
   }
 
   async bulkUploadExpenses(expenses: Omit<Expense, 'id' | 'created_at'>[]) {
-    const dbPayloads = expenses.map(e => this.mapToDb(e));
+    const payloads = expenses.map(e => ({
+      ...e,
+      house_code: this.houseService.currentHouseCode(),
+      created_by: 'admin' // Temporário até ter login
+    }));
+    const dbPayloads = payloads.map(p => this.mapToDb(p));
     return await this.supabase.from('expenses').insert(dbPayloads).select();
   }
 
@@ -107,13 +128,13 @@ export class SupabaseService {
     if (expense.type !== undefined) mapped.category = expense.type;
     if (expense.purchase_date !== undefined) mapped.date = expense.purchase_date;
 
-    // These might fail if columns don't exist, but we keep them for parity
+    // Campos opcionais de auditoria e controle
     if (expense.observation !== undefined) mapped.observation = expense.observation;
     if (expense.cubic_meters !== undefined) mapped.cubic_meters = expense.cubic_meters;
     if (expense.reserve_fund !== undefined) mapped.reserve_fund = expense.reserve_fund;
-    if (expense.association !== undefined) mapped.association = expense.association;
     if (expense.kws !== undefined) mapped.kws = expense.kws;
-    if (expense.create_user !== undefined) mapped.create_user = expense.create_user;
+    if (expense.house_code !== undefined) mapped.house_code = expense.house_code;
+    if (expense.created_by !== undefined) mapped.created_by = expense.created_by;
 
     return mapped;
   }
@@ -131,8 +152,8 @@ export interface Expense {
   date?: string; // DB field
   cubic_meters?: number;
   reserve_fund?: number;
-  association?: number;
   kws?: number;
-  create_user?: string;
   created_at?: string;
+  house_code?: string;
+  created_by?: string;
 }

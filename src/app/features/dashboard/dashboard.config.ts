@@ -7,6 +7,12 @@ import { NavItem } from '../../components/ui/types';
  */
 export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   {
+    id: 'home',
+    label: 'TERMS.HOME',
+    icon: 'pi-home',
+    route: '/dashboard/home',
+  },
+  {
     id: 'csv-viewer',
     label: 'ACTIONS.VIEW_CSV',
     icon: 'pi-table',

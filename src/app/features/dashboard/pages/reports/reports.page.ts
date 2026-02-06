@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -18,6 +18,7 @@ import * as echarts from 'echarts';
 
 // Services & Models
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
+import { HouseService } from '../../../../services/house.service';
 import { FinancialYear, FinancialSummary, FinancialMonth } from './reports.model';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 
@@ -46,6 +47,15 @@ import { PageHeaderComponent } from '../../../../components/ui/page-header/page-
 })
 export class ReportsPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
+  private readonly houseService = inject(HouseService);
+
+  constructor() {
+    // Reload data when house changes
+    effect(() => {
+      this.houseService.currentHouseCode();
+      this.fetchData();
+    });
+  }
 
   protected readonly loading = signal<boolean>(true);
   protected readonly payments = signal<any[]>([]);
@@ -105,9 +115,9 @@ export class ReportsPage implements OnInit {
       const month = date.getUTCMonth();
 
       let amount = e.price || 0;
-      // Lógica do sistema antigo para condomínio
+      // Lógica do sistema: para condomínio, somamos o fundo de reserva ao valor base
       if (e.type === 'CONDOMINIUM') {
-        amount += (e.association || 0) + (e.reserve_fund || 0);
+        amount += (e.reserve_fund || 0);
       }
 
       if (!yearMap.has(year)) this.initYear(yearMap, year);

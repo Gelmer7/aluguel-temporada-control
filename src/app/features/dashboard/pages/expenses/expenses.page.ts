@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, signal, inject, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, signal, inject, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Card } from 'primeng/card';
@@ -22,6 +22,7 @@ import { FilterContainerComponent } from '../../../../components/ui/filter-conta
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { ExpenseChartsComponent } from '../../components/expense-charts/expense-charts.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
+import { HouseService } from '../../../../services/house.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StringUtils } from '../../../../shared/utils/string.utils';
 
@@ -63,6 +64,7 @@ export class ExpensesPage implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
   private translateService = inject(TranslateService);
+  private houseService = inject(HouseService);
 
   expenses = signal<Expense[]>([]);
   filteredExpenses = signal<Expense[]>([]);
@@ -70,6 +72,14 @@ export class ExpensesPage implements OnInit {
   showExpenseForm = signal<boolean>(false);
   showCharts = signal<boolean>(false);
   currentExpense = signal<Expense | null>(null);
+
+  constructor() {
+    // Reload expenses when house changes
+    effect(() => {
+      this.houseService.currentHouseCode();
+      this.loadExpenses();
+    });
+  }
 
   // Filters
   years = signal<number[]>([]);

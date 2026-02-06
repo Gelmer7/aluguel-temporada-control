@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -18,6 +18,7 @@ import { DialogComponent } from '../../../../components/ui/dialog/dialog.compone
 
 // Services & Models
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
+import { HouseService } from '../../../../services/house.service';
 
 @Component({
   selector: 'app-tithe-page',
@@ -42,12 +43,21 @@ import { SupabaseService, Expense } from '../../../../services/supabase.service'
 export class TithePage implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly translate = inject(TranslateService);
+  private readonly houseService = inject(HouseService);
 
   // Filtros
   protected readonly selectedYear = signal<number>(new Date().getFullYear());
   protected readonly selectedMonth = signal<number>(new Date().getMonth());
   protected readonly tithePercentage = signal<number>(10);
   protected readonly offerPercentage = signal<number>(5);
+
+  constructor() {
+    // Reload data when house changes
+    effect(() => {
+      this.houseService.currentHouseCode();
+      this.loadData();
+    });
+  }
 
   // Dados
   protected readonly loading = signal<boolean>(true);

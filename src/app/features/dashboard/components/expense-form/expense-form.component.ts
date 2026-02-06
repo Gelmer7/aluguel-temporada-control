@@ -49,7 +49,6 @@ export class ExpenseFormComponent implements OnInit {
         observation: value.observation,
         kws: value.kws,
         cubicMeters: value.cubic_meters,
-        association: value.association,
         reserveFund: value.reserve_fund
       });
     } else {
@@ -57,7 +56,10 @@ export class ExpenseFormComponent implements OnInit {
       this.form.reset({
         type: 'OTHER',
         purchaseDate: new Date(),
-        price: 0
+        price: 0,
+        kws: 0,
+        cubicMeters: 0,
+        reserveFund: 0
       });
     }
   }
@@ -86,9 +88,8 @@ export class ExpenseFormComponent implements OnInit {
   ];
 
   condominiumDefaults = {
-    price: 235.59,
-    reserveFund: 11.78,
-    association: 64.26
+    price: 300.00, // Ajustado para ser mais genérico ou aproximado sem association
+    reserveFund: 15.00
   };
 
   constructor(private fb: FormBuilder) {
@@ -100,7 +101,6 @@ export class ExpenseFormComponent implements OnInit {
       observation: [''],
       kws: [0],
       cubicMeters: [0],
-      association: [0],
       reserveFund: [0]
     });
   }
@@ -128,13 +128,11 @@ export class ExpenseFormComponent implements OnInit {
       price: 0,
       kws: 0,
       cubicMeters: 0,
-      association: 0,
       reserveFund: 0
     };
 
     if (quickType.value === 'CONDOMINIUM') {
       patchData.price = this.condominiumDefaults.price;
-      patchData.association = this.condominiumDefaults.association;
       patchData.reserveFund = this.condominiumDefaults.reserveFund;
     }
 
@@ -148,7 +146,6 @@ export class ExpenseFormComponent implements OnInit {
       price: 0,
       kws: 0,
       cubicMeters: 0,
-      association: 0,
       reserveFund: 0
     });
   }

@@ -13,6 +13,7 @@ import { Drawer } from 'primeng/drawer';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { LanguageService } from '../../../services/language.service';
 import { ThemeService } from '../../../services/theme.service';
+import { HouseService } from '../../../services/house.service';
 
 @Component({
   selector: 'app-sidebar-menu',
@@ -36,6 +37,9 @@ export class SidebarMenuComponent {
   private languageService = inject(LanguageService);
   private themeService = inject(ThemeService);
   private translateService = inject(TranslateService);
+  private houseService = inject(HouseService);
+
+  readonly activeHouseName = computed(() => this.houseService.currentHouse().name);
 
   items = input.required<{
     id: string;

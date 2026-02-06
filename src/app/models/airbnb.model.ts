@@ -46,6 +46,8 @@ export interface AirbnbNormalizedRow {
   ganhosBrutos: string;
   impostosOcupacao: string;
   ganhosAno: string;
+  house_code?: string;
+  created_by?: string;
 }
 
 export const AirbnbHeaderToKey: Record<AirbnbHeaderKey, keyof AirbnbNormalizedRow> = {
@@ -72,7 +74,7 @@ export const AirbnbHeaderToKey: Record<AirbnbHeaderKey, keyof AirbnbNormalizedRo
   "Ganhos do ano": "ganhosAno",
 };
 
-export const AirbnbKeyToHeader: Record<keyof AirbnbNormalizedRow, AirbnbHeaderKey> = {
+export const AirbnbKeyToHeader: Partial<Record<keyof AirbnbNormalizedRow, AirbnbHeaderKey>> = {
   data: "Data",
   disponivelPorData: "Disponível por data",
   tipo: "Tipo",

@@ -6,8 +6,12 @@ export const DASHBOARD_ROUTES: Routes = [
     path: '',
     component: DashboardLayoutPage,
     children: [
-      { path: '', pathMatch: 'full', redirectTo: 'csv-reports/viewer' },
+      { path: '', pathMatch: 'full', redirectTo: 'home' },
 
+      {
+        path: 'home',
+        loadComponent: () => import('./pages/home/home.page').then((m) => m.HomePage),
+      },
       {
         path: 'csv-reports/viewer',
         loadComponent: () =>
