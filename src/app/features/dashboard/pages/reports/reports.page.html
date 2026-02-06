@@ -2,7 +2,7 @@
   <app-page-header [title]="'TERMS.REPORTS' | translate" icon="pi pi-chart-bar" />
 
   <!-- 1. Gráfico -->
-  <p-accordion [value]="[]" class="w-full">
+  <p-accordion [value]="[]" class="w-full [&_.p-accordioncontent-content]:!p-0">
     <p-accordion-panel value="0">
       <p-accordion-header>
         <div class="flex items-center gap-2">
@@ -38,7 +38,7 @@
         </div>
       </p-accordion-header>
       <p-accordion-content>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border rounded-lg p-2 text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border rounded-lg p-2 text-xs sm:text-base">
           <div class="grid grid-cols-2 gap-2">
             <div class="flex items-center gap-2">
               <i class="pi pi-arrow-up-right"></i>
@@ -75,7 +75,7 @@
         </div>
       </p-accordion-header>
       <p-accordion-content>
-        <div class="overflow-hidden border border-surface rounded-lg p-2 text-xs">
+        <div class="overflow-hidden border border-surface rounded-lg text-xs">
           <p-table
             [value]="flattenedData()"
             [loading]="loading()"
@@ -85,11 +85,10 @@
             dataKey="year"
             rowGroupMode="subheader"
             groupRowsBy="year"
-            [scrollable]="true"
-            class="p-datatable-sm"
+            class="p-datatable-sm text-xs sm:text-base"
           >
             <ng-template #header>
-              <tr>
+              <tr class="text-xs sm:text-base">
                 <th>{{ 'TERMS.MONTH' | translate }}</th>
                 @if (showGross()) {
                   <th>{{ 'TERMS.GROSS' | translate }}</th>
@@ -104,7 +103,7 @@
             </ng-template>
 
             <ng-template #groupheader let-item let-rowIndex="rowIndex" let-expanded="expanded">
-              <tr class="bg-surface-50 dark:bg-surface-900">
+              <tr class="bg-surface-50 dark:bg-surface-900 text-xs sm:text-base">
                 <td [attr.colspan]="colSpan()">
                   <div class="flex items-center gap-2">
                     <button
@@ -117,14 +116,14 @@
                       [plain]="true"
                       [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"
                     ></button>
-                    <span>{{ item.year }}</span>
+                    <span class="font-bold">{{ item.year }}</span>
                   </div>
                 </td>
               </tr>
             </ng-template>
 
             <ng-template #groupfooter let-item>
-              <tr class="bg-surface-100/50 dark:bg-surface-800/50">
+              <tr class="bg-surface-100/50 dark:bg-surface-800/50 text-xs sm:text-base font-bold">
                 <td>{{ 'TERMS.TOTAL' | translate }} {{ item.year }}</td>
                 @if (showGross()) {
                   <td>
@@ -149,7 +148,7 @@
             </ng-template>
 
             <ng-template #expandedrow let-month let-i="rowIndex">
-              <tr>
+              <tr class="text-xs sm:text-base">
                 <td>{{ 'MONTHS.' + month.monthIndex | translate }}</td>
                 @if (showGross()) {
                   <td>{{ month.gross === 0 ? '-' : (month.gross | currency: 'BRL') }}</td>

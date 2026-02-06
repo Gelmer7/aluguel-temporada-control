@@ -120,7 +120,15 @@ export class ExpensesPage implements OnInit {
 
   // Computed Data
   pagedExpenses = computed(() => {
-    const data = this.filteredExpenses();
+    const data = [...this.filteredExpenses()];
+    
+    // Sort by purchase_date descending
+    data.sort((a, b) => {
+      const dateA = new Date(a.purchase_date).getTime();
+      const dateB = new Date(b.purchase_date).getTime();
+      return dateB - dateA;
+    });
+
     const start = this.first();
     const end = start + this.rows();
     return data.slice(start, end);

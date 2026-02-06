@@ -62,7 +62,6 @@ import { AppColors } from '../../../../shared/design/colors';
     FloatLabel,
     Checkbox,
     MultiSelect,
-    Tag,
     Tooltip,
     Popover,
     Toast,
@@ -213,7 +212,19 @@ export class CsvViewerPage {
   }
 
   protected readonly pagedRows = computed(() => {
-    const data = this.visibleRows();
+    const data = [...this.visibleRows()];
+
+    // Custom sort by Data (MM/DD/YYYY)
+    data.sort((a, b) => {
+      const dateA = this.parseAirbnbDate(a.__norm.data);
+      const dateB = this.parseAirbnbDate(b.__norm.data);
+
+      const timeA = dateA ? dateA.getTime() : 0;
+      const timeB = dateB ? dateB.getTime() : 0;
+
+      return timeB - timeA; // Descending (most recent first)
+    });
+
     const start = this.first();
     const end = start + this.rowsPerPage();
     return data.slice(start, end);

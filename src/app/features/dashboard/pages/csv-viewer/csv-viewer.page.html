@@ -239,55 +239,16 @@
         [value]="pagedRows()"
         [scrollable]="true"
         scrollHeight="flex"
-        sortMode="single"
-        sortField="Data"
-        rowGroupMode="subheader"
-        [groupRowsBy]="'Data'"
-        rowGroupExpandMode="multiple"
         [globalFilterFields]="headers()"
         [tableStyle]="{ 'min-width': '80rem' }"
         dataKey="__id"
         [rowTrackBy]="rowTrackBy"
         [loading]="loading()"
-        class="p-datatable-sm h-full flex flex-col"
-        rowGroupMode="rowspan"
+        class="p-datatable-sm h-full flex flex-col text-xs sm:text-base"
       >
-        <!-- Sub-cabeçalho de grupo (Data) -->
-        <ng-template pTemplate="rowgroupheader" let-row>
-          <tr class="bg-surface-50 dark:bg-surface-800/50">
-            <td
-              [attr.colspan]="selectedColumns().length"
-              class="!p-2 border-b border-surface-200 dark:border-surface-700"
-            >
-              <div class="flex items-center gap-2">
-                <p-button
-                  [icon]="
-                    isGroupExpanded(getCellValue(row, 'Data'))
-                      ? 'pi pi-chevron-down'
-                      : 'pi pi-chevron-right'
-                  "
-                  [rounded]="true"
-                  [text]="true"
-                  severity="secondary"
-                  (click)="toggleGroup(getCellValue(row, 'Data'))"
-                  styleClass="w-8 h-8"
-                />
-                <span class="font-bold text-surface-900 dark:text-surface-0">
-                  {{ formatDateBR(getCellValue(row, 'Data')) }}
-                </span>
-                <p-tag
-                  [value]="calculateDateTotal(getCellValue(row, 'Data')) + ' transações'"
-                  severity="secondary"
-                  [rounded]="true"
-                />
-              </div>
-            </td>
-          </tr>
-        </ng-template>
-
         <!-- Cabeçalho das colunas (th) -->
         <ng-template pTemplate="header" let-columns>
-          <tr>
+          <tr class="text-xs sm:text-base">
             @for (col of columns; track col.field) {
               <th
                 [pSortableColumn]="col.field"
@@ -305,7 +266,6 @@
                     hideDelay="0"
                     >{{ col.headerAbbr }}</span
                   >
-                  <p-sortIcon [field]="col.field"></p-sortIcon>
                 </div>
               </th>
             }
@@ -314,59 +274,57 @@
 
         <!-- Corpo das linhas (td) -->
         <ng-template pTemplate="body" let-row let-columns="columns">
-          @if (isGroupExpanded(getCellValue(row, 'Data'))) {
-            <tr
-              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs"
-            >
-              @for (col of columns; track col.field) {
-                <td
-                  [pTooltip]="colTooltip(row, col.field)"
-                  tooltipPosition="top"
-                  [showDelay]="200"
-                  [hideDelay]="0"
-                  [style.minWidth]="getColMinWidth(col.field)"
-                  [style.width]="getColMaxWidth(col.field)"
-                  [ngClass]="tdClass(row, col.field)"
-                >
-                  @if (col.field === 'Hóspede') {
-                    <a
-                      [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      class="text-primary hover:underline block truncate"
-                      [style.maxWidth]="getColMaxWidth(col.field)"
-                      >{{ getCellValue(row, col.field) }}
-                    </a>
-                  } @else if (col.field === 'Tipo') {
-                    <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-                      getCellValue(row, col.field)
-                    }}</span>
-                  } @else if (isDateField(col.field)) {
-                    <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-                      formatDateBR(getCellValue(row, col.field))
-                    }}</span>
-                  } @else if (isDerived(col.field)) {
-                    @if (isPessoa(col.field)) {
-                      <div class="flex items-center gap-2">
-                        <i class="pi pi-user text-surface-400 text-xs"></i>
-                        <span class="truncate">{{ renderDerived(row, col.field) }}</span>
-                      </div>
-                    } @else {
-                      <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-                        renderDerived(row, col.field)
-                      }}</span>
-                    }
+          <tr
+            class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs sm:text-base"
+          >
+            @for (col of columns; track col.field) {
+              <td
+                [pTooltip]="colTooltip(row, col.field)"
+                tooltipPosition="top"
+                [showDelay]="200"
+                [hideDelay]="0"
+                [style.minWidth]="getColMinWidth(col.field)"
+                [style.width]="getColMaxWidth(col.field)"
+                [ngClass]="tdClass(row, col.field)"
+              >
+                @if (col.field === 'Hóspede') {
+                  <a
+                    [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary hover:underline block truncate"
+                    [style.maxWidth]="getColMaxWidth(col.field)"
+                    >{{ getCellValue(row, col.field) }}
+                  </a>
+                } @else if (col.field === 'Tipo') {
+                  <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                    getCellValue(row, col.field)
+                  }}</span>
+                } @else if (isDateField(col.field)) {
+                  <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                    formatDateBR(getCellValue(row, col.field))
+                  }}</span>
+                } @else if (isDerived(col.field)) {
+                  @if (isPessoa(col.field)) {
+                    <div class="flex items-center gap-2">
+                      <i class="pi pi-user text-surface-400 text-xs"></i>
+                      <span class="truncate">{{ renderDerived(row, col.field) }}</span>
+                    </div>
                   } @else {
-                    <span
-                      class="block truncate font-medium"
-                      [style.maxWidth]="getColMaxWidth(col.field)"
-                      >{{ getCellValue(row, col.field) }}</span
-                    >
+                    <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
+                      renderDerived(row, col.field)
+                    }}</span>
                   }
-                </td>
-              }
-            </tr>
-          }
+                } @else {
+                  <span
+                    class="block truncate font-medium"
+                    [style.maxWidth]="getColMaxWidth(col.field)"
+                    >{{ getCellValue(row, col.field) }}</span
+                  >
+                }
+              </td>
+            }
+          </tr>
         </ng-template>
       </p-table>
     </div>
