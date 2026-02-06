@@ -24,7 +24,12 @@
     "CANCEL": "Cancelar",
     "SAVE": "Salvar",
     "SAVE_EXPENSE": "Salvar Gasto",
-    "CLEAR_FILTERS": "Limpar Filtros"
+    "CLEAR_FILTERS": "Limpar Filtros",
+    "EDIT": "Editar",
+    "DELETE": "Excluir",
+    "CONFIRM": "Confirmar",
+    "SUCCESS": "Sucesso",
+    "CREATED_AT": "Criado em"
   },
   "TERMS": {
     "ENTRIES": "Entradas",
@@ -46,7 +51,32 @@
     "NET": "Líquido",
     "SETTINGS": "Configurações",
     "DATA_MANAGEMENT": "Gerenciamento de Dados",
-    "CUSTOM_COLORS": "Cores Personalizadas"
+    "CUSTOM_COLORS": "Cores Personalizadas",
+    "STATUS": "Status",
+    "SELECT": "Selecionar",
+    "FILTER_BY_STATUS": "Filtrar por Status"
+  },
+  "SUGGESTIONS_FORM": {
+    "NEW": "Nova Sugestão",
+    "EDIT": "Editar Sugestão",
+    "TITLE": "Título",
+    "DESCRIPTION": "Descrição",
+    "ANSWER": "Resposta",
+    "PLACEHOLDER_TITLE": "Ex: Melhoria na Dashboard",
+    "PLACEHOLDER_DESCRIPTION": "Descreva sua sugestão em detalhes...",
+    "PLACEHOLDER_ANSWER": "Resposta da administração...",
+    "SUCCESS_CREATE": "Sugestão enviada com sucesso!",
+    "SUCCESS_UPDATE": "Sugestão atualizada com sucesso!",
+    "SUCCESS_DELETE": "Sugestão excluída com sucesso!",
+    "CONFIRM_DELETE": "Tem certeza que deseja excluir esta sugestão?",
+    "NO_DATA": "Nenhuma sugestão encontrada.",
+    "CREATE_FIRST": "Criar minha primeira sugestão",
+    "STATUS": {
+      "PENDING": "Pendente",
+      "IN_PROGRESS": "Em Progresso",
+      "COMPLETED": "Concluído",
+      "REJECTED": "Rejeitado"
+    }
   },
   "REPORTS": {
     "SUMMARY": "Resumo Financeiro",

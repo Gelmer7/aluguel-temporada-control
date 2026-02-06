@@ -23,7 +23,12 @@
     "CANCEL": "Cancel",
     "SAVE": "Save",
     "SAVE_EXPENSE": "Save Expense",
-    "CLEAR_FILTERS": "Clear Filters"
+    "CLEAR_FILTERS": "Clear Filters",
+    "EDIT": "Edit",
+    "DELETE": "Delete",
+    "CONFIRM": "Confirm",
+    "SUCCESS": "Success",
+    "CREATED_AT": "Created at"
   },
   "TERMS": {
     "ENTRIES": "Entries",
@@ -42,7 +47,32 @@
     "SEARCH": "Search...",
     "TOTAL": "Total",
     "GROSS": "Gross",
-    "NET": "Net"
+    "NET": "Net",
+    "STATUS": "Status",
+    "SELECT": "Select",
+    "FILTER_BY_STATUS": "Filter by Status"
+  },
+  "SUGGESTIONS_FORM": {
+    "NEW": "New Suggestion",
+    "EDIT": "Edit Suggestion",
+    "TITLE": "Title",
+    "DESCRIPTION": "Description",
+    "ANSWER": "Answer",
+    "PLACEHOLDER_TITLE": "e.g. Dashboard Improvement",
+    "PLACEHOLDER_DESCRIPTION": "Describe your suggestion in detail...",
+    "PLACEHOLDER_ANSWER": "Admin answer...",
+    "SUCCESS_CREATE": "Suggestion sent successfully!",
+    "SUCCESS_UPDATE": "Suggestion updated successfully!",
+    "SUCCESS_DELETE": "Suggestion deleted successfully!",
+    "CONFIRM_DELETE": "Are you sure you want to delete this suggestion?",
+    "NO_DATA": "No suggestions found.",
+    "CREATE_FIRST": "Create my first suggestion",
+    "STATUS": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "REJECTED": "Rejected"
+    }
   },
   "REPORTS": {
     "SUMMARY": "Financial Summary",

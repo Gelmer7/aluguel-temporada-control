@@ -1,11 +1,140 @@
-<div class="p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-comment"></i>
-        <span>{{ 'TERMS.SUGGESTIONS' | translate }}</span>
+<div class="h-full flex flex-col p-6 bg-surface-50 dark:bg-surface-950 gap-6 overflow-hidden">
+  <div class="flex flex-col gap-6">
+    <!-- Header com Título e Filtro -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <h1 class="text-4xl font-bold m-0 text-surface-900 dark:text-surface-0">
+        {{ 'TERMS.SUGGESTIONS' | translate }}
+      </h1>
+    </div>
+
+    <!-- Botão Nova Sugestão e Filtro -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <p-button
+        [label]="'SUGGESTIONS_FORM.NEW' | translate"
+        icon="pi pi-plus"
+        severity="success"
+        (click)="openNew()"
+        class="shadow-sm"
+      />
+
+      <div class="flex items-center gap-4 bg-white dark:bg-surface-900 px-4 py-2 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm w-full sm:w-auto">
+        <span class="text-sm font-semibold text-surface-500 uppercase tracking-wider">{{ 'TERMS.STATUS' | translate }}:</span>
+        <p-select
+          [options]="statusOptions"
+          [ngModel]="filters().status"
+          (ngModelChange)="onFilterChange($event)"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="'TERMS.FILTER_BY_STATUS' | translate"
+          class="w-full sm:w-48 border-none"
+          variant="filled"
+        >
+          <ng-template let-option pTemplate="item">
+            <span>{{ option.label | translate }}</span>
+          </ng-template>
+          <ng-template let-option pTemplate="selectedItem">
+            <span>{{ option.label | translate }}</span>
+          </ng-template>
+        </p-select>
       </div>
-    </ng-template>
-    <div class="p-2"><!-- Visualização --></div>
-  </p-card>
+    </div>
+
+    <p-toast />
+    <p-confirm-dialog />
+
+    @if (loading()) {
+      <div class="flex justify-center p-12">
+        <i class="pi pi-spin pi-spinner text-4xl text-primary"></i>
+      </div>
+    } @else {
+      @if (suggestions().length === 0) {
+        <div class="text-center p-16 bg-white dark:bg-surface-900 rounded-xl border border-dashed border-surface-300 dark:border-surface-700">
+          <div class="flex flex-col items-center gap-4">
+            <i class="pi pi-inbox text-6xl opacity-20"></i>
+            <span class="text-xl font-medium opacity-60">{{ 'SUGGESTIONS_FORM.NO_DATA' | translate }}</span>
+            <p-button
+              [label]="'SUGGESTIONS_FORM.CREATE_FIRST' | translate"
+              icon="pi pi-plus"
+              (click)="openNew()"
+              [text]="true"
+            />
+          </div>
+        </div>
+      } @else {
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 overflow-y-auto pb-8 pr-2">
+          @for (suggestion of suggestions(); track suggestion.id) {
+            <div class="bg-white dark:bg-surface-900 rounded-2xl border border-surface-200 dark:border-surface-700 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col h-full overflow-hidden group">
+              <!-- Card Header -->
+              <div class="p-6 border-b border-surface-100 dark:border-surface-800 flex justify-between items-start gap-4">
+                <h2 class="text-xl font-bold m-0 leading-snug text-surface-900 dark:text-surface-0 flex-1 line-clamp-2">
+                  {{ suggestion.title }}
+                </h2>
+                <p-tag
+                  [value]="'SUGGESTIONS_FORM.STATUS.' + suggestion.status | translate"
+                  [severity]="getStatusSeverity(suggestion.status)"
+                  [rounded]="true"
+                  class="flex-shrink-0 shadow-sm"
+                />
+              </div>
+
+              <!-- Card Content -->
+              <div class="p-6 flex-1 flex flex-col gap-6">
+                <div class="flex-1">
+                  <p class="text-base text-surface-600 dark:text-surface-400 whitespace-pre-wrap leading-relaxed m-0">
+                    {{ suggestion.description }}
+                  </p>
+                </div>
+
+                @if (suggestion.answer) {
+                  <div class="p-5 bg-primary-50/50 dark:bg-primary-900/10 rounded-xl border border-primary-100 dark:border-primary-900/30 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1 h-full bg-primary-500"></div>
+                    <h3 class="text-xs font-black uppercase tracking-widest text-primary-600 dark:text-primary-400 mb-2 flex items-center gap-2">
+                      <i class="pi pi-comment text-[10px]"></i>
+                      {{ 'SUGGESTIONS_FORM.ANSWER' | translate }}
+                    </h3>
+                    <p class="text-sm text-surface-700 dark:text-surface-300 italic whitespace-pre-wrap m-0 leading-relaxed">
+                      {{ suggestion.answer }}
+                    </p>
+                  </div>
+                }
+              </div>
+
+              <!-- Card Footer -->
+              <div class="px-6 py-4 bg-surface-50/50 dark:bg-surface-800/30 border-t border-surface-100 dark:border-surface-800 flex justify-between items-center group-hover:bg-surface-100/50 dark:group-hover:bg-surface-800/50 transition-colors">
+                <span class="text-xs font-medium text-surface-500 dark:text-surface-400 flex items-center gap-1.5">
+                  <i class="pi pi-calendar text-[10px]"></i>
+                  {{ 'ACTIONS.CREATED_AT' | translate }}: {{ formatDate(suggestion.created_at) }}
+                </span>
+
+                <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p-button
+                    icon="pi pi-pencil"
+                    [text]="true"
+                    severity="info"
+                    (click)="openEdit(suggestion)"
+                    [pTooltip]="'ACTIONS.EDIT' | translate"
+                    class="p-button-sm p-button-rounded"
+                  />
+                  <p-button
+                    icon="pi pi-trash"
+                    [text]="true"
+                    severity="danger"
+                    (click)="confirmDelete(suggestion)"
+                    [pTooltip]="'ACTIONS.DELETE' | translate"
+                    class="p-button-sm p-button-rounded"
+                  />
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+
+  <app-suggestion-form
+    [(visible)]="isFormVisible"
+    [suggestion]="selectedSuggestion()"
+    (saved)="onSave($event)"
+  />
 </div>

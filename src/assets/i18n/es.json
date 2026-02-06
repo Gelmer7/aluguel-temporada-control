@@ -23,7 +23,12 @@
     "CANCEL": "Cancelar",
     "SAVE": "Guardar",
     "SAVE_EXPENSE": "Guardar Gasto",
-    "CLEAR_FILTERS": "Limpiar Filtros"
+    "CLEAR_FILTERS": "Limpiar Filtros",
+    "EDIT": "Editar",
+    "DELETE": "Eliminar",
+    "CONFIRM": "Confirmar",
+    "SUCCESS": "Éxito",
+    "CREATED_AT": "Creado el"
   },
   "TERMS": {
     "ENTRIES": "Entradas",
@@ -42,7 +47,32 @@
     "SEARCH": "Buscar...",
     "TOTAL": "Total",
     "GROSS": "Bruto",
-    "NET": "Neto"
+    "NET": "Neto",
+    "STATUS": "Estado",
+    "SELECT": "Seleccionar",
+    "FILTER_BY_STATUS": "Filtrar por Estado"
+  },
+  "SUGGESTIONS_FORM": {
+    "NEW": "Nueva Sugerencia",
+    "EDIT": "Editar Sugerencia",
+    "TITLE": "Título",
+    "DESCRIPTION": "Descripción",
+    "ANSWER": "Respuesta",
+    "PLACEHOLDER_TITLE": "Ej: Mejora en el Dashboard",
+    "PLACEHOLDER_DESCRIPTION": "Describa su sugerencia en detalle...",
+    "PLACEHOLDER_ANSWER": "Respuesta de la administración...",
+    "SUCCESS_CREATE": "¡Sugerencia enviada con éxito!",
+    "SUCCESS_UPDATE": "¡Sugerencia actualizada con éxito!",
+    "SUCCESS_DELETE": "¡Sugerencia eliminada con éxito!",
+    "CONFIRM_DELETE": "¿Está seguro de que desea eliminar esta sugerencia?",
+    "NO_DATA": "No se encontraron sugerencias.",
+    "CREATE_FIRST": "Crear mi primera sugerencia",
+    "STATUS": {
+      "PENDING": "Pendiente",
+      "IN_PROGRESS": "En Progresso",
+      "COMPLETED": "Completado",
+      "REJECTED": "Rechazado"
+    }
   },
   "REPORTS": {
     "SUMMARY": "Resumen Financiero",
