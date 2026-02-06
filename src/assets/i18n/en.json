@@ -143,5 +143,19 @@
       "DESC_CONDOMINIUM": "Monthly Condominium",
       "DESC_INTERNET": "Fiber Internet"
     }
+  },
+  "TITHE_MANAGEMENT": {
+    "ADD_TITHE": "Add Tithe",
+    "TITHE_PERCENTAGE": "Tithe Percentage (%)",
+    "OFFER_PERCENTAGE": "Offer Percentage (%)",
+    "AIRBNB_PAYMENTS": "Airbnb Payments",
+    "TOTAL_EXPENSES": "Total Expenses",
+    "TITHE_VALUE": "Tithe ({{percentage}}%)",
+    "OFFER_VALUE": "Offer ({{percentage}}%)",
+    "TOTAL_TO_PAY": "Total to Pay",
+    "CALCULATED_VALUES": "Calculated Values",
+    "TITHE_AND_OFFER": "Tithe and Offer",
+    "PAYMENTS_LIST": "Payments List",
+    "EXPENSES_LIST": "Expenses List"
   }
 }

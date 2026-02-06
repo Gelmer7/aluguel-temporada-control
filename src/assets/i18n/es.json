@@ -143,5 +143,19 @@
       "DESC_CONDOMINIUM": "Condominio Mensual",
       "DESC_INTERNET": "Internet Fibra"
     }
+  },
+  "TITHE_MANAGEMENT": {
+    "ADD_TITHE": "Agregar Diezmo",
+    "TITHE_PERCENTAGE": "Porcentaje del Diezmo (%)",
+    "OFFER_PERCENTAGE": "Porcentaje de la Ofrenda (%)",
+    "AIRBNB_PAYMENTS": "Pagos Airbnb",
+    "TOTAL_EXPENSES": "Total de Gastos",
+    "TITHE_VALUE": "Diezmo ({{percentage}}%)",
+    "OFFER_VALUE": "Ofrenda ({{percentage}}%)",
+    "TOTAL_TO_PAY": "Total a Pagar",
+    "CALCULATED_VALUES": "Valores Calculados",
+    "TITHE_AND_OFFER": "Diezmo y Ofrenda",
+    "PAYMENTS_LIST": "Lista de Pagos",
+    "EXPENSES_LIST": "Lista de Gastos"
   }
 }

@@ -36,12 +36,12 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   //   icon: 'pi-wallet',
   //   route: '/dashboard/carne-leao',
   // },
-  // {
-  //   id: 'tithe',
-  //   label: 'TERMS.TITHE',
-  //   icon: 'pi-heart',
-  //   route: '/dashboard/tithe',
-  // },
+  {
+    id: 'tithe',
+    label: 'TERMS.TITHE',
+    icon: 'pi-heart',
+    route: '/dashboard/tithe',
+  },
   // {
   //   id: 'contracts',
   //   label: 'TERMS.CONTRACTS',

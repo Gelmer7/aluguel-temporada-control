@@ -1,11 +1,194 @@
-<div class="p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-heart"></i>
-        <span>{{ 'TERMS.TITHE' | translate }}</span>
+<div class="flex flex-col gap-4 p-4">
+  <!-- Header -->
+  <app-page-header
+    [title]="'TERMS.TITHE'"
+    [icon]="'pi-heart'"
+    [showAction]="true"
+    [actionLabel]="'TITHE_MANAGEMENT.ADD_TITHE'"
+    [actionTooltip]="'TITHE_MANAGEMENT.ADD_TITHE'"
+    [actionIcon]="'pi pi-plus'"
+    (onAction)="onAddTithe()"
+  />
+
+  @if (loading()) {
+    <div class="flex justify-center p-8">
+      <i class="pi pi-spin pi-spinner text-4xl"></i>
+    </div>
+  } @else {
+    <!-- Filtros -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <p-card>
+      <div class="flex flex-col gap-4">
+        <p-floatLabel>
+          <p-select
+            [options]="years()"
+            [(ngModel)]="selectedYear"
+            [fluid]="true"
+            id="year-select"
+          />
+          <label for="year-select">{{ 'TERMS.YEAR' | translate }}</label>
+        </p-floatLabel>
+
+        <p-floatLabel>
+          <p-select
+            [options]="months()"
+            [(ngModel)]="selectedMonth"
+            optionLabel="label"
+            optionValue="value"
+            [fluid]="true"
+            id="month-select"
+          />
+          <label for="month-select">{{ 'TERMS.MONTH' | translate }}</label>
+        </p-floatLabel>
+
+        <p-floatLabel>
+          <p-inputNumber
+            [(ngModel)]="tithePercentage"
+            [suffix]="' %'"
+            [min]="0"
+            [max]="100"
+            [fluid]="true"
+            id="tithe-percent"
+          />
+          <label for="tithe-percent">{{ 'TITHE_MANAGEMENT.TITHE_PERCENTAGE' | translate }}</label>
+        </p-floatLabel>
+
+        <p-floatLabel>
+          <p-inputNumber
+            [(ngModel)]="offerPercentage"
+            [suffix]="' %'"
+            [min]="0"
+            [max]="100"
+            [fluid]="true"
+            id="offer-percent"
+          />
+          <label for="offer-percent">{{ 'TITHE_MANAGEMENT.OFFER_PERCENTAGE' | translate }}</label>
+        </p-floatLabel>
       </div>
-    </ng-template>
-    <div class="p-2"><!-- Visualização --></div>
-  </p-card>
+    </p-card>
+
+    <!-- Resumo -->
+    <div class="md:col-span-3">
+      <p-card>
+        <p-table [value]="[{}]" [responsiveLayout]="'scroll'">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>{{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}</th>
+              <th>{{ 'TITHE_MANAGEMENT.TOTAL_EXPENSES' | translate }}</th>
+              <th>{{ 'TITHE_MANAGEMENT.TITHE_VALUE' | translate: { percentage: tithePercentage() } }}</th>
+              <th>{{ 'TITHE_MANAGEMENT.OFFER_VALUE' | translate: { percentage: offerPercentage() } }}</th>
+              <th>{{ 'TITHE_MANAGEMENT.TOTAL_TO_PAY' | translate }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body">
+            <tr>
+              <td>{{ totalAirbnb() | currency: 'BRL' }}</td>
+              <td>{{ totalExpenses() | currency: 'BRL' }}</td>
+              <td>{{ titheValue() | currency: 'BRL' }}</td>
+              <td>{{ offerValue() | currency: 'BRL' }}</td>
+              <td>{{ totalToPay() | currency: 'BRL' }}</td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </p-card>
+    </div>
+  </div>
+
+  <!-- Detalhes -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <!-- Tabela de Pagamentos -->
+    <p-card [header]="'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate">
+      <p-table
+        [value]="filteredPayments()"
+        [rows]="10"
+        [paginator]="true"
+        [loading]="loading()"
+        size="small"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{ 'EXPENSES_FORM.DATE' | translate }}</th>
+            <th>{{ 'EXPENSES_FORM.DESCRIPTION' | translate }}</th>
+            <th>{{ 'EXPENSES_FORM.PRICE' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-payment>
+          <tr>
+            <td>{{ payment.data | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ payment.descricao }}</td>
+            <td>{{ payment.valor | currency: 'BRL' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+
+    <!-- Tabela de Despesas -->
+    <p-card [header]="'TITHE_MANAGEMENT.EXPENSES_LIST' | translate">
+      <p-table
+        [value]="filteredExpenses()"
+        [rows]="10"
+        [paginator]="true"
+        [loading]="loading()"
+        size="small"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th>{{ 'EXPENSES_FORM.DATE' | translate }}</th>
+            <th>{{ 'EXPENSES_FORM.DESCRIPTION' | translate }}</th>
+            <th>{{ 'EXPENSES_FORM.PRICE' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-expense>
+          <tr>
+            <td>{{ expense.purchase_date | date: 'dd/MM/yyyy' }}</td>
+            <td>{{ expense.description }}</td>
+            <td>{{ expense.price | currency: 'BRL' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </p-card>
+    </div>
+  }
 </div>
+
+<!-- Modal Adicionar Dízimo -->
+<app-dialog
+  [(visible)]="showAddDialog"
+  [header]="'TITHE_MANAGEMENT.ADD_TITHE' | translate"
+  [icon]="'pi pi-heart'"
+  (onSave)="onSaveTithe()"
+  (onCancel)="showAddDialog.set(false)"
+>
+  <div class="flex flex-col gap-4 p-2">
+    <p-floatLabel>
+      <p-inputNumber
+        [(ngModel)]="titheValueToPay"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        [fluid]="true"
+        id="tithe-value-pay"
+      />
+      <label for="tithe-value-pay">{{ 'TITHE_MANAGEMENT.TITHE_VALUE' | translate: { percentage: tithePercentage() } }}</label>
+    </p-floatLabel>
+
+    <p-floatLabel>
+      <p-inputNumber
+        [(ngModel)]="offerValueToPay"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        [fluid]="true"
+        id="offer-value-pay"
+      />
+      <label for="offer-value-pay">{{ 'TITHE_MANAGEMENT.OFFER_VALUE' | translate: { percentage: offerPercentage() } }}</label>
+    </p-floatLabel>
+
+    <div class="p-2 bg-surface-100 dark:bg-surface-800 rounded-lg">
+      <div class="flex justify-between items-center">
+        <span>{{ 'TITHE_MANAGEMENT.TOTAL_TO_PAY' | translate }}</span>
+        <span class="text-xl">{{ (titheValueToPay() + offerValueToPay()) | currency: 'BRL' }}</span>
+      </div>
+    </div>
+  </div>
+</app-dialog>
