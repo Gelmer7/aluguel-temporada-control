@@ -27,17 +27,19 @@
     </ng-template>
 
     <!-- Conteúdo dos filtros -->
-    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
-      <p-select
+    <!-- Tipo -->
+    <p-floatlabel class="flex-1 min-w-[150px]" variant="in">
+      <p-multiselect
         inputId="type_select"
-        [options]="typeOptions"
-        [ngModel]="selectedType()"
-        (ngModelChange)="selectedType.set($event || 'ALL'); onFilterChange()"
-        [showClear]="true"
+        [options]="expenseTypes"
+        [ngModel]="selectedTypes()"
+        (ngModelChange)="selectedTypes.set($event || []); onFilterChange()"
         class="w-full"
         appendTo="body"
         optionLabel="label"
         optionValue="value"
+        [maxSelectedLabels]="2"
+        [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
       >
         <ng-template pTemplate="selectedItem" let-selectedOption>
           {{ selectedOption.label | translate }}
@@ -45,10 +47,10 @@
         <ng-template pTemplate="item" let-option>
           {{ option.label | translate }}
         </ng-template>
-      </p-select>
+      </p-multiselect>
       <label for="type_select">{{ 'TERMS.TYPE' | translate }}</label>
     </p-floatlabel>
-
+    <!-- Ano -->
     <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
       <p-select
         inputId="year_select"
@@ -70,7 +72,7 @@
       </p-select>
       <label for="year_select">{{ 'TERMS.YEAR' | translate }}</label>
     </p-floatlabel>
-
+    <!-- Mês -->
     <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
       <p-select
         inputId="month_select"
@@ -93,21 +95,15 @@
       </p-select>
       <label for="month_select">{{ 'TERMS.MONTH' | translate }}</label>
     </p-floatlabel>
-
+    <!-- Limpar Filtros -->
     <div class="flex items-center">
       <p-button
-        [label]="'ACTIONS.CLEAR_FILTERS' | translate"
         icon="pi pi-filter-slash"
         [text]="true"
         severity="secondary"
         size="small"
-        class="h-8"
-        (click)="
-          selectedType.set('ALL');
-          selectedYear.set('ALL');
-          selectedMonth.set('ALL');
-          onFilterChange()
-        "
+        class="p-button-sm"
+        (click)="clearFilters()"
       />
     </div>
   </app-filter-container>
@@ -133,7 +129,12 @@
           class="w-full !py-1 sm:!py-2 text-xs sm:text-sm"
         />
       </p-iconfield>
-      <p-button icon="pi pi-chart-pie" variant="text" [pTooltip]="'TERMS.CHARTS' | translate" />
+      <p-button
+        icon="pi pi-chart-pie"
+        variant="text"
+        [pTooltip]="'TERMS.CHARTS' | translate"
+        (click)="showCharts.set(true)"
+      />
     </div>
 
     <!-- Scrollable Table Content -->
@@ -267,6 +268,14 @@
     (visibleChange)="showExpenseForm.set($event)"
     [editData]="currentExpense()"
     (save)="onSaveExpense($event)"
+  />
+
+  <!-- Charts Dialog -->
+  <app-expense-charts
+    [visible]="showCharts()"
+    (visibleChange)="showCharts.set($event)"
+    [expenses]="filteredExpenses()"
+    [selectedYear]="selectedYear()"
   />
 
   <!-- Confirmations and Toasts -->

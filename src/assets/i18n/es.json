@@ -50,6 +50,7 @@
     "NET": "Neto",
     "STATUS": "Estado",
     "SELECT": "Seleccionar",
+    "SELECTED": "seleccionado(s)",
     "FILTER_BY_STATUS": "Filtrar por Estado"
   },
   "SUGGESTIONS_FORM": {
@@ -64,7 +65,7 @@
     "SUCCESS_CREATE": "¡Sugerencia enviada con éxito!",
     "SUCCESS_UPDATE": "¡Sugerencia actualizada con éxito!",
     "SUCCESS_DELETE": "¡Sugerencia eliminada con éxito!",
-    "CONFIRM_DELETE": "¿Está seguro de que desea eliminar esta sugerencia?",
+    "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar esta sugerencia?",
     "NO_DATA": "No se encontraron sugerencias.",
     "CREATE_FIRST": "Crear mi primera sugerencia",
     "STATUS": {
@@ -73,6 +74,14 @@
       "COMPLETED": "Completado",
       "REJECTED": "Rechazado"
     }
+  },
+  "EXPENSE_CHARTS": {
+    "TITLE": "Gráficos de Gastos",
+    "DISTRIBUTION": "Distribución por Tipo",
+    "MONTHLY": "Gastos Mensuales de {{year}}",
+    "MONTHLY_ALL": "Suma Mensual Histórica (Todos los Años)",
+    "ANNUAL": "Evolución Anual",
+    "NO_DATA": "Sin datos para mostrar gráficos."
   },
   "REPORTS": {
     "SUMMARY": "Resumen Financiero",

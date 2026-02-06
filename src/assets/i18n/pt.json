@@ -54,6 +54,7 @@
     "CUSTOM_COLORS": "Cores Personalizadas",
     "STATUS": "Status",
     "SELECT": "Selecionar",
+    "SELECTED": "selecionado(s)",
     "FILTER_BY_STATUS": "Filtrar por Status"
   },
   "SUGGESTIONS_FORM": {
@@ -77,6 +78,14 @@
       "COMPLETED": "Concluído",
       "REJECTED": "Rejeitado"
     }
+  },
+  "EXPENSE_CHARTS": {
+    "TITLE": "Gráficos de Gastos",
+    "DISTRIBUTION": "Distribuição por Tipo",
+    "MONTHLY": "Gastos Mensais de {{year}}",
+    "MONTHLY_ALL": "Soma Mensal Histórica (Todos os Anos)",
+    "ANNUAL": "Evolução Anual",
+    "NO_DATA": "Sem dados para exibir gráficos."
   },
   "REPORTS": {
     "SUMMARY": "Resumo Financeiro",

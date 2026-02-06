@@ -50,6 +50,7 @@
     "NET": "Net",
     "STATUS": "Status",
     "SELECT": "Select",
+    "SELECTED": "selected",
     "FILTER_BY_STATUS": "Filter by Status"
   },
   "SUGGESTIONS_FORM": {
@@ -73,6 +74,14 @@
       "COMPLETED": "Completed",
       "REJECTED": "Rejected"
     }
+  },
+  "EXPENSE_CHARTS": {
+    "TITLE": "Expense Charts",
+    "DISTRIBUTION": "Distribution by Type",
+    "MONTHLY": "Monthly Expenses of {{year}}",
+    "MONTHLY_ALL": "Historical Monthly Sum (All Years)",
+    "ANNUAL": "Annual Evolution",
+    "NO_DATA": "No data to display charts."
   },
   "REPORTS": {
     "SUMMARY": "Financial Summary",

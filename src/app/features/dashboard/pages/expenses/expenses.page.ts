@@ -13,12 +13,14 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { Select } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { FloatLabel } from 'primeng/floatlabel';
 import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
+import { ExpenseChartsComponent } from '../../components/expense-charts/expense-charts.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StringUtils } from '../../../../shared/utils/string.utils';
@@ -43,12 +45,14 @@ import { StringUtils } from '../../../../shared/utils/string.utils';
     ConfirmDialog,
     Toast,
     Select,
+    MultiSelectModule,
     FloatLabel,
     AccordionModule,
     TablePaginatorComponent,
     PageHeaderComponent,
     FilterContainerComponent,
     ExpenseFormComponent,
+    ExpenseChartsComponent,
     TranslateModule
   ],
   providers: [ConfirmationService, MessageService],
@@ -64,6 +68,7 @@ export class ExpensesPage implements OnInit {
   filteredExpenses = signal<Expense[]>([]);
   loading = signal<boolean>(false);
   showExpenseForm = signal<boolean>(false);
+  showCharts = signal<boolean>(false);
   currentExpense = signal<Expense | null>(null);
 
   // Filters
@@ -111,7 +116,7 @@ export class ExpensesPage implements OnInit {
 
   selectedYear = signal<number | string>('ALL');
   selectedMonth = signal<number | string>('ALL');
-  selectedType = signal<string>('ALL');
+  selectedTypes = signal<string[]>(this.expenseTypes.map(t => t.value));
   globalFilter = signal<string>('');
 
   // Pagination
@@ -121,7 +126,7 @@ export class ExpensesPage implements OnInit {
   // Computed Data
   pagedExpenses = computed(() => {
     const data = [...this.filteredExpenses()];
-    
+
     // Sort by purchase_date descending
     data.sort((a, b) => {
       const dateA = new Date(a.purchase_date).getTime();
@@ -162,9 +167,12 @@ export class ExpensesPage implements OnInit {
   }
 
   protected getSelectedTypeLabel(): string {
-    const type = this.selectedType();
-    if (type === 'ALL') return 'TERMS.ALL';
-    return this.expenseTypes.find(t => t.value === type)?.label || 'TERMS.ALL';
+    const types = this.selectedTypes();
+    if (types.length === 0 || types.length === this.expenseTypes.length) return 'TERMS.ALL';
+    if (types.length === 1) {
+      return this.expenseTypes.find(t => t.value === types[0])?.label || 'TERMS.ALL';
+    }
+    return `${types.length} ${this.translateService.instant('TERMS.SELECTED')}`;
   }
 
   totalExpenses = computed(() => {
@@ -216,9 +224,10 @@ export class ExpensesPage implements OnInit {
       filtered = filtered.filter(e => new Date(e.purchase_date).getMonth() + 1 === month);
     }
 
-    const type = this.selectedType();
-    if (type !== 'ALL') {
-      filtered = filtered.filter(e => e.type === type);
+    const types = this.selectedTypes();
+    // Se types.length === 0 ou se todos estão selecionados, não filtramos (mostra tudo)
+    if (types.length > 0 && types.length < this.expenseTypes.length) {
+      filtered = filtered.filter(e => types.includes(e.type));
     }
 
     const query = StringUtils.normalize(this.globalFilter());
@@ -231,6 +240,13 @@ export class ExpensesPage implements OnInit {
     }
 
     this.filteredExpenses.set(filtered);
+  }
+
+  clearFilters() {
+    this.selectedYear.set('ALL');
+    this.selectedMonth.set('ALL');
+    this.selectedTypes.set(this.expenseTypes.map(t => t.value));
+    this.onFilterChange();
   }
 
   onAddExpense() {

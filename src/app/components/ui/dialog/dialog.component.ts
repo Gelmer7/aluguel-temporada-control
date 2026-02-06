@@ -41,6 +41,9 @@ export class DialogComponent {
   /** Width of the dialog */
   width = input<string>('50vw');
 
+  /** Max width of the dialog */
+  maxWidth = input<string>('none');
+
   /** Breakpoints for responsiveness */
   breakpoints = input<{ [key: string]: string }>({ '960px': '75vw', '640px': '90vw' });
 
