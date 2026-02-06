@@ -8,6 +8,7 @@ import { InputNumber } from 'primeng/inputnumber';
 import { DatePicker } from 'primeng/datepicker';
 import { Select } from 'primeng/select';
 import { Textarea } from 'primeng/textarea';
+import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
@@ -26,6 +27,7 @@ import { map } from 'rxjs/operators';
     DatePicker,
     Select,
     Textarea,
+    TooltipModule,
     ToolbarModule,
     TranslateModule,
   ],
@@ -138,6 +140,18 @@ export class ExpenseFormComponent implements OnInit {
     }
 
     this.form.patchValue(patchData);
+  }
+
+  clearForm() {
+    this.form.reset({
+      type: 'OTHER',
+      purchaseDate: new Date(),
+      price: 0,
+      kws: 0,
+      cubicMeters: 0,
+      association: 0,
+      reserveFund: 0
+    });
   }
 
   onClose() {
