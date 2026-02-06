@@ -1,5 +1,5 @@
 import { AirbnbNormalizedRow, AirbnbHeaderToKey } from '../../../../models/airbnb.model';
-import { AppColors } from '../../../../shared/design/colors';
+import { AppColorConfig } from '../../../../shared/design/colors';
 
 export type ViewerRow = { __id: number; __raw?: Record<string, string>; __norm: AirbnbNormalizedRow };
 
@@ -53,7 +53,7 @@ export function colTooltip(row: ViewerRow, field: string, inicioFimField: string
   return String(v ?? '');
 }
 
-export function tipoHighlight(row: ViewerRow): string | undefined {
+export function tipoHighlight(row: ViewerRow, colors: AppColorConfig): string | undefined {
   const tipo = (row.__norm.tipo ?? '').trim();
-  return tipo === 'Recebimento do coanfitrião' ? AppColors.coHost : tipo === 'Reserva' ? AppColors.host : tipo === 'Pagamento da Resolução' ? AppColors.damage : undefined;
+  return tipo === 'Recebimento do coanfitrião' ? colors.coHost : tipo === 'Reserva' ? colors.host : tipo === 'Pagamento da Resolução' ? colors.damage : undefined;
 }

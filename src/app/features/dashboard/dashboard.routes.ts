@@ -54,6 +54,11 @@ export const DASHBOARD_ROUTES: Routes = [
           import('./pages/data-management/data-management.page').then((m) => m.DataManagementPage),
       },
       {
+        path: 'color-settings',
+        loadComponent: () =>
+          import('./pages/color-settings/color-settings.page').then((m) => m.ColorSettingsPage),
+      },
+      {
         path: 'suggestions',
         loadComponent: () =>
           import('./pages/suggestions/suggestions.page').then((m) => m.SuggestionsPage),

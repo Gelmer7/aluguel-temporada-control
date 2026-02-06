@@ -1,0 +1,60 @@
+<div class="container mx-auto p-4 flex flex-col gap-6">
+  <app-page-header
+    [title]="'SETTINGS.COLORS.TITLE' | translate"
+    icon="pi pi-palette"
+  >
+    <div class="flex gap-2">
+      <p-button
+        [label]="'SETTINGS.COLORS.RESET_DEFAULTS' | translate"
+        icon="pi pi-refresh"
+        severity="secondary"
+        (onClick)="resetDefaults()"
+      />
+      <p-button
+        [label]="'SETTINGS.COLORS.SAVE_CHANGES' | translate"
+        icon="pi pi-save"
+        (onClick)="save()"
+      />
+    </div>
+  </app-page-header>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    @for (key of colorKeys; track key) {
+      <p-card [header]="getLabel(key)" class="h-full">
+        <div class="flex flex-col gap-4">
+          <div class="flex flex-col gap-2">
+            <label [for]="key" class="text-surface-600 dark:text-surface-400">
+              {{ 'SETTINGS.COLORS.TAILWIND_CLASSES' | translate }}
+            </label>
+            <input
+              pInputText
+              [id]="key"
+              [(ngModel)]="editableColors[key]"
+              class="w-full"
+              placeholder="bg-orange-100 text-orange-900 ..."
+            />
+          </div>
+
+          <div class="mt-2">
+            <span class="text-surface-500 mb-2 block">{{ 'SETTINGS.COLORS.PREVIEW' | translate }}</span>
+            <div class="flex flex-col gap-2">
+              <div class="p-3 rounded border border-surface-200 dark:border-surface-700">
+                <span class="text-surface-500 mb-1 block">{{ 'SETTINGS.COLORS.LIGHT_MODE' | translate }}</span>
+                <div [class]="editableColors[key]" class="p-2 rounded text-center transition-colors">
+                  Exemplo de Texto
+                </div>
+              </div>
+              <div class="p-3 rounded border border-surface-200 dark:border-surface-700 bg-surface-900">
+                <span class="text-surface-400 mb-1 block">{{ 'SETTINGS.COLORS.DARK_MODE' | translate }}</span>
+                <div [class]="editableColors[key]" class="p-2 rounded text-center transition-colors">
+                  Exemplo de Texto
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </p-card>
+    }
+  </div>
+</div>
+<p-toast />

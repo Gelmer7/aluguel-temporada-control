@@ -4,19 +4,18 @@
   [modal]="true"
   [style]="
     isMobile
-      ? { width: '100vw', height: '100vh', margin: '0', 'max-height': 'none' }
-      : { width: '100vw', maxWidth: '500px' }
+      ? { width: '95vw', height: '80vh', margin: '0', 'max-height': 'none' }
+      : { width: '100vw', maxWidth: '600px' }
   "
   [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
   [draggable]="false"
   [resizable]="false"
-  [styleClass]="isMobile ? 'p-dialog-maximized [&_.p-dialog-footer]:!p-0' : '[&_.p-dialog-footer]:!p-0'"
+  [styleClass]="(isMobile ? 'p-dialog-maximized' : '') + ' [&_.p-dialog-footer]:!p-0 [&_.p-dialog-header]:!px-4 '"
   (onHide)="onClose()"
 >
-  <div class="flex flex-col gap-4 p-1 sm:p-2">
+  <div class="flex flex-col gap-2 p-1 sm:p-2">
     <!-- Quick Actions -->
-    <div class="flex gap-2 flex-wrap items-center">
-      <span class="w-full">{{ 'EXPENSES_FORM.SUGGESTIONS' | translate }}:</span>
+    <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
       @for (qt of quickExpenseTypes; track qt) {
         <p-button
           [label]="qt.label | translate"
@@ -24,8 +23,16 @@
           (click)="applyQuickExpense(qt)"
           severity="secondary"
           size="small"
-          class="flex-1 sm:flex-none"
-        ></p-button>
+          class="flex-none max-w-[110px]"
+          styleClass="w-full"
+        >
+          <ng-template pTemplate="content">
+            <div class="flex items-center gap-2 overflow-hidden w-full">
+              <i [class]="qt.icon"></i>
+              <span class="truncate">{{ qt.label | translate }}</span>
+            </div>
+          </ng-template>
+        </p-button>
       }
     </div>
 

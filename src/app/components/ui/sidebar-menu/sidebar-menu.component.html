@@ -83,11 +83,18 @@
         <span class="text-sm">{{ 'TOOLBAR.LOGOUT' | translate }}</span>
       </div>
     } @else {
-      <div class="p-menuitem-content flex items-center gap-2 p-2">
+      <div
+        class="p-menuitem-content flex items-center gap-2 p-2"
+        [routerLink]="item.routerLink"
+        (click)="item.command?.({ originalEvent: $event, item: item })"
+      >
         @if (item.icon) {
           <span [class]="item.icon"></span>
         }
         <span class="text-sm">{{ item.label }}</span>
+        @if (item.items) {
+          <span class="ml-auto pi pi-angle-right text-xs"></span>
+        }
       </div>
     }
   </ng-template>

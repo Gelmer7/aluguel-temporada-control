@@ -292,14 +292,17 @@
                     [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="text-primary hover:underline block truncate"
+                    class="text-primary dark:text-primary-400 hover:underline block truncate"
                     [style.maxWidth]="getColMaxWidth(col.field)"
                     >{{ getCellValue(row, col.field) }}
                   </a>
                 } @else if (col.field === 'Tipo') {
-                  <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
-                    getCellValue(row, col.field)
-                  }}</span>
+                  <div
+                    class="px-2 py-0.5 rounded text-xs font-medium inline-block transition-colors"
+                    [class]="tdClass(row, col.field)"
+                  >
+                    {{ getCellValue(row, col.field) }}
+                  </div>
                 } @else if (isDateField(col.field)) {
                   <span class="block truncate" [style.maxWidth]="getColMaxWidth(col.field)">{{
                     formatDateBR(getCellValue(row, col.field))
@@ -307,7 +310,7 @@
                 } @else if (isDerived(col.field)) {
                   @if (isPessoa(col.field)) {
                     <div class="flex items-center gap-2">
-                      <i class="pi pi-user text-surface-400 text-xs"></i>
+                      <i class="pi pi-user text-xs opacity-70"></i>
                       <span class="truncate">{{ renderDerived(row, col.field) }}</span>
                     </div>
                   } @else {

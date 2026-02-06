@@ -8,7 +8,7 @@ import { Avatar } from 'primeng/avatar';
 import { Button, ButtonModule } from 'primeng/button';
 import { Tooltip, TooltipModule } from 'primeng/tooltip';
 import { MenuItem } from 'primeng/api';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Drawer } from 'primeng/drawer';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { LanguageService } from '../../../services/language.service';
@@ -35,6 +35,7 @@ import { ThemeService } from '../../../services/theme.service';
 export class SidebarMenuComponent {
   private languageService = inject(LanguageService);
   private themeService = inject(ThemeService);
+  private translateService = inject(TranslateService);
 
   items = input.required<{
     id: string;
@@ -87,13 +88,19 @@ export class SidebarMenuComponent {
 
     this.userMenuItems.set([
       {
-        label: 'Settings',
+        label: this.translateService.instant('TERMS.SETTINGS'),
         icon: 'pi pi-cog',
         items: [
           {
-            label: 'Download/Upload',
+            label: this.translateService.instant('TERMS.DATA_MANAGEMENT'),
             icon: 'pi pi-database',
             routerLink: '/dashboard/data-management',
+            command: () => this.closeDrawer(),
+          },
+          {
+            label: this.translateService.instant('TERMS.CUSTOM_COLORS'),
+            icon: 'pi pi-palette',
+            routerLink: '/dashboard/color-settings',
             command: () => this.closeDrawer(),
           },
         ],

@@ -44,7 +44,7 @@ import {
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
-import { AppColors } from '../../../../shared/design/colors';
+import { ColorService } from '../../../../services/color.service';
 
 @Component({
   selector: 'app-csv-viewer-page',
@@ -84,6 +84,7 @@ export class CsvViewerPage {
   private readonly http = inject(HttpClient);
   private readonly supabase = inject(SupabaseService);
   private readonly messageService = inject(MessageService);
+  protected readonly colorService = inject(ColorService);
 
   protected readonly syncing = signal<boolean>(false);
   protected readonly loading = signal<boolean>(false);
@@ -504,7 +505,9 @@ export class CsvViewerPage {
   }
 
   public groupClass(date: string): string {
-    return this.groupIndex(date) % 2 === 0 ? 'bg-neutral-50' : 'bg-neutral-100';
+    return this.groupIndex(date) % 2 === 0
+      ? 'bg-surface-0 dark:bg-surface-900 text-surface-700 dark:text-surface-100'
+      : 'bg-surface-50 dark:bg-surface-800/40 text-surface-700 dark:text-surface-100';
   }
 
   public groupHeaderClass(date: string): string {
@@ -562,21 +565,23 @@ export class CsvViewerPage {
   }
 
   public tipoHighlight(row: ViewerRow): string | undefined {
-    return th(row);
+    return th(row, this.colorService.colors());
   }
 
   public rowClass(row: ViewerRow): string {
-    const base = this.groupClass(row.__norm.data);
-    const extra = this.tipoHighlight(row);
-    return extra ? base + ' ' + extra : base;
+    const highlight = this.tipoHighlight(row);
+    if (highlight) {
+      return highlight;
+    }
+    return this.groupClass(row.__norm.data);
   }
 
   public colClass(field: string): string {
-    return field === 'Valor' ? AppColors.pagamentos : '';
+    return field === 'Valor' ? this.colorService.colors().pagamentos : '';
   }
 
   public colHeaderClass(field: string): string {
-    const base = field === 'Valor' ? AppColors.pagamentos : '';
+    const base = field === 'Valor' ? this.colorService.colors().pagamentos : '';
     return (base ? base + ' ' : '') + '!p-1';
   }
 

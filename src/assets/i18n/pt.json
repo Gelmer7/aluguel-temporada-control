@@ -43,7 +43,10 @@
     "SEARCH": "Buscar...",
     "TOTAL": "Total",
     "GROSS": "Bruto",
-    "NET": "Líquido"
+    "NET": "Líquido",
+    "SETTINGS": "Configurações",
+    "DATA_MANAGEMENT": "Gerenciamento de Dados",
+    "CUSTOM_COLORS": "Cores Personalizadas"
   },
   "REPORTS": {
     "SUMMARY": "Resumo Financeiro",
@@ -69,6 +72,27 @@
     "9": "Outubro",
     "10": "Novembro",
     "11": "Dezembro"
+  },
+  "SETTINGS": {
+    "COLORS": {
+      "TITLE": "Configurações de Cores",
+      "SUBTITLE": "Personalize as classes Tailwind para os diferentes tipos de registros",
+      "TAILWIND_CLASSES": "Classes Tailwind",
+      "PREVIEW": "Visualização",
+      "LIGHT_MODE": "Modo Claro",
+      "DARK_MODE": "Modo Escuro",
+      "RESET_DEFAULTS": "Resetar Padrões",
+      "SAVE_CHANGES": "Salvar Alterações",
+      "LABELS": {
+        "HOST": "Anfitrião (Reserva)",
+        "COHOST": "Coanfitrião (Recebimento)",
+        "PAGAMENTOS": "Pagamentos",
+        "DAMAGE": "Danos / Resoluções",
+        "SIMULATION": "Simulação"
+      },
+      "SUCCESS_SAVE": "Configurações de cores salvas com sucesso!",
+      "SUCCESS_RESET": "Cores restauradas para o padrão."
+    }
   },
   "EXPENSES_FORM": {
     "NEW": "Novo Gasto",
