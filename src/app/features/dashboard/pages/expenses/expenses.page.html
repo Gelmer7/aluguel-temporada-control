@@ -118,7 +118,7 @@
   >
     <!-- Table Header Toolbar -->
     <div
-      class="flex-none flex flex-col sm:flex-row sm:items-center justify-between p-2 sm:p-2.5 border-b border-surface-200 dark:border-surface-700 gap-2"
+      class="flex items-center justify-start p-1 border-b border-surface-200 dark:border-surface-700"
     >
       <p-iconfield iconPosition="left" class="w-full sm:max-w-xs">
         <p-inputicon>
@@ -133,6 +133,7 @@
           class="w-full !py-1 sm:!py-2 text-xs sm:text-sm"
         />
       </p-iconfield>
+      <p-button icon="pi pi-chart-pie" variant="text" [pTooltip]="'TERMS.CHARTS' | translate" />
     </div>
 
     <!-- Scrollable Table Content -->

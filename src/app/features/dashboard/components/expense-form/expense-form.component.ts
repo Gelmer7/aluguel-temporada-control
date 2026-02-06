@@ -1,18 +1,17 @@
 import { Component, EventEmitter, Input, Output, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Dialog } from 'primeng/dialog';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { InputNumber } from 'primeng/inputnumber';
-import { DatePicker } from 'primeng/datepicker';
-import { Select } from 'primeng/select';
-import { Textarea } from 'primeng/textarea';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
+import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
-import { map } from 'rxjs/operators';
+import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
 
 @Component({
   selector: 'app-expense-form',
@@ -20,13 +19,13 @@ import { map } from 'rxjs/operators';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    Dialog,
-    Button,
-    InputText,
-    InputNumber,
-    DatePicker,
-    Select,
-    Textarea,
+    DialogComponent,
+    ButtonModule,
+    InputTextModule,
+    InputNumberModule,
+    DatePickerModule,
+    SelectModule,
+    TextareaModule,
     TooltipModule,
     ToolbarModule,
     TranslateModule,

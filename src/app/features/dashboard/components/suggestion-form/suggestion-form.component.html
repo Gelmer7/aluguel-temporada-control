@@ -1,77 +1,68 @@
-<p-dialog
-  [header]="(suggestion ? 'SUGGESTIONS_FORM.EDIT' : 'SUGGESTIONS_FORM.NEW') | translate"
+<app-dialog
   [(visible)]="visible"
-  [modal]="true"
-  [breakpoints]="{ '960px': '75vw', '640px': '90vw' }"
-  [style]="{ width: '50vw' }"
-  (onHide)="onHide()"
+  [header]="(suggestion ? 'SUGGESTIONS_FORM.EDIT' : 'SUGGESTIONS_FORM.NEW') | translate"
+  [icon]="suggestion ? 'pi pi-pencil' : 'pi pi-plus'"
+  (onSave)="save()"
+  (onCancel)="onHide()"
+  [saveDisabled]="form.invalid"
 >
-  <form [formGroup]="form" class="flex flex-col gap-4 mt-2">
-    <div class="flex flex-col gap-2">
-      <label for="title">{{ 'SUGGESTIONS_FORM.TITLE' | translate }}</label>
-      <input pInputText id="title" formControlName="title" [placeholder]="'SUGGESTIONS_FORM.PLACEHOLDER_TITLE' | translate" />
-    </div>
-
-    <div class="flex flex-col gap-2">
-      <label for="description">{{ 'SUGGESTIONS_FORM.DESCRIPTION' | translate }}</label>
-      <textarea
-        pTextarea
-        id="description"
-        formControlName="description"
-        rows="5"
-        [autoResize]="true"
-        [placeholder]="'SUGGESTIONS_FORM.PLACEHOLDER_DESCRIPTION' | translate"
-      ></textarea>
-    </div>
-
-    @if (isAdmin()) {
+  <div content>
+    <form [formGroup]="form" class="flex flex-col gap-4 mt-2">
       <div class="flex flex-col gap-2">
-        <label for="status">{{ 'TERMS.STATUS' | translate }}</label>
-        <p-select
-          id="status"
-          formControlName="status"
-          [options]="statusOptions"
-          optionLabel="label"
-          optionValue="value"
-          [placeholder]="'TERMS.SELECT' | translate"
-          class="w-full"
-        >
-          <ng-template let-option pTemplate="item">
-            <span>{{ 'SUGGESTIONS_FORM.STATUS.' + option.value | translate }}</span>
-          </ng-template>
-          <ng-template let-option pTemplate="selectedItem">
-            <span>{{ 'SUGGESTIONS_FORM.STATUS.' + option.value | translate }}</span>
-          </ng-template>
-        </p-select>
+        <label for="title">{{ 'SUGGESTIONS_FORM.TITLE' | translate }}</label>
+        <input pInputText id="title" formControlName="title" [placeholder]="'SUGGESTIONS_FORM.PLACEHOLDER_TITLE' | translate" />
       </div>
 
       <div class="flex flex-col gap-2">
-        <label for="answer">{{ 'SUGGESTIONS_FORM.ANSWER' | translate }}</label>
+        <label for="description">{{ 'SUGGESTIONS_FORM.DESCRIPTION' | translate }}</label>
         <textarea
           pTextarea
-          id="answer"
-          formControlName="answer"
-          rows="3"
+          id="description"
+          formControlName="description"
+          rows="5"
           [autoResize]="true"
-          [placeholder]="'SUGGESTIONS_FORM.PLACEHOLDER_ANSWER' | translate"
+          [placeholder]="'SUGGESTIONS_FORM.PLACEHOLDER_DESCRIPTION' | translate"
         ></textarea>
       </div>
-    }
 
-    <div class="flex justify-end gap-2 mt-4">
-      <p-button
-        [label]="'ACTIONS.CANCEL' | translate"
-        icon="pi pi-times"
-        [text]="true"
-        severity="secondary"
-        (click)="onHide()"
-      />
-      <p-button
-        [label]="'ACTIONS.SAVE' | translate"
-        icon="pi pi-check"
-        [disabled]="form.invalid"
-        (click)="save()"
-      />
-    </div>
-  </form>
-</p-dialog>
+      @if (isAdmin()) {
+        <div class="flex flex-col gap-2">
+          <label for="status">{{ 'TERMS.STATUS' | translate }}</label>
+          <p-select
+            id="status"
+            formControlName="status"
+            [options]="statusOptions"
+            optionLabel="label"
+            optionValue="value"
+            [placeholder]="'TERMS.SELECT' | translate"
+            class="w-full"
+          >
+            <ng-template let-option pTemplate="item">
+              <span>{{ 'SUGGESTIONS_FORM.STATUS.' + option.value | translate }}</span>
+            </ng-template>
+            <ng-template let-option pTemplate="selectedItem">
+              <span>{{ 'SUGGESTIONS_FORM.STATUS.' + option.value | translate }}</span>
+            </ng-template>
+          </p-select>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <label for="answer">{{ 'SUGGESTIONS_FORM.ANSWER' | translate }}</label>
+          <textarea
+            pTextarea
+            id="answer"
+            formControlName="answer"
+            rows="3"
+            [autoResize]="true"
+            [placeholder]="'SUGGESTIONS_FORM.PLACEHOLDER_ANSWER' | translate"
+          ></textarea>
+        </div>
+      }
+    </form>
+  </div>
+
+  <!-- Exemplo de como usar o header-toolbar se precisasse de algo específico -->
+  <!-- <div header-toolbar>
+    <p-button icon="pi pi-info-circle" [text]="true" severity="secondary" />
+  </div> -->
+</app-dialog>

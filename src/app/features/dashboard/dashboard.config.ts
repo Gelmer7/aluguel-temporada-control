@@ -48,12 +48,7 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   //   icon: 'pi-file-edit',
   //   route: '/dashboard/contracts',
   // },
-  {
-    id: 'charts',
-    label: 'TERMS.CHARTS',
-    icon: 'pi-chart-pie',
-    route: '/dashboard/charts',
-  },
+
   {
     id: 'reports',
     label: 'TERMS.REPORTS',

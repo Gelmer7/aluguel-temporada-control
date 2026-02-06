@@ -1,32 +1,29 @@
-<p-dialog
-  [header]="(isEdit ? 'EXPENSES_FORM.EDIT' : 'EXPENSES_FORM.NEW') | translate"
+<app-dialog
   [(visible)]="visible"
-  [modal]="true"
-  [style]="
-    isMobile
-      ? { width: '92vw', height: '80vh' }
-      : { width: '100vw', maxWidth: '600px' }
-  "
-  [contentStyle]="isMobile ? { 'flex-grow': '1', 'overflow-y': 'auto' } : {}"
-  [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
-  [draggable]="false"
-  [resizable]="false"
-  [styleClass]="' [&_.p-dialog-footer]:!p-0 [&_.p-dialog-header]:!px-4 '"
-  [blockScroll]="true"
-  (onHide)="onClose()"
+  [header]="(isEdit ? 'EXPENSES_FORM.EDIT' : 'EXPENSES_FORM.NEW') | translate"
+  [icon]="isEdit ? 'pi pi-pencil' : 'pi pi-plus'"
+  [width]="isMobile ? '92vw' : '600px'"
+  [saveLabel]="(isEdit ? 'ACTIONS.SAVE' : 'ACTIONS.SAVE_EXPENSE') | translate"
+  [saveDisabled]="form.invalid"
+  (onSave)="onSubmit()"
+  (onCancel)="onClose()"
 >
-  <div class="flex flex-col gap-2 p-1 sm:p-2">
+  <!-- Custom Toolbar in Header -->
+  <div header-toolbar class="flex gap-2">
+    <p-button
+      icon="pi pi-filter-slash"
+      (click)="clearForm()"
+      [text]="true"
+      severity="secondary"
+      size="small"
+      [pTooltip]="'ACTIONS.CLEAR' | translate"
+      tooltipPosition="bottom"
+    />
+  </div>
+
+  <div content class="flex flex-col gap-2 p-1 sm:p-2">
     <!-- Quick Actions -->
     <div class="flex gap-2 overflow-x-auto no-scrollbar py-1">
-      <p-button
-        icon="pi pi-filter-slash"
-        (click)="clearForm()"
-        severity="secondary"
-        size="small"
-        [pTooltip]="'ACTIONS.CLEAR' | translate"
-        tooltipPosition="bottom"
-        class="flex-none"
-      />
       @for (qt of quickExpenseTypes; track qt) {
         <p-button
           [label]="qt.label | translate"
@@ -189,25 +186,4 @@
       </div>
     </form>
   </div>
-
-  <ng-template pTemplate="footer">
-    <p-toolbar class="border-none bg-transparent !p-2 w-full">
-      <div class="p-toolbar-group-start"></div>
-      <div class="p-toolbar-group-end flex flex-row justify-end items-center gap-2">
-        <p-button
-          [label]="'ACTIONS.CANCEL' | translate"
-          (click)="onClose()"
-          severity="secondary"
-          variant="outlined"
-          icon="pi pi-times"
-        ></p-button>
-        <p-button
-          [label]="(isEdit ? 'ACTIONS.SAVE' : 'ACTIONS.SAVE_EXPENSE') | translate"
-          [disabled]="form.invalid"
-          icon="pi pi-check"
-          (click)="onSubmit()"
-        ></p-button>
-      </div>
-    </p-toolbar>
-  </ng-template>
-</p-dialog>
+</app-dialog>

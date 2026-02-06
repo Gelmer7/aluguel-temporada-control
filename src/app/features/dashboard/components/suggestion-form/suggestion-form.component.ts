@@ -1,13 +1,13 @@
 import { Component, EventEmitter, Input, Output, OnInit, OnChanges, SimpleChanges, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Dialog } from 'primeng/dialog';
-import { Button } from 'primeng/button';
-import { InputText } from 'primeng/inputtext';
-import { Textarea } from 'primeng/textarea';
-import { Select } from 'primeng/select';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { TextareaModule } from 'primeng/textarea';
+import { SelectModule } from 'primeng/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { Suggestion, SuggestionStatus } from '../../../../models/suggestion.model';
+import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
 
 @Component({
   selector: 'app-suggestion-form',
@@ -16,11 +16,11 @@ import { Suggestion, SuggestionStatus } from '../../../../models/suggestion.mode
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    Dialog,
-    Button,
-    InputText,
-    Textarea,
-    Select,
+    DialogComponent,
+    ButtonModule,
+    InputTextModule,
+    TextareaModule,
+    SelectModule,
     TranslateModule
   ],
   templateUrl: './suggestion-form.component.html',

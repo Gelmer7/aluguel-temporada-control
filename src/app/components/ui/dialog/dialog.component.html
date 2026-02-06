@@ -1,0 +1,56 @@
+<p-dialog
+  [(visible)]="visible"
+  [modal]="true"
+  [breakpoints]="breakpoints()"
+  [style]="{ width: width() }"
+  (onHide)="close()"
+>
+  <!-- Custom Header with Toolbar -->
+  <ng-template pTemplate="header">
+    <div class="flex items-center justify-between w-full ">
+      <div class="flex items-center gap-3">
+        @if (icon()) {
+          <i [class]="icon()"></i>
+        }
+        <span>{{ header() | translate }}</span>
+      </div>
+
+      <!-- Slot for additional toolbar items -->
+      <div class="flex items-center gap-2 mr-8">
+        <ng-content select="[header-toolbar]"></ng-content>
+      </div>
+    </div>
+  </ng-template>
+
+  <!-- Main Content Slot -->
+  <div class="flex flex-col gap-4">
+    <ng-content select="[content]"></ng-content>
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Custom Footer -->
+  @if (showFooter()) {
+    <ng-template pTemplate="footer">
+      <div class="flex justify-end gap-2">
+        <!-- Slot for custom footer actions -->
+        <ng-content select="[footer-actions]"></ng-content>
+
+        <!-- Default actions -->
+        <p-button
+          [label]="cancelLabel() | translate"
+          icon="pi pi-times"
+          [text]="true"
+          severity="secondary"
+          (click)="close()"
+        />
+        <p-button
+          [label]="saveLabel() | translate"
+          icon="pi pi-check"
+          [severity]="saveSeverity()"
+          [disabled]="saveDisabled()"
+          (click)="save()"
+        />
+      </div>
+    </ng-template>
+  }
+</p-dialog>
