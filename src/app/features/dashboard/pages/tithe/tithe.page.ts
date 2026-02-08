@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -12,18 +12,19 @@ import { TooltipModule } from 'primeng/tooltip';
 import { FloatLabel } from 'primeng/floatlabel';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { IftaLabelModule } from 'primeng/iftalabel';
+import { ButtonModule } from 'primeng/button';
+import { TextareaModule } from 'primeng/textarea';
+
 
 // Components
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 
 // Services & Models
 import { SupabaseService, Expense, Tithe } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
-import { IftaLabelModule } from 'primeng/iftalabel';
-import { ButtonModule } from 'primeng/button';
-import { TextareaModule } from 'primeng/textarea';
+import { HeaderService } from '../../../../services/header';
 
 @Component({
   selector: 'app-tithe-page',
@@ -42,7 +43,6 @@ import { TextareaModule } from 'primeng/textarea';
     TranslateModule,
     FloatLabel,
     ToastModule,
-    PageHeaderComponent,
     DialogComponent,
     FilterContainerComponent,
     IftaLabelModule,
@@ -55,6 +55,9 @@ export class TithePage implements OnInit {
   private readonly translate = inject(TranslateService);
   private readonly houseService = inject(HouseService);
   private readonly messageService = inject(MessageService);
+  private readonly headerService = inject(HeaderService);
+
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
   // Filtros
   protected readonly selectedYear = signal<number>(new Date().getFullYear());
@@ -67,6 +70,17 @@ export class TithePage implements OnInit {
     effect(() => {
       this.houseService.currentHouseCode();
       this.loadData();
+    });
+
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'TERMS.TITHE',
+          icon: 'pi-heart',
+          actions: actions
+        });
+      }
     });
   }
 
@@ -106,7 +120,7 @@ export class TithePage implements OnInit {
     const year = this.selectedYear();
     const month = this.selectedMonth();
     return this.expenses().filter((e) => {
-      const date = new Date(e.purchase_date);
+      const date = new Date(e.purchaseDate);
       return date.getUTCFullYear() === year && date.getUTCMonth() === month;
     });
   });
@@ -174,12 +188,12 @@ export class TithePage implements OnInit {
     const monthStr = month < 10 ? `0${month}` : month;
     const monthYear = `${this.selectedYear()}-${monthStr}-01`;
 
-    const titheData: Omit<Tithe, 'id' | 'created_at'> = {
-      month_year: monthYear,
-      airbnb_gross: this.totalAirbnb(),
-      tithe_value: this.titheValueToPay(),
-      offer_value: this.offerValueToPay(),
-      total_paid: this.titheValueToPay() + this.offerValueToPay(),
+    const titheData: Omit<Tithe, 'id' | 'createDate'> = {
+      monthYear: monthYear,
+      airbnbGross: this.totalAirbnb(),
+      titheValue: this.titheValueToPay(),
+      offerValue: this.offerValueToPay(),
+      totalPaid: this.titheValueToPay() + this.offerValueToPay(),
       observation: this.titheObservation(),
     };
 

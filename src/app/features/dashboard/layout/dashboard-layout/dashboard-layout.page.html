@@ -1,40 +1,32 @@
-<div class="flex flex-col h-screen overflow-hidden bg-surface-50 dark:bg-surface-950" aria-label="Shell do dashboard">
+<div class="flex h-screen overflow-hidden bg-surface-50 dark:bg-surface-950" aria-label="Shell do dashboard">
 
-  <!-- Botão Flutuante para Abrir Menu -->
-  <div class="fixed top-4 left-4 z-50 flex items-center gap-1">
-    <p-button
-    icon="pi pi-bars"
-    [rounded]="true"
-    [raised]="true"
-    severity="secondary"
-    (onClick)="menuVisible.set(true)"
-    pTooltip="Abrir Menu"
-    tooltipPosition="right"
-    />
-    <div
-      class="flex flex-col items-center leading-none gap-1 cursor-pointer hover:opacity-80 transition-opacity"
-      routerLink="/dashboard/home"
-      pTooltip="Trocar Casa Ativa"
-      tooltipPosition="right"
-    >
-      <i class="pi pi-home text-lg text-primary"></i>
-      <span class="text-[8px] font-bold uppercase tracking-wider text-surface-700 dark:text-surface-300">
-        {{ activeHouseName() }}
-      </span>
-    </div>
-  </div>
-
-  <!-- Menu Unificado (Drawer) -->
+  <!-- Menu Unificado -->
   <app-sidebar-menu
     [items]="navItems"
     [visible]="menuVisible()"
     (onVisibleChange)="menuVisible.set($event)"
   ></app-sidebar-menu>
 
-  <div class="flex flex-1 overflow-hidden">
-    <main class="flex-1 flex flex-col min-w-0" role="main" aria-label="Área principal">
+  <div class="flex flex-col flex-1 overflow-hidden relative">
+    <!-- Botão Flutuante para Abrir Menu -->
+    <div class="fixed top-3 left-3 z-50 flex items-center gap-1 sm:hidden">
+      <p-button
+        icon="pi pi-bars"
+        [rounded]="true"
+        [raised]="true"
+        severity="secondary"
+        (onClick)="menuVisible.set(true)"
+        pTooltip="Abrir Menu"
+        tooltipPosition="right"
+      />
+    </div>
+
+    <main class="flex-1 flex flex-col min-w-0 overflow-hidden" role="main" aria-label="Área principal">
+      <!-- Header Fixo -->
+      <app-page-header class="sticky top-0 z-40" />
+
       <section
-        class="flex-1 flex flex-col min-h-0 overflow-hidden"
+        class="flex-1 flex flex-col min-h-0 overflow-auto"
         aria-label="Conteúdo"
       >
         <router-outlet></router-outlet>

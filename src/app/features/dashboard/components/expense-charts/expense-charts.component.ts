@@ -92,14 +92,14 @@ export class ExpenseChartsComponent {
     if (year === 'ALL') {
       // Se "TODOS" estiver selecionado, somamos todos os meses de todos os anos disponíveis nos dados filtrados
       data.forEach(e => {
-        const month = new Date(e.purchase_date).getUTCMonth();
+        const month = new Date(e.purchaseDate).getUTCMonth();
         monthlyTotals[month] += (e.price || 0);
       });
     } else {
       // Se um ano específico estiver selecionado, filtramos apenas por esse ano
-      data.filter(e => new Date(e.purchase_date).getUTCFullYear() === Number(year))
+      data.filter(e => new Date(e.purchaseDate).getUTCFullYear() === Number(year))
           .forEach(e => {
-            const month = new Date(e.purchase_date).getUTCMonth();
+            const month = new Date(e.purchaseDate).getUTCMonth();
             monthlyTotals[month] += (e.price || 0);
           });
     }
@@ -156,7 +156,7 @@ export class ExpenseChartsComponent {
     if (!data.length) return null;
 
     const annualTotals = data.reduce((acc, curr) => {
-      const year = new Date(curr.purchase_date).getUTCFullYear();
+      const year = new Date(curr.purchaseDate).getUTCFullYear();
       acc[year] = (acc[year] || 0) + (curr.price || 0);
       return acc;
     }, {} as Record<number, number>);

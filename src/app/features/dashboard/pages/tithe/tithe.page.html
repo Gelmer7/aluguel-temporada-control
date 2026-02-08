@@ -1,15 +1,15 @@
+<ng-template #headerActions>
+  <p-button
+    icon="pi pi-plus"
+    (onClick)="onAddTithe()"
+    [pTooltip]="'TITHE_MANAGEMENT.ADD_TITHE' | translate"
+    tooltipPosition="left"
+    [size]="'small'"
+  />
+</ng-template>
+
 <p-toast />
 <div class="flex flex-col gap-2 p-2 overflow-auto max-h-[calc(100vh)]">
-  <!-- Header -->
-  <app-page-header
-    [title]="'TERMS.TITHE'"
-    [icon]="'pi-heart'"
-    [showAction]="true"
-    [actionTooltip]="'TITHE_MANAGEMENT.ADD_TITHE'"
-    [actionIcon]="'pi pi-plus'"
-    (onAction)="onAddTithe()"
-  />
-
   @if (loading()) {
     <div class="flex justify-center p-8">
       <i class="pi pi-spin pi-spinner text-4xl"></i>
@@ -93,9 +93,7 @@
       </app-filter-container>
 
       <!-- Resumo -->
-      <div
-        class="shadow-sm border rounded-lg p-1 border-surface-200 dark:border-surface-700 text-xs"
-      >
+      <div class="shadow-sm border rounded-lg p-1 text-xs">
         <p-table [value]="[{}]" [responsiveLayout]="'scroll'" size="small">
           <ng-template pTemplate="header">
             <tr>
@@ -123,107 +121,180 @@
       </div>
     </div>
 
-    <!-- Detalhes -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      <!-- Tabela de Pagamentos -->
-      <p-card [header]="'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate">
+    <!-- Tabela de Pagamentos -->
+    <div class="flex-1 rounded-xl shadow-sm border flex flex-col p-1">
+      <div
+        class="flex items-center justify-between p-1 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
+      >
+        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate }}</span>
+      </div>
+      <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
           [value]="filteredPayments()"
           [rows]="10"
           [paginator]="true"
           [loading]="loading()"
-          size="small"
+          [scrollable]="true"
+          scrollHeight="flex"
+          class="p-datatable-sm"
         >
           <ng-template pTemplate="header">
             <tr>
-              <th>{{ 'EXPENSES_FORM.DATE' | translate }}</th>
-              <th>{{ 'EXPENSES_FORM.DESCRIPTION' | translate }}</th>
-              <th>{{ 'EXPENSES_FORM.PRICE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DATE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DESCRIPTION' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.PRICE' | translate }}
+              </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-payment>
+            <tr
+              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+            >
+              <td class="truncate">{{ payment.data | date: 'dd/MM/yy' }}</td>
+              <td class="truncate">{{ payment.informacoes }}</td>
+              <td class="truncate font-medium">{{ payment.valor | currency: 'BRL' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
             <tr>
-              <td>{{ payment.data | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ payment.descricao }}</td>
-              <td>{{ payment.valor | currency: 'BRL' }}</td>
+              <td colspan="2" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+                Total:
+              </td>
+              <td class="font-bold text-primary bg-surface-50/50 dark:bg-surface-800/50">
+                {{ totalAirbnb() | currency: 'BRL' }}
+              </td>
             </tr>
           </ng-template>
         </p-table>
-      </p-card>
+      </div>
+    </div>
 
-      <!-- Tabela de Despesas -->
-      <p-card [header]="'TITHE_MANAGEMENT.EXPENSES_LIST' | translate">
+    <!-- Tabela de Despesas -->
+    <div class="flex-1 rounded-xl shadow-sm border flex flex-col p-1">
+      <div
+        class="flex items-center justify-between p-1 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
+      >
+        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.EXPENSES_LIST' | translate }}</span>
+      </div>
+      <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
         <p-table
           [value]="filteredExpenses()"
           [rows]="10"
           [paginator]="true"
           [loading]="loading()"
-          size="small"
+          [scrollable]="true"
+          scrollHeight="flex"
+          class="p-datatable-sm"
         >
           <ng-template pTemplate="header">
             <tr>
-              <th>{{ 'EXPENSES_FORM.DATE' | translate }}</th>
-              <th>{{ 'EXPENSES_FORM.DESCRIPTION' | translate }}</th>
-              <th>{{ 'EXPENSES_FORM.PRICE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DATE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DESCRIPTION' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.PRICE' | translate }}
+              </th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-expense>
+            <tr
+              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+            >
+              <td class="truncate">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
+              <td class="truncate">{{ expense.description }}</td>
+              <td class="truncate font-medium">{{ expense.price | currency: 'BRL' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
             <tr>
-              <td>{{ expense.purchase_date | date: 'dd/MM/yyyy' }}</td>
-              <td>{{ expense.description }}</td>
-              <td>{{ expense.price | currency: 'BRL' }}</td>
+              <td colspan="2" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+                Total:
+              </td>
+              <td class="font-bold text-red-500 bg-surface-50/50 dark:bg-surface-800/50">
+                {{ totalExpenses() | currency: 'BRL' }}
+              </td>
             </tr>
           </ng-template>
         </p-table>
-      </p-card>
+      </div>
     </div>
 
-    <!-- Histórico de Dízimos -->
-    <p-card [header]="'TITHE_MANAGEMENT.HISTORY' | translate" class="mt-4">
-      <p-table
-        [value]="titheHistory()"
-        [rows]="10"
-        [paginator]="true"
-        [loading]="loading()"
-        size="small"
+    <!-- Tabela Histórico de Dízimos -->
+    <div class="flex-1 rounded-xl shadow-sm border flex flex-col p-1">
+      <div
+        class="flex items-center justify-between p-1 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
       >
-        <ng-template pTemplate="header">
-          <tr>
-            <th>{{ 'TERMS.MONTH' | translate }}</th>
-            <th>{{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}</th>
-            <th>{{ 'TITHE_MANAGEMENT.TITHE_VALUE' | translate: { percentage: '' } }}</th>
-            <th>{{ 'TITHE_MANAGEMENT.OFFER_VALUE' | translate: { percentage: '' } }}</th>
-            <th>{{ 'TITHE_MANAGEMENT.TOTAL_TO_PAY' | translate }}</th>
-            <th style="width: 4rem"></th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body" let-tithe>
-          <tr>
-            <td>{{ tithe.month_year | date: 'MM/yyyy' }}</td>
-            <td>{{ tithe.airbnb_gross | currency: 'BRL' }}</td>
-            <td>{{ tithe.tithe_value | currency: 'BRL' }}</td>
-            <td>{{ tithe.offer_value | currency: 'BRL' }}</td>
-            <td>{{ tithe.total_paid | currency: 'BRL' }}</td>
-            <td>
-              <p-button
-                icon="pi pi-trash"
-                [rounded]="true"
-                [text]="true"
-                severity="danger"
-                (onClick)="onDeleteTithe(tithe.id)"
-              />
-            </td>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="emptymessage">
-          <tr>
-            <td colspan="6" class="text-center p-4">
-              {{ 'TITHE_MANAGEMENT.NO_HISTORY' | translate }}
-            </td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </p-card>
+        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.HISTORY' | translate }}</span>
+      </div>
+      <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
+        <p-table
+          [value]="titheHistory()"
+          [rows]="10"
+          [paginator]="true"
+          [loading]="loading()"
+          [scrollable]="true"
+          scrollHeight="flex"
+          class="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.MONTH' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TITHE_MANAGEMENT.TITHE_VALUE' | translate: { percentage: '' } }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TITHE_MANAGEMENT.OFFER_VALUE' | translate: { percentage: '' } }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TITHE_MANAGEMENT.TOTAL_TO_PAY' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800" style="width: 4rem"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-tithe>
+            <tr
+              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+            >
+              <td class="truncate">{{ tithe.monthYear | date: 'MM/yyyy' }}</td>
+              <td class="truncate">{{ tithe.airbnbGross | currency: 'BRL' }}</td>
+              <td class="truncate">{{ tithe.titheValue | currency: 'BRL' }}</td>
+              <td class="truncate">{{ tithe.offerValue | currency: 'BRL' }}</td>
+              <td class="truncate font-bold text-primary">
+                {{ tithe.totalPaid | currency: 'BRL' }}
+              </td>
+              <td class="text-center">
+                <p-button
+                  icon="pi pi-trash"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="danger"
+                  size="small"
+                  (click)="onDeleteTithe(tithe.id)"
+                />
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="text-center p-4">
+                {{ 'TITHE_MANAGEMENT.NO_HISTORY' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
   }
 </div>
 
@@ -264,17 +335,18 @@
       }}</label>
     </p-iftalabel>
 
-    <p-float-label variant="in">
+    <p-iftalabel>
       <textarea
         pInputTextarea
         [(ngModel)]="titheObservation"
         rows="3"
-        fluid
+        [fluid]="true"
         id="tithe-observation"
         class="w-full"
+        style="resize: none"
       ></textarea>
       <label for="tithe-observation">{{ 'EXPENSES_FORM.OBSERVATION' | translate }}</label>
-    </p-float-label>
+    </p-iftalabel>
 
     <div class="p-2 bg-surface-100 dark:bg-surface-800 rounded-lg">
       <div class="flex justify-between items-center">

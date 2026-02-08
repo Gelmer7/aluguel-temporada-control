@@ -1,41 +1,39 @@
+<!-- Template de Ações para o Header -->
+<ng-template #headerActions>
+  <div class="flex items-center gap-1">
+    <p-button
+      icon="pi pi-upload"
+      severity="secondary"
+      [outlined]="true"
+      size="small"
+      (click)="fileInput.click()"
+      pTooltip="Carregar novo relatório do Airbnb"
+      tooltipPosition="left"
+    />
+    <input
+      #fileInput
+      type="file"
+      (change)="onFileSelected($event)"
+      accept=".csv"
+      class="hidden"
+    />
+
+    <p-button
+      icon="pi pi-sync"
+      [severity]="syncing() ? 'warn' : 'primary'"
+      size="small"
+      (click)="syncDatabase()"
+      [loading]="syncing()"
+      [disabled]="rows().length === 0"
+      pTooltip="Salvar os dados atuais no banco de dados (evita duplicatas)"
+      tooltipPosition="bottom"
+    />
+  </div>
+</ng-template>
+
 <!-- Container principal da página -->
 <p-toast />
 <div class="h-full flex flex-col p-2 bg-surface-50 dark:bg-surface-950 gap-2 overflow-hidden">
-  <!-- Header com Ações -->
-  <div class="flex items-center justify-between gap-1">
-    <app-page-header [title]="'ACTIONS.VIEW_CSV'" [icon]="'pi-table'" class="flex-1" />
-
-    <div class="flex items-center gap-1">
-      <p-button
-        icon="pi pi-upload"
-        severity="secondary"
-        [outlined]="true"
-        size="small"
-        (click)="fileInput.click()"
-        pTooltip="Carregar novo relatório do Airbnb"
-        tooltipPosition="left"
-      />
-      <input
-        #fileInput
-        type="file"
-        (change)="onFileSelected($event)"
-        accept=".csv"
-        class="hidden"
-      />
-
-      <p-button
-        icon="pi pi-sync"
-        [severity]="syncing() ? 'warn' : 'primary'"
-        size="small"
-        (click)="syncDatabase()"
-        [loading]="syncing()"
-        [disabled]="rows().length === 0"
-        pTooltip="Salvar os dados atuais no banco de dados (evita duplicatas)"
-        tooltipPosition="bottom"
-      />
-    </div>
-  </div>
-
   <!-- Filtros Reutilizáveis -->
   <app-filter-container>
     <!-- Resumo dos filtros (aparece quando colapsado) -->

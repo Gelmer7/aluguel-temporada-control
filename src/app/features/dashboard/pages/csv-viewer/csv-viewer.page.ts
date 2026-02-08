@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -11,7 +11,6 @@ import { Select } from 'primeng/select';
 import { FloatLabel } from 'primeng/floatlabel';
 import { Checkbox } from 'primeng/checkbox';
 import { MultiSelect } from 'primeng/multiselect';
-import { Tag } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
 import { Popover } from 'primeng/popover';
 import { Toast } from 'primeng/toast';
@@ -23,6 +22,7 @@ import { MessageService } from 'primeng/api';
 
 // Services & Utils
 import { SupabaseService } from '../../../../services/supabase.service';
+import { HeaderService } from '../../../../services/header';
 import { StringUtils } from '../../../../shared/utils/string.utils';
 import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
 import Papa from 'papaparse';
@@ -42,7 +42,6 @@ import {
 
 // Shared Components
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ColorService } from '../../../../services/color.service';
 
@@ -71,7 +70,6 @@ import { ColorService } from '../../../../services/color.service';
     AccordionModule,
     // Shared
     TablePaginatorComponent,
-    PageHeaderComponent,
     FilterContainerComponent,
   ],
   providers: [MessageService],
@@ -84,7 +82,24 @@ export class CsvViewerPage {
   private readonly http = inject(HttpClient);
   private readonly supabase = inject(SupabaseService);
   private readonly messageService = inject(MessageService);
+  private readonly headerService = inject(HeaderService);
   protected readonly colorService = inject(ColorService);
+
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
+
+  constructor() {
+    this.loadFromDatabase();
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'ACTIONS.VIEW_CSV',
+          icon: 'pi-table',
+          actions: actions
+        });
+      }
+    });
+  }
 
   protected readonly syncing = signal<boolean>(false);
   protected readonly loading = signal<boolean>(false);
@@ -318,10 +333,6 @@ export class CsvViewerPage {
     'Taxa de limpeza',
     'Valor',
   ];
-
-  constructor() {
-    this.loadFromDatabase();
-  }
 
   protected async syncDatabase() {
     if (this.rows().length === 0) return;

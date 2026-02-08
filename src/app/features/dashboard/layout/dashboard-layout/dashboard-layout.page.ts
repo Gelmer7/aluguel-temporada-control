@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy, signal, inject, computed } from '@a
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarMenuComponent } from '../../../../components/ui/sidebar-menu/sidebar-menu.component';
+import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { NavItem } from '../../../../components/ui/types';
 import { Button } from 'primeng/button';
 import { Tooltip } from 'primeng/tooltip';
@@ -16,6 +17,7 @@ import { HouseService } from '../../../../services/house.service';
     CommonModule,
     RouterModule,
     SidebarMenuComponent,
+    PageHeaderComponent,
     Button,
     Tooltip,
   ],

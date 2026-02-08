@@ -1,30 +1,53 @@
 <div
-  class="ml-25 flex-none flex items-center justify-between gap-2 bg-surface-0 dark:bg-surface-900 p-1 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+  class="flex-none flex items-center justify-between gap-2 bg-surface-0 dark:bg-surface-900 p-2 sm:p-3 ml-12 sm:ml-0"
 >
-  <div class="flex items-center gap-1">
+  <div class="flex items-center gap-2 sm:gap-3">
     <!-- Ícone da Página -->
     <div
-      class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
+      class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
     >
-      <i [class]="'pi ' + icon() + ' text-primary text-xl sm:text-2xl'"></i>
+      <i [class]="'pi ' + displayIcon() + ' text-primary text-lg sm:text-xl'"></i>
     </div>
 
     <!-- Título da Página -->
-    <h1 class="text-xs sm:text-lg font-bold text-surface-900 dark:text-surface-0 m-0">
-      {{ title() | translate }}
+    <h1 class="text-sm sm:text-xl font-bold text-surface-900 dark:text-surface-0 m-0">
+      {{ displayTitle() | translate }}
     </h1>
   </div>
 
-  <!-- Ação à Direita (Opcional) -->
-  @if (showAction()) {
-    <p-button
-      [icon]="actionIcon()"
-      [label]="actionLabel() | translate"
-      (onClick)="handleAction()"
-      [pTooltip]="actionTooltip() | translate"
+  <!-- Ações à Direita -->
+  <div class="flex items-center gap-2">
+    <!-- Slot para múltiplas ações via Template (Recomendado) -->
+    <ng-container *ngTemplateOutlet="actionsTemplate()"></ng-container>
+
+    <!-- Slot para conteúdo projetado -->
+    <ng-content></ng-content>
+
+    <!-- Ação à Direita Legada (Opcional) -->
+    @if (showAction()) {
+      <p-button
+        [icon]="actionIcon()"
+        [label]="actionLabel() | translate"
+        (onClick)="handleAction()"
+        [pTooltip]="actionTooltip() | translate"
+        tooltipPosition="left"
+        [size]="'small'"
+        class="flex-shrink-0"
+      />
+    }
+
+
+    <!-- Indicador de Casa Ativa -->
+    <div
+      class="flex flex-col items-center leading-none gap-1 cursor-pointer hover:opacity-80 transition-opacity px-2 border rounded-lg p-0.5"
+      routerLink="/dashboard/home"
+      pTooltip="Trocar Casa Ativa"
       tooltipPosition="left"
-      [size]="'small'"
-      class="flex-shrink-0"
-    />
-  }
+    >
+      <i class="pi pi-home text-lg text-primary"></i>
+      <span class="text-[8px] font-bold uppercase tracking-wider text-surface-700 dark:text-surface-300">
+        {{ activeHouseName() }}
+      </span>
+    </div>
+  </div>
 </div>

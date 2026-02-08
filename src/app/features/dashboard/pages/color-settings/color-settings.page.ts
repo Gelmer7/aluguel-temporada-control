@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -13,10 +13,8 @@ import { ToastModule } from 'primeng/toast';
 
 // Services
 import { ColorService } from '../../../../services/color.service';
+import { HeaderService } from '../../../../services/header';
 import { AppColorConfig } from '../../../../shared/design/colors';
-
-// Components
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 
 @Component({
   selector: 'app-color-settings',
@@ -31,7 +29,6 @@ import { PageHeaderComponent } from '../../../../components/ui/page-header/page-
     ButtonModule,
     TooltipModule,
     ToastModule,
-    PageHeaderComponent,
   ],
   providers: [MessageService],
   templateUrl: './color-settings.page.html',
@@ -40,9 +37,25 @@ export class ColorSettingsPage {
   private readonly colorService = inject(ColorService);
   private readonly messageService = inject(MessageService);
   private readonly translateService = inject(TranslateService);
+  private readonly headerService = inject(HeaderService);
+
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
   protected editableColors: AppColorConfig = { ...this.colorService.colors() };
   protected colorKeys = Object.keys(this.editableColors) as (keyof AppColorConfig)[];
+
+  constructor() {
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'SETTINGS.COLORS.TITLE',
+          icon: 'pi-palette',
+          actions: actions
+        });
+      }
+    });
+  }
 
   getLabel(key: string): string {
     const labelKey = `SETTINGS.COLORS.LABELS.${key.toUpperCase()}`;

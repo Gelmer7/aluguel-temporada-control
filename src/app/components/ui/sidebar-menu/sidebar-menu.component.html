@@ -1,7 +1,76 @@
+<!-- Sidebar Mini (Desktop/Tablet) -->
+<aside
+  class="hidden sm:flex flex-col w-20 h-screen border-r border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 sticky top-0 left-0 z-40 transition-all duration-300"
+>
+  <!-- Mini Header -->
+  <div class="flex flex-col items-center py-6 gap-6">
+    <button
+      pRipple
+      class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 text-primary"
+      (click)="onVisibleChange.emit(true)"
+      pTooltip="Expandir Menu"
+      tooltipPosition="right"
+    >
+      <i class="pi pi-bars text-xl"></i>
+    </button>
+
+    <img src="airbnb_black.svg" alt="Logo" class="h-8 w-auto dark:invert" />
+  </div>
+
+  <!-- Mini Menu Items -->
+  <div class="flex-1 overflow-y-auto py-4 no-scrollbar">
+    <div class="flex flex-col items-center gap-4 px-2">
+      @for (item of items(); track trackById($index, item)) {
+        <a
+          pRipple
+          [routerLink]="item.route"
+          routerLinkActive="!bg-primary !text-white shadow-lg shadow-primary/20"
+          class="flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-600 dark:text-surface-400 group relative"
+          [pTooltip]="item.label | translate"
+          tooltipPosition="right"
+        >
+          <span [class]="'pi ' + item.icon" class="text-xl"></span>
+          @if (item.badge) {
+            <p-badge
+              class="absolute -top-1 -right-1"
+              [value]="item.badge"
+              severity="danger"
+              size="small"
+            />
+          }
+        </a>
+      }
+    </div>
+  </div>
+
+  <!-- Mini Footer -->
+  <div
+    class="mt-auto border-t border-surface-200 dark:border-surface-700 p-4 flex flex-col items-center gap-4"
+  >
+    <button
+      class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200"
+      (click)="toggleTheme()"
+      [pTooltip]="'TOOLBAR.THEME' | translate"
+      tooltipPosition="right"
+    >
+      <i [class]="'pi ' + currentTheme.icon" class="text-lg"></i>
+    </button>
+
+    <div
+      class="cursor-pointer hover:scale-105 transition-transform duration-200"
+      (click)="userMenu.toggle($event)"
+      [pTooltip]="'Gelmer Apaza'"
+      tooltipPosition="right"
+    >
+      <p-avatar label="G" shape="circle" size="normal" styleClass="bg-primary text-white" />
+    </div>
+  </div>
+</aside>
+
 <p-drawer
   [visible]="visible()"
   (visibleChange)="onVisibleChange.emit($event)"
-  [styleClass]="'!w-full sm:!w-[18rem] border-r border-surface-200 dark:border-surface-700'"
+  [styleClass]="'!w-[80%] sm:!w-[18rem] border-r border-surface-200 dark:border-surface-700'"
 >
   <ng-template #header>
     <div class="flex items-center gap-2 px-2 py-1">

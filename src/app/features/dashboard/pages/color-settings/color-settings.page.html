@@ -1,23 +1,22 @@
-<div class="container mx-auto p-4 flex flex-col gap-6">
-  <app-page-header
-    [title]="'SETTINGS.COLORS.TITLE' | translate"
-    icon="pi pi-palette"
-  >
-    <div class="flex gap-2">
-      <p-button
-        [label]="'SETTINGS.COLORS.RESET_DEFAULTS' | translate"
-        icon="pi pi-refresh"
-        severity="secondary"
-        (onClick)="resetDefaults()"
-      />
-      <p-button
-        [label]="'SETTINGS.COLORS.SAVE_CHANGES' | translate"
-        icon="pi pi-save"
-        (onClick)="save()"
-      />
-    </div>
-  </app-page-header>
+<ng-template #headerActions>
+  <div class="flex gap-2">
+    <p-button
+      [label]="'SETTINGS.COLORS.RESET_DEFAULTS' | translate"
+      icon="pi pi-refresh"
+      severity="secondary"
+      [size]="'small'"
+      (onClick)="resetDefaults()"
+    />
+    <p-button
+      [label]="'SETTINGS.COLORS.SAVE_CHANGES' | translate"
+      icon="pi pi-save"
+      [size]="'small'"
+      (onClick)="save()"
+    />
+  </div>
+</ng-template>
 
+<div class="container mx-auto p-4 flex flex-col gap-6">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
     @for (key of colorKeys; track key) {
       <p-card [header]="getLabel(key)" class="h-full">

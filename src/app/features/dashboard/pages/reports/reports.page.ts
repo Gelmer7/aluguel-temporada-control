@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -19,8 +19,8 @@ import * as echarts from 'echarts';
 // Services & Models
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
+import { HeaderService } from '../../../../services/header';
 import { FinancialYear, FinancialSummary, FinancialMonth } from './reports.model';
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 
 @Component({
   selector: 'app-reports-page',
@@ -39,7 +39,6 @@ import { PageHeaderComponent } from '../../../../components/ui/page-header/page-
     RippleModule,
     TooltipModule,
     TranslateModule,
-    PageHeaderComponent,
     NgxEchartsDirective,
   ],
   providers: [provideEchartsCore({ echarts })],
@@ -48,12 +47,23 @@ import { PageHeaderComponent } from '../../../../components/ui/page-header/page-
 export class ReportsPage implements OnInit {
   private readonly supabase = inject(SupabaseService);
   private readonly houseService = inject(HouseService);
+  private readonly headerService = inject(HeaderService);
+
+  headerActions = viewChild<TemplateRef<any>>('headerActions');
 
   constructor() {
     // Reload data when house changes
     effect(() => {
       this.houseService.currentHouseCode();
       this.fetchData();
+    });
+
+    effect(() => {
+      this.headerService.setHeader({
+        title: 'TERMS.REPORTS',
+        icon: 'pi-chart-bar',
+        actions: this.headerActions()
+      });
     });
   }
 
@@ -110,14 +120,15 @@ export class ReportsPage implements OnInit {
 
     // Processar Gastos
     exps.forEach(e => {
-      const date = new Date(e.purchase_date);
+      const date = new Date(e.purchaseDate);
       const year = date.getUTCFullYear();
       const month = date.getUTCMonth();
 
       let amount = e.price || 0;
-      // Lógica do sistema: para condomínio, somamos o fundo de reserva ao valor base
+      // Lógica do sistema: para condomínio, somamos o fundo de reserva e associação ao valor base
       if (e.type === 'CONDOMINIUM') {
-        amount += (e.reserve_fund || 0);
+        amount += (e.reserveFund || 0);
+        amount += (e.association || 0);
       }
 
       if (!yearMap.has(year)) this.initYear(yearMap, year);

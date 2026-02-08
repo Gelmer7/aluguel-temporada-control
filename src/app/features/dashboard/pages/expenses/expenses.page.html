@@ -1,13 +1,14 @@
-<div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
-  <!-- Header with Actions -->
-  <app-page-header
-    [title]="'TERMS.EXPENSES'"
-    [icon]="'pi-wallet'"
-    [showAction]="true"
-    [actionTooltip]="'Novo Gasto'"
-    (onAction)="onAddExpense()"
+<ng-template #headerActions>
+  <p-button
+    icon="pi pi-plus"
+    (onClick)="onAddExpense()"
+    pTooltip="Novo Gasto"
+    tooltipPosition="left"
+    [size]="'small'"
   />
+</ng-template>
 
+<div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
   <!-- Filtros Reutilizáveis -->
   <app-filter-container>
     <!-- Resumo dos filtros (aparece quando colapsado) -->
@@ -150,7 +151,7 @@
         <ng-template pTemplate="header">
           <tr class="text-xs sm:text-base">
             <th
-              pSortableColumn="purchase_date"
+              pSortableColumn="purchaseDate"
               class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3"
             >
               Data
@@ -184,7 +185,7 @@
             class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs sm:text-base"
           >
             <td class="!p-1.5 sm:!p-2">
-              {{ expense.purchase_date | date: 'dd/MM/yyyy' }}
+              {{ expense.purchaseDate | date: 'dd/MM/yyyy' }}
             </td>
             <td class="!p-1.5 sm:!p-2">
               <div class="flex flex-col">

@@ -47,7 +47,7 @@ export interface AirbnbNormalizedRow {
   impostosOcupacao: string;
   ganhosAno: string;
   house_code?: string;
-  created_by?: string;
+  createUser?: string;
 }
 
 export const AirbnbHeaderToKey: Record<AirbnbHeaderKey, keyof AirbnbNormalizedRow> = {

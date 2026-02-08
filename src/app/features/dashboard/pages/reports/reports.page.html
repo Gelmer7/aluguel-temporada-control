@@ -1,5 +1,36 @@
+<ng-template #headerActions>
+  <div class="flex items-center gap-3">
+    <div class="flex items-center gap-1.5">
+      <p-checkbox
+        [binary]="true"
+        [(ngModel)]="showGross"
+        inputId="gross"
+        size="small"
+      />
+      <label for="gross" class="text-xs font-medium cursor-pointer">{{ 'TERMS.GROSS' | translate }}</label>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <p-checkbox
+        [binary]="true"
+        [(ngModel)]="showExpenses"
+        inputId="expenses"
+        size="small"
+      />
+      <label for="expenses" class="text-xs font-medium cursor-pointer">{{ 'TERMS.EXPENSES' | translate }}</label>
+    </div>
+    <div class="flex items-center gap-1.5">
+      <p-checkbox
+        [binary]="true"
+        [(ngModel)]="showNet"
+        inputId="net"
+        size="small"
+      />
+      <label for="net" class="text-xs font-medium cursor-pointer">{{ 'TERMS.NET' | translate }}</label>
+    </div>
+  </div>
+</ng-template>
+
 <div class="flex flex-col gap-2 p-2 overflow-auto max-h-[calc(100vh)]">
-  <app-page-header [title]="'TERMS.REPORTS' | translate" icon="pi pi-chart-bar" />
 
   <!-- 1. Gráfico -->
   <p-accordion [value]="[]" class="w-full [&_.p-accordioncontent-content]:!p-0">

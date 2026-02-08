@@ -1,19 +1,19 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, OnInit, computed, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Card } from 'primeng/card';
-import { Button } from 'primeng/button';
-import { Select } from 'primeng/select';
+import { Button, ButtonModule } from 'primeng/button';
+import { Select, SelectModule } from 'primeng/select';
 import { Tag } from 'primeng/tag';
-import { Toast } from 'primeng/toast';
+import { Toast, ToastModule } from 'primeng/toast';
 import { Tooltip } from 'primeng/tooltip';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { SuggestionService } from '../../../../services/suggestion.service';
 import { Suggestion, SuggestionStatus, SuggestionFilters } from '../../../../models/suggestion.model';
 import { SuggestionFormComponent } from '../../components/suggestion-form/suggestion-form.component';
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
+import { HeaderService } from '../../../../services/header';
 import { SupabaseService } from '../../../../services/supabase.service';
 
 @Component({
@@ -23,10 +23,10 @@ import { SupabaseService } from '../../../../services/supabase.service';
   imports: [
     CommonModule,
     FormsModule,
-    Button,
-    Select,
+    ButtonModule,
+    SelectModule,
     Tag,
-    Toast,
+    ToastModule ,
     Tooltip,
     ConfirmDialog,
     TranslateModule,
@@ -41,6 +41,9 @@ export class SuggestionsPage implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private messageService = inject(MessageService);
   private translateService = inject(TranslateService);
+  private headerService = inject(HeaderService);
+
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
   suggestions = signal<Suggestion[]>([]);
   loading = signal<boolean>(false);
@@ -57,6 +60,19 @@ export class SuggestionsPage implements OnInit {
     { label: 'SUGGESTIONS_FORM.STATUS.COMPLETED', value: 'COMPLETED' },
     { label: 'SUGGESTIONS_FORM.STATUS.REJECTED', value: 'REJECTED' },
   ];
+
+  constructor() {
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'TERMS.SUGGESTIONS',
+          icon: 'pi-comment',
+          actions: actions
+        });
+      }
+    });
+  }
 
   async ngOnInit() {
     // Carregar sugestões diretamente, sem verificar autenticação

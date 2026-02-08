@@ -45,8 +45,7 @@
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-4 mt-2">
       <!-- Description -->
-      <div class="flex flex-col gap-1.5">
-        <label for="description">{{ 'EXPENSES_FORM.DESCRIPTION' | translate }}</label>
+      <p-iftalabel class="w-full">
         <input
           pInputText
           id="description"
@@ -54,12 +53,12 @@
           class="w-full !h-10 sm:!h-11"
           [placeholder]="'EXPENSES_FORM.PLACEHOLDER_DESCRIPTION' | translate"
         />
-      </div>
+        <label for="description">{{ 'EXPENSES_FORM.DESCRIPTION' | translate }}</label>
+      </p-iftalabel>
 
       <!-- Price & Type -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="flex flex-col gap-1.5">
-          <label for="price">{{ 'EXPENSES_FORM.PRICE' | translate }} (R$)</label>
+        <p-iftalabel class="w-full">
           <p-inputnumber
             id="price"
             formControlName="price"
@@ -70,9 +69,10 @@
             inputStyleClass="w-full !h-10 sm:!h-11"
           >
           </p-inputnumber>
-        </div>
-        <div class="flex flex-col gap-1.5">
-          <label for="type">{{ 'EXPENSES_FORM.TYPE' | translate }}</label>
+          <label for="price">{{ 'EXPENSES_FORM.PRICE' | translate }} (R$)</label>
+        </p-iftalabel>
+
+        <p-iftalabel class="w-full">
           <p-select
             id="type"
             [options]="expenseTypes"
@@ -98,12 +98,12 @@
               </div>
             </ng-template>
           </p-select>
-        </div>
+          <label for="type">{{ 'EXPENSES_FORM.TYPE' | translate }}</label>
+        </p-iftalabel>
       </div>
 
       <!-- Date -->
-      <div class="flex flex-col gap-1.5">
-        <label for="purchaseDate">{{ 'EXPENSES_FORM.DATE' | translate }}</label>
+      <p-iftalabel class="w-full">
         <p-datepicker
           id="purchaseDate"
           formControlName="purchaseDate"
@@ -114,12 +114,12 @@
           appendTo="body"
         >
         </p-datepicker>
-      </div>
+        <label for="purchaseDate">{{ 'EXPENSES_FORM.DATE' | translate }}</label>
+      </p-iftalabel>
 
       <!-- Conditional Fields -->
       @if (form.get('type')?.value === 'ELECTRICITY') {
-        <div class="flex flex-col gap-1.5 animate-fadein">
-          <label for="kws">{{ 'EXPENSES_FORM.KWS' | translate }}</label>
+        <p-iftalabel class="w-full animate-fadein">
           <p-inputnumber
             id="kws"
             formControlName="kws"
@@ -127,11 +127,11 @@
             styleClass="w-full"
             inputStyleClass="w-full !h-10 sm:!h-11"
           ></p-inputnumber>
-        </div>
+          <label for="kws">{{ 'EXPENSES_FORM.KWS' | translate }}</label>
+        </p-iftalabel>
       }
       @if (form.get('type')?.value === 'WATER') {
-        <div class="flex flex-col gap-1.5 animate-fadein">
-          <label for="cubicMeters">{{ 'EXPENSES_FORM.CUBIC_METERS' | translate }}</label>
+        <p-iftalabel class="w-full animate-fadein">
           <p-inputnumber
             id="cubicMeters"
             formControlName="cubicMeters"
@@ -139,12 +139,12 @@
             styleClass="w-full"
             inputStyleClass="w-full !h-10 sm:!h-11"
           ></p-inputnumber>
-        </div>
+          <label for="cubicMeters">{{ 'EXPENSES_FORM.CUBIC_METERS' | translate }}</label>
+        </p-iftalabel>
       }
       @if (form.get('type')?.value === 'CONDOMINIUM') {
-        <div class="grid grid-cols-1 gap-4 animate-fadein">
-          <div class="flex flex-col gap-1.5">
-            <label for="reserveFund">{{ 'EXPENSES_FORM.RESERVE_FUND' | translate }} (R$)</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 animate-fadein">
+          <p-iftalabel class="w-full">
             <p-inputnumber
               id="reserveFund"
               formControlName="reserveFund"
@@ -155,13 +155,27 @@
               inputStyleClass="w-full !h-10 sm:!h-11"
             >
             </p-inputnumber>
-          </div>
+            <label for="reserveFund">{{ 'EXPENSES_FORM.RESERVE_FUND' | translate }} (R$)</label>
+          </p-iftalabel>
+
+          <p-iftalabel class="w-full">
+            <p-inputnumber
+              id="association"
+              formControlName="association"
+              mode="currency"
+              currency="BRL"
+              locale="pt-BR"
+              styleClass="w-full"
+              inputStyleClass="w-full !h-10 sm:!h-11"
+            >
+            </p-inputnumber>
+            <label for="association">{{ 'EXPENSES_FORM.ASSOCIATION' | translate }} (R$)</label>
+          </p-iftalabel>
         </div>
       }
 
       <!-- Observation -->
-      <div class="flex flex-col gap-1.5">
-        <label for="observation">{{ 'EXPENSES_FORM.OBSERVATION' | translate }}</label>
+      <p-iftalabel class="w-full">
         <textarea
           pTextarea
           id="observation"
@@ -170,7 +184,8 @@
           class="w-full"
           [placeholder]="'EXPENSES_FORM.PLACEHOLDER_OBSERVATION' | translate"
         ></textarea>
-      </div>
+        <label for="observation">{{ 'EXPENSES_FORM.OBSERVATION' | translate }}</label>
+      </p-iftalabel>
     </form>
   </div>
 </app-dialog>

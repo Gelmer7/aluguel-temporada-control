@@ -9,6 +9,7 @@ import { SelectModule } from 'primeng/select';
 import { TextareaModule } from 'primeng/textarea';
 import { TooltipModule } from 'primeng/tooltip';
 import { ToolbarModule } from 'primeng/toolbar';
+import { IftaLabelModule } from 'primeng/iftalabel';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
@@ -28,6 +29,7 @@ import { DialogComponent } from '../../../../components/ui/dialog/dialog.compone
     TextareaModule,
     TooltipModule,
     ToolbarModule,
+    IftaLabelModule,
     TranslateModule,
   ],
   templateUrl: './expense-form.component.html',
@@ -45,11 +47,12 @@ export class ExpenseFormComponent implements OnInit {
         description: value.description,
         price: value.price,
         type: value.type,
-        purchaseDate: new Date(value.purchase_date),
+        purchaseDate: new Date(value.purchaseDate),
         observation: value.observation,
         kws: value.kws,
-        cubicMeters: value.cubic_meters,
-        reserveFund: value.reserve_fund
+        cubicMeters: value.cubicMeters,
+        reserveFund: value.reserveFund,
+        association: value.association
       });
     } else {
       this.isEdit = false;
@@ -59,7 +62,8 @@ export class ExpenseFormComponent implements OnInit {
         price: 0,
         kws: 0,
         cubicMeters: 0,
-        reserveFund: 0
+        reserveFund: 0,
+        association: 0
       });
     }
   }
@@ -88,8 +92,9 @@ export class ExpenseFormComponent implements OnInit {
   ];
 
   condominiumDefaults = {
-    price: 300.00, // Ajustado para ser mais genérico ou aproximado sem association
-    reserveFund: 15.00
+    price: 300.00,
+    reserveFund: 15.00,
+    association: 130.00
   };
 
   constructor(private fb: FormBuilder) {
@@ -101,7 +106,8 @@ export class ExpenseFormComponent implements OnInit {
       observation: [''],
       kws: [0],
       cubicMeters: [0],
-      reserveFund: [0]
+      reserveFund: [0],
+      association: [0]
     });
   }
 
@@ -128,12 +134,14 @@ export class ExpenseFormComponent implements OnInit {
       price: 0,
       kws: 0,
       cubicMeters: 0,
-      reserveFund: 0
+      reserveFund: 0,
+      association: 0
     };
 
     if (quickType.value === 'CONDOMINIUM') {
       patchData.price = this.condominiumDefaults.price;
       patchData.reserveFund = this.condominiumDefaults.reserveFund;
+      patchData.association = this.condominiumDefaults.association;
     }
 
     this.form.patchValue(patchData);
@@ -146,7 +154,8 @@ export class ExpenseFormComponent implements OnInit {
       price: 0,
       kws: 0,
       cubicMeters: 0,
-      reserveFund: 0
+      reserveFund: 0,
+      association: 0
     });
   }
 

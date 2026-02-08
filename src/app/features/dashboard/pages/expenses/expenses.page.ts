@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, signal, inject, computed, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, signal, inject, computed, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Card } from 'primeng/card';
@@ -17,12 +17,12 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { FloatLabel } from 'primeng/floatlabel';
 import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { ExpenseChartsComponent } from '../../components/expense-charts/expense-charts.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
+import { HeaderService } from '../../../../services/header';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StringUtils } from '../../../../shared/utils/string.utils';
 
@@ -50,7 +50,6 @@ import { StringUtils } from '../../../../shared/utils/string.utils';
     FloatLabel,
     AccordionModule,
     TablePaginatorComponent,
-    PageHeaderComponent,
     FilterContainerComponent,
     ExpenseFormComponent,
     ExpenseChartsComponent,
@@ -65,6 +64,9 @@ export class ExpensesPage implements OnInit {
   private messageService = inject(MessageService);
   private translateService = inject(TranslateService);
   private houseService = inject(HouseService);
+  private headerService = inject(HeaderService);
+
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
   expenses = signal<Expense[]>([]);
   filteredExpenses = signal<Expense[]>([]);
@@ -78,6 +80,18 @@ export class ExpensesPage implements OnInit {
     effect(() => {
       this.houseService.currentHouseCode();
       this.loadExpenses();
+    });
+
+    // Configura o header assim que o template estiver disponível
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'TERMS.EXPENSES',
+          icon: 'pi-wallet',
+          actions: actions
+        });
+      }
     });
   }
 
@@ -137,10 +151,10 @@ export class ExpensesPage implements OnInit {
   pagedExpenses = computed(() => {
     const data = [...this.filteredExpenses()];
 
-    // Sort by purchase_date descending
+    // Sort by purchaseDate descending
     data.sort((a, b) => {
-      const dateA = new Date(a.purchase_date).getTime();
-      const dateB = new Date(b.purchase_date).getTime();
+      const dateA = new Date(a.purchaseDate).getTime();
+      const dateB = new Date(b.purchaseDate).getTime();
       return dateB - dateA;
     });
 
@@ -226,12 +240,12 @@ export class ExpensesPage implements OnInit {
 
     const year = this.selectedYear();
     if (year !== 'ALL') {
-      filtered = filtered.filter(e => new Date(e.purchase_date).getFullYear() === year);
+      filtered = filtered.filter(e => new Date(e.purchaseDate).getFullYear() === year);
     }
 
     const month = this.selectedMonth();
     if (month !== 'ALL') {
-      filtered = filtered.filter(e => new Date(e.purchase_date).getMonth() + 1 === month);
+      filtered = filtered.filter(e => new Date(e.purchaseDate).getMonth() + 1 === month);
     }
 
     const types = this.selectedTypes();
@@ -304,18 +318,17 @@ export class ExpensesPage implements OnInit {
     try {
       const current = this.currentExpense();
 
-      // Normalizar os dados do formulário para o formato da interface Expense (snake_case)
-      const normalizedExpense: any = {
-        price: expenseData.price,
-        description: expenseData.description,
-        observation: expenseData.observation,
-        type: expenseData.type,
-        purchase_date: expenseData.purchaseDate?.toISOString() || new Date().toISOString(),
-        cubic_meters: expenseData.cubicMeters,
-        reserve_fund: expenseData.reserveFund,
+      // Normalizar os dados do formulário para o formato da interface Expense (camelCase)
+      const normalizedExpense: Omit<Expense, 'id' | 'createDate'> = {
+        price: expenseData.price || 0,
+        description: expenseData.description || '',
+        observation: expenseData.observation || '',
+        type: expenseData.type || 'OTHER',
+        purchaseDate: expenseData.purchaseDate?.toISOString() || new Date().toISOString(),
+        cubicMeters: expenseData.cubicMeters,
+        reserveFund: expenseData.reserveFund,
         association: expenseData.association,
-        kws: expenseData.kws,
-        create_user: 'gelmer7@gmail.com'
+        kws: expenseData.kws
       };
 
       if (current) {

@@ -1,26 +1,36 @@
-import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { SupabaseService } from '../../../../services/supabase.service';
+import { HeaderService } from '../../../../services/header';
 import { TranslateModule } from '@ngx-translate/core';
-import { PageHeaderComponent } from '../../../../components/ui/page-header/page-header.component';
 
 @Component({
   selector: 'app-data-management-page',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, Button, Card, Toast, TranslateModule, PageHeaderComponent],
+  imports: [CommonModule, Button, Card, Toast, TranslateModule],
   providers: [MessageService],
   templateUrl: './data-management.page.html',
 })
 export class DataManagementPage {
   private supabaseService = inject(SupabaseService);
   private messageService = inject(MessageService);
+  private headerService = inject(HeaderService);
 
   loading = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      this.headerService.setHeader({
+        title: 'TERMS.DATA_MANAGEMENT',
+        icon: 'pi-database'
+      });
+    });
+  }
 
   async onDownloadExpenses() {
     this.loading.set(true);
@@ -66,12 +76,12 @@ export class DataManagementPage {
           description: item.description,
           observation: item.observation,
           type: item.type,
-          purchase_date: item.purchaseDate?.$date || item.purchase_date,
-          cubic_meters: item.cubicMeters || item.cubic_meters,
-          reserve_fund: item.reserveFund || item.reserve_fund,
+          purchaseDate: item.purchaseDate?.$date || item.purchaseDate || item.purchase_date,
+          cubicMeters: item.cubicMeters || item.cubic_meters,
+          reserveFund: item.reserveFund || item.reserve_fund,
           association: item.association,
           kws: item.kws,
-          create_user: item.createUser || item.create_user || 'gelmer7@gmail.com'
+          createUser: item.createUser || item.create_user || 'gelmer7@gmail.com'
         }));
 
         const { error } = await this.supabaseService.bulkUploadExpenses(transformedData);
