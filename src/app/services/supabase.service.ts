@@ -44,7 +44,7 @@ export class SupabaseService {
     const { data, error } = await this.supabase
       .from('airbnb_logs')
       .select('*')
-      .eq('houseCode', this.houseService.currentHouseCode())
+      .eq('house_code', this.houseService.currentHouseCode())
       .order('data', { ascending: false });
 
     return { data, error };
@@ -58,7 +58,7 @@ export class SupabaseService {
     // Adicionar metadados a cada registro
     const recordsWithMetadata = records.map(record => ({
       ...record,
-      houseCode: this.houseService.currentHouseCode(),
+      house_code: this.houseService.currentHouseCode(),
       createUser: 'gelmer7@gmail.com' // Temporário até ter login
     }));
 
@@ -77,7 +77,7 @@ export class SupabaseService {
     const { data, error } = await this.supabase
       .from('expenses')
       .select('*')
-      .eq('houseCode', this.houseService.currentHouseCode())
+      .eq('house_code', this.houseService.currentHouseCode())
       .order('purchaseDate', { ascending: false });
 
     return { data, error };
@@ -86,7 +86,7 @@ export class SupabaseService {
   async addExpense(expense: Omit<Expense, 'id' | 'createDate'>) {
     const payload = {
       ...expense,
-      houseCode: this.houseService.currentHouseCode(),
+      house_code: this.houseService.currentHouseCode(),
       createUser: 'gelmer7@gmail.com' // Temporário até ter login
     };
     return await this.supabase.from('expenses').insert(payload).select();
@@ -103,7 +103,7 @@ export class SupabaseService {
   async bulkUploadExpenses(expenses: Omit<Expense, 'id' | 'createDate'>[]) {
     const payloads = expenses.map(e => ({
       ...e,
-      houseCode: this.houseService.currentHouseCode(),
+      house_code: this.houseService.currentHouseCode(),
       createUser: 'gelmer7@gmail.com' // Temporário até ter login
     }));
     return await this.supabase.from('expenses').insert(payloads).select();
@@ -115,7 +115,7 @@ export class SupabaseService {
     const { data, error } = await this.supabase
       .from('tithes')
       .select('*')
-      .eq('houseCode', this.houseService.currentHouseCode())
+      .eq('house_code', this.houseService.currentHouseCode())
       .order('monthYear', { ascending: false });
 
     return { data, error };
@@ -124,7 +124,7 @@ export class SupabaseService {
   async addTithe(tithe: Omit<Tithe, 'id' | 'createDate'>) {
     const payload = {
       ...tithe,
-      houseCode: this.houseService.currentHouseCode(),
+      house_code: this.houseService.currentHouseCode(),
       createUser: 'gelmer7@gmail.com' // Temporário até ter login
     };
     return await this.supabase.from('tithes').insert(payload).select();
@@ -148,7 +148,7 @@ export interface Tithe {
   totalPaid: number;
   observation?: string;
   createDate?: string;
-  houseCode?: string;
+  house_code?: string;
   createUser?: string;
 }
 
@@ -164,6 +164,6 @@ export interface Expense {
   association?: number;
   kws?: number;
   createDate?: string;
-  houseCode?: string;
+  house_code?: string;
   createUser?: string;
 }
