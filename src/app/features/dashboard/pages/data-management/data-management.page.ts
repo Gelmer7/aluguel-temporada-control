@@ -71,18 +71,32 @@ export class DataManagementPage {
     reader.onload = async (e: any) => {
       try {
         const jsonData = JSON.parse(e.target.result);
-        const transformedData = jsonData.map((item: any) => ({
-          price: item.price,
-          description: item.description,
-          observation: item.observation,
-          type: item.type,
-          purchaseDate: item.purchaseDate?.$date || item.purchaseDate || item.purchase_date,
-          cubicMeters: item.cubicMeters || item.cubic_meters,
-          reserveFund: item.reserveFund || item.reserve_fund,
-          association: item.association,
-          kws: item.kws,
-          createUser: item.createUser || item.create_user || 'gelmer7@gmail.com'
-        }));
+        const transformedData = jsonData.map((item: any) => {
+          const expense: any = {
+            price: item.price || 0,
+            description: item.description || '',
+            observation: item.observation || '',
+            type: item.type || 'OTHER',
+            purchaseDate: item.purchaseDate?.$date || item.purchaseDate || item.purchase_date || new Date().toISOString(),
+            createUser: item.createUser || item.create_user || 'gelmer7@gmail.com'
+          };
+
+          // Adicionar campos opcionais apenas se existirem no item original
+          if (item.cubicMeters !== undefined || item.cubic_meters !== undefined) {
+            expense.cubicMeters = item.cubicMeters || item.cubic_meters;
+          }
+          if (item.reserveFund !== undefined || item.reserve_fund !== undefined) {
+            expense.reserveFund = item.reserveFund || item.reserve_fund;
+          }
+          if (item.association !== undefined) {
+            expense.association = item.association;
+          }
+          if (item.kws !== undefined) {
+            expense.kws = item.kws;
+          }
+
+          return expense;
+        });
 
         const { error } = await this.supabaseService.bulkUploadExpenses(transformedData);
         if (error) throw error;

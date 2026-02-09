@@ -319,17 +319,24 @@ export class ExpensesPage implements OnInit {
       const current = this.currentExpense();
 
       // Normalizar os dados do formulário para o formato da interface Expense (camelCase)
-      const normalizedExpense: Omit<Expense, 'id' | 'createDate'> = {
+      // Enviamos apenas os campos necessários de acordo com o tipo de gasto
+      const normalizedExpense: any = {
         price: expenseData.price || 0,
         description: expenseData.description || '',
         observation: expenseData.observation || '',
         type: expenseData.type || 'OTHER',
         purchaseDate: expenseData.purchaseDate?.toISOString() || new Date().toISOString(),
-        cubicMeters: expenseData.cubicMeters,
-        reserveFund: expenseData.reserveFund,
-        association: expenseData.association,
-        kws: expenseData.kws
       };
+
+      // Adicionar campos condicionais apenas se necessário
+      if (expenseData.type === 'ELECTRICITY') {
+        normalizedExpense.kws = expenseData.kws || 0;
+      } else if (expenseData.type === 'WATER') {
+        normalizedExpense.cubicMeters = expenseData.cubicMeters || 0;
+      } else if (expenseData.type === 'CONDOMINIUM') {
+        normalizedExpense.reserveFund = expenseData.reserveFund || 0;
+        normalizedExpense.association = expenseData.association || 0;
+      }
 
       if (current) {
         // Update
@@ -342,6 +349,14 @@ export class ExpensesPage implements OnInit {
         });
       } else {
         // Create
+        // Garantir que campos não aplicáveis sejam nulos ou 0 para novos registros
+        if (expenseData.type !== 'ELECTRICITY') normalizedExpense.kws = 0;
+        if (expenseData.type !== 'WATER') normalizedExpense.cubicMeters = 0;
+        if (expenseData.type !== 'CONDOMINIUM') {
+          normalizedExpense.reserveFund = 0;
+          normalizedExpense.association = 0;
+        }
+
         const { error } = await this.supabaseService.addExpense(normalizedExpense);
         if (error) throw error;
         this.messageService.add({
