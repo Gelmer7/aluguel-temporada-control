@@ -27,6 +27,10 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () => import('./pages/expenses/expenses.page').then((m) => m.ExpensesPage),
       },
       {
+        path: 'manual-rentals',
+        loadComponent: () => import('./pages/manual-rentals/manual-rentals.page').then((m) => m.ManualRentalsPage),
+      },
+      {
         path: 'earnings',
         loadComponent: () => import('./pages/earnings/earnings.page').then((m) => m.EarningsPage),
       },

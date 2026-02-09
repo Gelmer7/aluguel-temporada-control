@@ -228,13 +228,13 @@ export class ReportsPage implements OnInit {
   private async fetchData() {
     this.loading.set(true);
     try {
-      const [paysRes, expsRes] = await Promise.all([
-        this.supabase.getAirbnbRecords(),
+      const [earningsRes, expensesRes] = await Promise.all([
+        this.supabase.getUnifiedEarnings(),
         this.supabase.getExpenses()
       ]);
 
-      if (paysRes.data) this.payments.set(paysRes.data);
-      if (expsRes.data) this.expenses.set(expsRes.data);
+      if (earningsRes.data) this.payments.set(earningsRes.data);
+      if (expensesRes.data) this.expenses.set(expensesRes.data);
     } catch (error) {
       console.error('Erro ao buscar dados do relatório:', error);
     } finally {

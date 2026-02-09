@@ -18,24 +18,24 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     icon: 'pi-table',
     route: '/dashboard/csv-reports/viewer',
   },
-  // {
-  //   id: 'entries',
-  //   label: 'TERMS.ENTRIES',
-  //   icon: 'pi-download',
-  //   route: '/dashboard/airbnb-payments',
-  // },
+  {
+    id: 'manual-rentals',
+    label: 'TERMS.MANUAL_RENTALS',
+    icon: 'pi-wallet',
+    route: '/dashboard/manual-rentals',
+  },
   {
     id: 'expenses',
     label: 'TERMS.EXPENSES',
     icon: 'pi-arrow-up',
     route: '/dashboard/expenses',
   },
-  // {
-  //   id: 'earnings',
-  //   label: 'TERMS.EARNINGS',
-  //   icon: 'pi-dollar',
-  //   route: '/dashboard/earnings',
-  // },
+  {
+    id: 'earnings',
+    label: 'TERMS.EARNINGS',
+    icon: 'pi-dollar',
+    route: '/dashboard/earnings',
+  },
   // {
   //   id: 'carne',
   //   label: 'TERMS.CARNE_LEAO',

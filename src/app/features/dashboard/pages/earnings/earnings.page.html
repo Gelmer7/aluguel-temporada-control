@@ -1,11 +1,198 @@
-<div class="p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-dollar"></i>
-        <span>{{ 'TERMS.EARNINGS' | translate }}</span>
+<div class="flex flex-col h-full overflow-hidden p-4 gap-4">
+  <p-toast />
+
+  <!-- Filtros e Resumo -->
+  <div class="flex flex-col gap-2">
+    <app-filter-container>
+      <ng-template #filterSummary class="flex flex-wrap items-center gap-4">
+        <span
+          >{{ 'TERMS.YEAR' | translate }}:
+          <span class="text-primary">{{ selectedYear() }}</span></span
+        >
+        <span
+          >{{ 'TERMS.MONTH' | translate }}:
+          <span class="text-primary">{{ 'MONTHS.' + selectedMonth() | translate }}</span></span
+        >
+      </ng-template>
+
+      <div class="flex flex-wrap items-center gap-4 w-full p-1">
+        <p-floatLabel class="flex-1 min-w-[120px]" variant="in">
+          <p-select
+            [options]="years()"
+            [(ngModel)]="selectedYear"
+            [fluid]="true"
+            id="year-select"
+            variant="filled"
+            showClear="true"
+          />
+          <label for="year-select">{{ 'TERMS.YEAR' | translate }}</label>
+        </p-floatLabel>
+
+        <p-floatLabel class="flex-1 min-w-[150px]" variant="in">
+          <p-select
+            inputId="month-select"
+            [options]="months()"
+            [(ngModel)]="selectedMonth"
+            optionLabel="label"
+            optionValue="value"
+            [fluid]="true"
+            variant="filled"
+            showClear="true"
+          />
+          <label for="month-select">{{ 'TERMS.MONTH' | translate }}</label>
+        </p-floatLabel>
       </div>
-    </ng-template>
-    <div class="p-2"><!-- Visualização --></div>
-  </p-card>
+    </app-filter-container>
+
+    <!-- Resumo -->
+    <div class="shadow-sm border rounded-lg p-1 text-xs">
+      <p-table [value]="[{}]" [responsiveLayout]="'scroll'" size="small">
+        <ng-template pTemplate="header">
+          <tr>
+            <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}</th>
+            <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.TOTAL_EXPENSES' | translate }}</th>
+            <th class="!bg-transparent">{{ 'TERMS.TOTAL_EARNINGS' | translate }}</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body">
+          <tr>
+            <td class="font-semibold">{{ totalReceived() | currency: 'BRL' }}</td>
+            <td class="font-semibold text-red-500">{{ totalExpenses() | currency: 'BRL' }}</td>
+            <td class="font-semibold bg-primary/10">{{ totalEarnings() | currency: 'BRL' }}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+
+  <div class="flex-1 flex flex-col gap-4 overflow-y-auto">
+    <!-- Tabela de Pagamentos -->
+    <div class="flex-1 rounded-xl shadow-sm border flex flex-col p-1 overflow-hidden">
+      <div
+        class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
+      >
+        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate }}</span>
+      </div>
+      <div class="flex-1 w-full overflow-auto flex flex-col">
+        <p-table
+          [value]="filteredPayments()"
+          [rows]="10"
+          [paginator]="true"
+          [loading]="loading()"
+          [scrollable]="true"
+          scrollHeight="flex"
+          class="p-datatable-sm"
+          [tableStyle]="{ 'min-width': '1000px' }"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DATE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.TYPE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TERMS.START_DATE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.END_DATE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.NIGHTS' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.GUEST' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.LISTING' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.PRICE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.PAID' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TERMS.CLEANING_FEE' | translate }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-payment>
+            <tr
+              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+            >
+              <td class="truncate">{{ payment.data | date: 'dd/MM/yy' }}</td>
+              <td class="truncate">{{ payment.tipo }}</td>
+              <td class="truncate">{{ payment.data_inicio | date: 'dd/MM/yy' }}</td>
+              <td class="truncate">{{ payment.data_termino | date: 'dd/MM/yy' }}</td>
+              <td class="truncate">{{ payment.noites }}</td>
+              <td class="truncate">{{ payment.hospede }}</td>
+              <td class="truncate">{{ payment.anuncio }}</td>
+              <td class="truncate font-medium">{{ payment.valor | currency: 'BRL' }}</td>
+              <td class="truncate font-medium">{{ payment.pago | currency: 'BRL' }}</td>
+              <td class="truncate font-medium">{{ payment.taxa_limpeza | currency: 'BRL' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="7" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+                Total:
+              </td>
+              <td class="font-bold text-primary bg-surface-50/50 dark:bg-surface-800/50">
+                {{ totalReceived() | currency: 'BRL' }}
+              </td>
+              <td colspan="2" class="bg-surface-50/50 dark:bg-surface-800/50"></td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Tabela de Despesas -->
+    <div class="flex-1 rounded-xl shadow-sm border flex flex-col p-1 overflow-hidden">
+      <div
+        class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
+      >
+        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.EXPENSES_LIST' | translate }}</span>
+      </div>
+      <div class="flex-1 w-full overflow-auto flex flex-col">
+        <p-table
+          [value]="filteredExpenses()"
+          [rows]="10"
+          [paginator]="true"
+          [loading]="loading()"
+          [scrollable]="true"
+          scrollHeight="flex"
+          class="p-datatable-sm"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DATE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.DESCRIPTION' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.PRICE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.TYPE' | translate }}
+              </th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-expense>
+            <tr
+              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+            >
+              <td class="truncate">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
+              <td class="truncate">{{ expense.description }}</td>
+              <td class="truncate font-medium">{{ expense.price | currency: 'BRL' }}</td>
+              <td class="truncate">{{ expense.type }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr>
+              <td colspan="2" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+                Total:
+              </td>
+              <td class="font-bold text-red-500 bg-surface-50/50 dark:bg-surface-800/50">
+                {{ totalExpenses() | currency: 'BRL' }}
+              </td>
+              <td class="bg-surface-50/50 dark:bg-surface-800/50"></td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
 </div>

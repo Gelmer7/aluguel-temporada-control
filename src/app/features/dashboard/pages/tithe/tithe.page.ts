@@ -162,13 +162,13 @@ export class TithePage implements OnInit {
   private async loadData() {
     this.loading.set(true);
     try {
-      const [paymentsRes, expensesRes, tithesRes] = await Promise.all([
-        this.supabase.getAirbnbRecords(),
+      const [earningsRes, expensesRes, tithesRes] = await Promise.all([
+        this.supabase.getUnifiedEarnings(),
         this.supabase.getExpenses(),
         this.supabase.getTithes(),
       ]);
 
-      if (paymentsRes.data) this.payments.set(paymentsRes.data);
+      if (earningsRes.data) this.payments.set(earningsRes.data);
       if (expensesRes.data) this.expenses.set(expensesRes.data);
       if (tithesRes.data) this.titheHistory.set(tithesRes.data);
     } finally {

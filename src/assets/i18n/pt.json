@@ -34,6 +34,7 @@
   "TERMS": {
     "HOME": "Início",
     "ENTRIES": "Entradas",
+    "MANUAL_RENTALS": "Aluguel Temporada",
     "EXPENSES": "Gastos",
     "EARNINGS": "Ganhos",
     "CARNE_LEAO": "Carnê-Leão",
@@ -45,6 +46,14 @@
     "YEAR": "Ano",
     "MONTH": "Mês",
     "TYPE": "Tipo",
+    "START_DATE": "Data de Início",
+    "END_DATE": "Data de Término",
+    "NIGHTS": "Noites",
+    "GUEST": "Hóspede",
+    "LISTING": "Anúncio",
+    "PAID": "Pago",
+    "CLEANING_FEE": "Taxa de Limpeza",
+    "TOTAL_EARNINGS": "Total Ganho",
     "ALL": "Todos",
     "SEARCH": "Buscar...",
     "TOTAL": "Total",
@@ -169,6 +178,25 @@
       "DESC_CONDOMINIUM": "Condomínio Mensal",
       "DESC_INTERNET": "Internet Fibra"
     }
+  },
+  "MANUAL_RENTALS_FORM": {
+    "NEW": "Novo Aluguel",
+    "EDIT": "Editar Aluguel",
+    "PAYMENT_DATE": "Data do Pagamento",
+    "RESERVATION_DATE": "Data da Reserva",
+    "START_DATE": "Data de Início",
+    "END_DATE": "Data de Término",
+    "NIGHTS": "Noites",
+    "GUEST": "Hóspede",
+    "AD": "Anúncio",
+    "CLEANING_FEE": "Taxa de Limpeza",
+    "PAID_AMOUNT": "Valor Pago",
+    "INFO": "Informações",
+    "PLACEHOLDER_GUEST": "Nome do hóspede",
+    "PLACEHOLDER_INFO": "Observações adicionais...",
+    "SUCCESS_CREATE": "Aluguel cadastrado com sucesso!",
+    "SUCCESS_UPDATE": "Aluguel atualizado com sucesso!",
+    "CONFIRM_DELETE": "Tem certeza que deseja excluir este aluguel?"
   },
   "TITHE_MANAGEMENT": {
     "ADD_TITHE": "Adicionar Dízimo",

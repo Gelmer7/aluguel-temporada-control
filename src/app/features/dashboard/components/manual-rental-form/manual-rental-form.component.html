@@ -1,0 +1,140 @@
+<app-dialog
+  [header]="isEdit ? 'MANUAL_RENTALS_FORM.EDIT' : 'MANUAL_RENTALS_FORM.NEW'"
+  [(visible)]="visible"
+  [width]="isMobile ? '100vw' : '50vw'"
+  [breakpoints]="{ '960px': '75vw', '640px': '100vw' }"
+  [saveDisabled]="form.invalid"
+  (onSave)="onSubmit()"
+  (onCancel)="onClose()">
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="flex flex-col gap-6 pt-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Data do Pagamento -->
+      <p-iftalabel>
+        <p-datepicker
+          formControlName="data_pagamento"
+          id="data_pagamento"
+          [showIcon]="true"
+          appendTo="body"
+          class="w-full">
+        </p-datepicker>
+        <label for="data_pagamento">{{ 'MANUAL_RENTALS_FORM.PAYMENT_DATE' | translate }}</label>
+      </p-iftalabel>
+
+      <!-- Hóspede -->
+      <p-iftalabel>
+        <input
+          pInputText
+          id="hospede"
+          formControlName="hospede"
+          class="w-full"
+          [placeholder]="'MANUAL_RENTALS_FORM.PLACEHOLDER_GUEST' | translate" />
+        <label for="hospede">{{ 'MANUAL_RENTALS_FORM.GUEST' | translate }}</label>
+      </p-iftalabel>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Data da Reserva -->
+      <p-iftalabel>
+        <p-datepicker
+          formControlName="data_reserva"
+          id="data_reserva"
+          [showIcon]="true"
+          appendTo="body"
+          class="w-full">
+        </p-datepicker>
+        <label for="data_reserva">{{ 'MANUAL_RENTALS_FORM.RESERVATION_DATE' | translate }}</label>
+      </p-iftalabel>
+
+      <!-- Anúncio -->
+      <p-iftalabel>
+        <input
+          pInputText
+          id="anuncio"
+          formControlName="anuncio"
+          class="w-full" />
+        <label for="anuncio">{{ 'MANUAL_RENTALS_FORM.AD' | translate }}</label>
+      </p-iftalabel>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Data de Início -->
+      <p-iftalabel>
+        <p-datepicker
+          formControlName="data_inicio"
+          id="data_inicio"
+          [showIcon]="true"
+          appendTo="body"
+          class="w-full">
+        </p-datepicker>
+        <label for="data_inicio">{{ 'MANUAL_RENTALS_FORM.START_DATE' | translate }}</label>
+      </p-iftalabel>
+
+      <!-- Data de Término -->
+      <p-iftalabel>
+        <p-datepicker
+          formControlName="data_termino"
+          id="data_termino"
+          [showIcon]="true"
+          appendTo="body"
+          class="w-full">
+        </p-datepicker>
+        <label for="data_termino">{{ 'MANUAL_RENTALS_FORM.END_DATE' | translate }}</label>
+      </p-iftalabel>
+
+      <!-- Noites -->
+      <p-iftalabel>
+        <p-inputnumber
+          formControlName="noites"
+          id="noites"
+          [showButtons]="true"
+          [min]="1"
+          class="w-full">
+        </p-inputnumber>
+        <label for="noites">{{ 'MANUAL_RENTALS_FORM.NIGHTS' | translate }}</label>
+      </p-iftalabel>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Valor Pago -->
+      <p-iftalabel>
+        <p-inputnumber
+          formControlName="valor_pago"
+          id="valor_pago"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          class="w-full">
+        </p-inputnumber>
+        <label for="valor_pago">{{ 'MANUAL_RENTALS_FORM.PAID_AMOUNT' | translate }}</label>
+      </p-iftalabel>
+
+      <!-- Taxa de Limpeza -->
+      <p-iftalabel>
+        <p-inputnumber
+          formControlName="taxa_limpeza"
+          id="taxa_limpeza"
+          mode="currency"
+          currency="BRL"
+          locale="pt-BR"
+          class="w-full">
+        </p-inputnumber>
+        <label for="taxa_limpeza">{{ 'MANUAL_RENTALS_FORM.CLEANING_FEE' | translate }}</label>
+      </p-iftalabel>
+    </div>
+
+    <!-- Informações -->
+    <p-iftalabel>
+      <textarea
+        pTextarea
+        id="informacoes"
+        formControlName="informacoes"
+        rows="3"
+        class="w-full"
+        [placeholder]="'MANUAL_RENTALS_FORM.PLACEHOLDER_INFO' | translate">
+      </textarea>
+      <label for="informacoes">{{ 'MANUAL_RENTALS_FORM.INFO' | translate }}</label>
+    </p-iftalabel>
+  </form>
+</app-dialog>

@@ -74,6 +74,41 @@ export const AirbnbHeaderToKey: Record<AirbnbHeaderKey, keyof AirbnbNormalizedRo
   "Ganhos do ano": "ganhosAno",
 };
 
+export interface ManualRental {
+  id?: string;
+  data_pagamento: string;
+  tipo: string;
+  data_reserva: string;
+  data_inicio: string;
+  data_termino: string;
+  noites: number;
+  hospede: string;
+  anuncio: string;
+  informacoes?: string;
+  moeda: string;
+  valor_pago: number;
+  taxa_limpeza: number;
+  house_code?: string;
+  create_user?: string;
+  created_at?: string;
+}
+
+export interface UnifiedEarning {
+  id: string;
+  data: string;
+  tipo: string;
+  data_inicio?: string;
+  data_termino?: string;
+  noites: number;
+  hospede: string;
+  anuncio: string;
+  valor: number;
+  pago?: number;
+  taxa_limpeza: number;
+  fonte: 'Airbnb' | 'Manual';
+  house_code: string;
+}
+
 export const AirbnbKeyToHeader: Partial<Record<keyof AirbnbNormalizedRow, AirbnbHeaderKey>> = {
   data: "Data",
   disponivelPorData: "Disponível por data",

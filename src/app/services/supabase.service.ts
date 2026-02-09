@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
-import { AirbnbNormalizedRow } from '../models/airbnb.model';
+import { AirbnbNormalizedRow, ManualRental, UnifiedEarning } from '../models/airbnb.model';
 import { HouseService } from './house.service';
 
 @Injectable({
@@ -69,6 +69,62 @@ export class SupabaseService {
         ignoreDuplicates: false
       })
       .select();
+  }
+
+  // --- Manual Rental Methods ---
+
+  /**
+   * Busca todos os registros de aluguéis manuais
+   */
+  async getManualRentals() {
+    const { data, error } = await this.supabase
+      .from('manual_rentals')
+      .select('*')
+      .eq('house_code', this.houseService.currentHouseCode())
+      .order('data_pagamento', { ascending: false });
+
+    return { data, error };
+  }
+
+  /**
+   * Salva ou atualiza um aluguel manual
+   */
+  async upsertManualRental(rental: ManualRental) {
+    const rentalWithMetadata = {
+      ...rental,
+      house_code: this.houseService.currentHouseCode(),
+      create_user: 'gelmer7@gmail.com'
+    };
+
+    return await this.supabase
+      .from('manual_rentals')
+      .upsert(rentalWithMetadata)
+      .select();
+  }
+
+  /**
+   * Remove um aluguel manual
+   */
+  async deleteManualRental(id: string) {
+    return await this.supabase
+      .from('manual_rentals')
+      .delete()
+      .eq('id', id);
+  }
+
+  // --- Unified Earnings Methods ---
+
+  /**
+   * Busca os ganhos unificados (Airbnb + Manual) através da View
+   */
+  async getUnifiedEarnings() {
+    const { data, error } = await this.supabase
+      .from('v_unified_earnings')
+      .select('*')
+      .eq('house_code', this.houseService.currentHouseCode())
+      .order('data', { ascending: false });
+
+    return { data: data as UnifiedEarning[], error };
   }
 
   // --- Expense Methods ---
