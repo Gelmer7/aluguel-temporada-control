@@ -1,8 +1,11 @@
 import { Component, ChangeDetectionStrategy, input, output, inject, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { Tooltip } from 'primeng/tooltip';
+import { PopoverModule } from 'primeng/popover';
+import { SelectModule } from 'primeng/select';
 import { TranslateModule } from '@ngx-translate/core';
 import { HeaderService } from '../../../services/header';
 import { HouseService } from '../../../services/house.service';
@@ -15,7 +18,16 @@ import { HouseService } from '../../../services/house.service';
   selector: 'app-page-header',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterModule, Button, Tooltip, TranslateModule],
+  imports: [
+    CommonModule,
+    RouterModule,
+    FormsModule,
+    Button,
+    Tooltip,
+    PopoverModule,
+    SelectModule,
+    TranslateModule,
+  ],
   templateUrl: './page-header.component.html',
 })
 export class PageHeaderComponent {
@@ -52,8 +64,22 @@ export class PageHeaderComponent {
   /** Template de ações do serviço */
   actionsTemplate = this.headerService.actionsTemplate;
 
+  /** Lista de casas disponíveis */
+  readonly houses = this.houseService.allHouses;
+
   /** Nome da casa ativa */
   activeHouseName = computed(() => this.houseService.currentHouse().name);
+
+  /** Getter/Setter para a casa atual (usado no p-select) */
+  get currentHouse() {
+    return this.houseService.currentHouse();
+  }
+
+  set currentHouse(house: any) {
+    if (house) {
+      this.houseService.setActiveHouse(house.id);
+    }
+  }
 
   protected handleAction(): void {
     this.onAction.emit();

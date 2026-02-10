@@ -40,7 +40,7 @@
     <!-- Indicador de Casa Ativa -->
     <div
       class="flex flex-col items-center leading-none gap-1 cursor-pointer hover:opacity-80 transition-opacity px-2 border rounded-lg p-0.5"
-      routerLink="/dashboard/home"
+      (click)="op.toggle($event)"
       pTooltip="Trocar Casa Ativa"
       tooltipPosition="left"
     >
@@ -49,5 +49,41 @@
         {{ activeHouseName() }}
       </span>
     </div>
+
+    <!-- Popover para Seleção de Casa -->
+    <p-popover #op>
+      <div class="flex flex-col gap-3 min-w-[250px] p-1">
+        <div class="flex items-center gap-2 mb-1">
+          <i class="pi pi-home text-primary"></i>
+          <span class="font-bold text-surface-900 dark:text-surface-0">Selecione a Casa</span>
+        </div>
+
+        <p-select
+           [(ngModel)]="currentHouse"
+           [options]="houses()"
+           optionLabel="name"
+           [showClear]="false"
+           class="w-full !bg-surface-100 dark:!bg-surface-800 !border-surface-300 dark:!border-surface-600"
+           appendTo="body"
+           (onChange)="op.hide()"
+         >
+          <ng-template pTemplate="selectedItem" let-selectedOption>
+            <div class="flex items-center gap-2">
+              <i class="pi pi-home text-primary"></i>
+              <span class="font-medium">{{ selectedOption.name }}</span>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="item" let-house>
+            <div class="flex items-center gap-3 py-1">
+              <i class="pi pi-home text-primary"></i>
+              <div class="flex flex-col">
+                <span class="font-medium">{{ house.name }}</span>
+                <span class="text-xs text-surface-500">{{ house.code }}</span>
+              </div>
+            </div>
+          </ng-template>
+        </p-select>
+      </div>
+    </p-popover>
   </div>
 </div>

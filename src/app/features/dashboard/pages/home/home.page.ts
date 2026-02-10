@@ -1,27 +1,36 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, viewChild, TemplateRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
 import { CardModule } from 'primeng/card';
-import { HouseService } from '../../../../services/house.service';
+import { Button, ButtonModule } from 'primeng/button';
+import { Tooltip, TooltipModule } from 'primeng/tooltip';
+import { HeaderService } from '../../../../services/header';
 
 @Component({
   selector: 'app-home',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, SelectModule, CardModule],
+  imports: [CommonModule, CardModule, ButtonModule, TooltipModule],
   templateUrl: './home.page.html',
 })
 export class HomePage {
-  private houseService = inject(HouseService);
+  private headerService = inject(HeaderService);
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
-  readonly houses = this.houseService.allHouses;
-
-  get currentHouse() {
-    return this.houseService.currentHouse();
+  constructor() {
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'Home',
+          icon: 'pi-home',
+          actions: actions,
+        });
+      }
+    });
   }
 
-  set currentHouse(house: any) {
-    this.houseService.setActiveHouse(house.id);
+  onRefresh() {
+    // Lógica para atualizar os dados da home
+    console.log('Refreshing home data...');
   }
 }

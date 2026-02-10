@@ -110,8 +110,8 @@ export class CsvViewerPage {
     { field: string; headerFull: string; headerAbbr: string }[]
   >([]);
   public readonly groupIndexMap = signal<Record<string, number>>({});
-  public readonly columnMinWidth = signal<Record<string, string>>({ Noites: '6rem' });
-  public readonly columnMaxWidth = signal<Record<string, string>>({ Noites: '10rem' });
+  public readonly columnMinWidth = signal<Record<string, string>>({ Noites: '2rem' });
+  public readonly columnMaxWidth = signal<Record<string, string>>({ Noites: '4rem' });
   protected readonly expandedRowGroups = signal<string[]>([]);
   protected readonly hidePayout = signal<boolean>(true);
   protected readonly filterQuery = signal<string>('');
@@ -217,7 +217,7 @@ export class CsvViewerPage {
 
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
+    const year = String(date.getFullYear()).slice(-2);
 
     return `${day}/${month}/${year}`;
   }
@@ -267,7 +267,7 @@ export class CsvViewerPage {
     const format = (d: Date) => {
       const day = String(d.getDate()).padStart(2, '0');
       const month = String(d.getMonth() + 1).padStart(2, '0');
-      const year = d.getFullYear();
+      const year = String(d.getFullYear()).slice(-2);
       return `${day}/${month}/${year}`;
     };
 
@@ -486,6 +486,14 @@ export class CsvViewerPage {
   protected onPageChange(event: any) {
     this.first.set(event.first);
     this.rowsPerPage.set(event.rows);
+  }
+
+  protected isColumnSelected(field: string): boolean {
+    return this.selectedColumns().some((col) => col.field === field);
+  }
+
+  protected getColumn(field: string) {
+    return this.selectedColumns().find((col) => col.field === field);
   }
 
   protected calculateDateTotal(date: string): number {

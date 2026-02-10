@@ -1,69 +1,82 @@
-<div class="flex-1 flex flex-col min-h-0 bg-transparent">
+<div class="flex-1 flex flex-col min-h-0 bg-transparent p-2">
   <!-- Filtros -->
   <app-filter-container>
     <div class="flex flex-wrap items-center gap-4">
       <p-iconfield iconPosition="left" class="flex-1 min-w-[200px] md:max-w-md">
         <p-inputicon styleClass="pi pi-search" />
-        <input 
-          pInputText 
-          type="text" 
-          [ngModel]="globalFilter()" 
+        <input
+          pInputText
+          type="text"
+          [ngModel]="globalFilter()"
           (ngModelChange)="onFilterGlobal($event)"
-          [placeholder]="'TERMS.SEARCH' | translate" 
-          class="w-full" />
+          [placeholder]="'TERMS.SEARCH' | translate"
+          class="w-full"
+        />
       </p-iconfield>
     </div>
   </app-filter-container>
 
   <!-- Tabela -->
   <div class="flex-1 min-h-0 px-4 pb-4">
-    <p-table 
-      [value]="pagedRentals()" 
-      [loading]="loading()" 
+    <p-table
+      [value]="pagedRentals()"
+      [loading]="loading()"
       styleClass="p-datatable-sm shadow-sm rounded-xl overflow-hidden"
       [responsiveLayout]="'scroll'"
       [scrollable]="true"
-      scrollHeight="flex">
-      
+      scrollHeight="flex"
+    >
       <ng-template pTemplate="header">
         <tr>
-          <th class="bg-surface-0 dark:bg-surface-900">{{ 'MANUAL_RENTALS_FORM.PAYMENT_DATE' | translate }}</th>
-          <th class="bg-surface-0 dark:bg-surface-900">{{ 'MANUAL_RENTALS_FORM.GUEST' | translate }}</th>
-          <th class="bg-surface-0 dark:bg-surface-900">{{ 'MANUAL_RENTALS_FORM.AD' | translate }}</th>
-          <th class="bg-surface-0 dark:bg-surface-900 text-right">{{ 'MANUAL_RENTALS_FORM.PAID_AMOUNT' | translate }}</th>
-          <th class="bg-surface-0 dark:bg-surface-900 text-right">{{ 'MANUAL_RENTALS_FORM.CLEANING_FEE' | translate }}</th>
+          <th class="bg-surface-0 dark:bg-surface-900">
+            {{ 'MANUAL_RENTALS_FORM.PAYMENT_DATE' | translate }}
+          </th>
+          <th class="bg-surface-0 dark:bg-surface-900">
+            {{ 'MANUAL_RENTALS_FORM.GUEST' | translate }}
+          </th>
+          <th class="bg-surface-0 dark:bg-surface-900">
+            {{ 'MANUAL_RENTALS_FORM.AD' | translate }}
+          </th>
+          <th class="bg-surface-0 dark:bg-surface-900 text-right">
+            {{ 'MANUAL_RENTALS_FORM.PAID_AMOUNT' | translate }}
+          </th>
+          <th class="bg-surface-0 dark:bg-surface-900 text-right">
+            {{ 'MANUAL_RENTALS_FORM.CLEANING_FEE' | translate }}
+          </th>
           <th class="bg-surface-0 dark:bg-surface-900 w-24"></th>
         </tr>
       </ng-template>
 
       <ng-template pTemplate="body" let-rental>
         <tr>
-          <td>{{ rental.data_pagamento | date:'dd/MM/yyyy' }}</td>
+          <td>{{ rental.data_pagamento | date: 'dd/MM/yyyy' }}</td>
           <td>{{ rental.hospede }}</td>
           <td>{{ rental.anuncio }}</td>
           <td class="text-right">
-            {{ rental.valor_pago | currency:rental.moeda:'symbol':'1.2-2':'pt-BR' }}
+            {{ rental.valor_pago | currency: rental.moeda : 'symbol' : '1.2-2' : 'pt-BR' }}
           </td>
           <td class="text-right">
-            {{ rental.taxa_limpeza | currency:rental.moeda:'symbol':'1.2-2':'pt-BR' }}
+            {{ rental.taxa_limpeza | currency: rental.moeda : 'symbol' : '1.2-2' : 'pt-BR' }}
           </td>
           <td>
             <div class="flex justify-end gap-2">
-              <p-button 
-                icon="pi pi-pencil" 
-                [rounded]="true" 
-                [text]="true" 
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
                 severity="secondary"
                 (onClick)="editRental(rental)"
-                [pTooltip]="'ACTIONS.EDIT' | translate">
+                [pTooltip]="'ACTIONS.EDIT' | translate"
+              >
               </p-button>
-              <p-button 
-                icon="pi pi-trash" 
-                [rounded]="true" 
-                [text]="true" 
+              <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
                 severity="danger"
                 (onClick)="confirmDelete(rental)"
-                [pTooltip]="'ACTIONS.DELETE' | translate">
+                [pTooltip]="'ACTIONS.DELETE' | translate"
+              >
               </p-button>
             </div>
           </td>
@@ -84,29 +97,26 @@
   </div>
 
   <!-- Paginação -->
-  <app-table-paginator 
-    [first]="first()" 
-    [rows]="rows()" 
+  <app-table-paginator
+    [first]="first()"
+    [rows]="rows()"
     [totalRecords]="filteredRentals().length"
-    (onPageChange)="onPageChange($event)">
+    (onPageChange)="onPageChange($event)"
+  >
   </app-table-paginator>
 </div>
 
 <!-- Template para o Header -->
 <ng-template #headerActions>
-  <p-button 
-    [label]="'MANUAL_RENTALS_FORM.NEW' | translate" 
-    icon="pi pi-plus" 
-    (onClick)="openNew()"
-    severity="primary">
-  </p-button>
+  <p-button icon="pi pi-plus" (onClick)="openNew()" severity="primary"> </p-button>
 </ng-template>
 
 <!-- Diálogos e Toasts -->
-<app-manual-rental-form 
-  [(visible)]="showForm" 
-  [editData]="currentRental()" 
-  (save)="saveRental($event)">
+<app-manual-rental-form
+  [(visible)]="showForm"
+  [editData]="currentRental()"
+  (save)="saveRental($event)"
+>
 </app-manual-rental-form>
 
 <p-confirmdialog></p-confirmdialog>

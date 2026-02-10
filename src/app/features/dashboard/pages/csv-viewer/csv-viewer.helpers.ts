@@ -21,10 +21,10 @@ export function renderDerived(row: ViewerRow, field: string, inicioFimField: str
     const ini = row.__norm.dataInicio ?? '';
     const fim = row.__norm.dataTermino ?? '';
     
-    // Função interna simples para formatar MM/DD/YYYY para DD/MM/YYYY
+    // Função interna simples para formatar MM/DD/YYYY para DD/MM/YYYY (ano simplificado)
     const format = (d: string) => {
       const p = d.split('/');
-      return p.length === 3 ? `${p[1].padStart(2, '0')}/${p[0].padStart(2, '0')}/${p[2]}` : d;
+      return p.length === 3 ? `${p[1].padStart(2, '0')}/${p[0].padStart(2, '0')}/${p[2].slice(-2)}` : d;
     };
     
     return `${format(ini)} - ${format(fim)}`;
