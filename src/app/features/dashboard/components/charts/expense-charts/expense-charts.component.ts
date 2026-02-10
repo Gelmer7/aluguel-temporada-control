@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
-import { Expense } from '../../../../services/supabase.service';
-import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
+import { DialogComponent } from '../../../../../components/ui/dialog/dialog.component';
+import { Expense } from '../../../../../services/supabase.service';
+import { StackedBarChartComponent, StackedBarSeries } from '../../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
 
 @Component({
   selector: 'app-expense-charts',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, TranslateModule, NgxEchartsDirective, DialogComponent],
+  imports: [CommonModule, TranslateModule, NgxEchartsDirective, DialogComponent, StackedBarChartComponent],
   providers: [provideEchartsCore({ echarts })],
   templateUrl: './expense-charts.component.html',
 })
@@ -87,7 +88,7 @@ export class ExpenseChartsComponent {
   });
 
   /** Chart 2: Monthly Expenses for Selected Year (Stacked Bar Chart) */
-  monthlyChartOption = computed(() => {
+  monthlyChartData = computed(() => {
     const data = this.expenses();
     const year = this.selectedYear();
     if (!data.length) return null;
@@ -96,7 +97,6 @@ export class ExpenseChartsComponent {
     const types = Array.from(new Set(data.map(e => e.type || 'OTHER')));
 
     // 2. Inicializar estrutura para totais por tipo e por mês
-    // { 'TIPO_A': [0, 0, ..., 0], 'TIPO_B': [0, 0, ..., 0] }
     const typeMonthlyTotals: Record<string, number[]> = {};
     types.forEach(type => {
       typeMonthlyTotals[type] = Array(12).fill(0);
@@ -115,65 +115,25 @@ export class ExpenseChartsComponent {
     });
 
     // 4. Criar as séries para o gráfico
-    const series = types.map(type => {
+    const series: StackedBarSeries[] = types.map(type => {
+      const seriesData = typeMonthlyTotals[type];
       return {
         name: this.translate.instant(`EXPENSES_FORM.TYPES.${type}`),
-        type: 'bar',
-        stack: 'total',
-        data: typeMonthlyTotals[type],
-        emphasis: { focus: 'series' }
+        data: seriesData,
       };
     });
 
-    const titleText = year === 'ALL'
-      ? this.translate.instant('EXPENSE_CHARTS.MONTHLY_ALL')
-      : this.translate.instant('EXPENSE_CHARTS.MONTHLY', { year });
+    if (series.length === 0 || series.every(s => s.data.every(v => v === 0))) {
+      return null;
+    }
+
+    const labels = Array.from({ length: 12 }, (_, i) => this.translate.instant(`MONTHS.${i}`).substring(0, 3));
+    const groups = Array(12).fill(year === 'ALL' ? '' : year.toString());
 
     return {
-      title: {
-        text: titleText,
-        left: 'center',
-        textStyle: { fontSize: 14, color: '#4b5563' }
-      },
-      tooltip: {
-        trigger: 'axis',
-        axisPointer: { type: 'shadow' },
-        formatter: (params: any[]) => {
-          let html = `${params[0].name}<br/>`;
-          let total = 0;
-          params.forEach(p => {
-            if (p.value > 0) {
-              html += `${p.marker} ${p.seriesName}: <b>R$ ${p.value.toFixed(2)}</b><br/>`;
-              total += p.value;
-            }
-          });
-          html += `<hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;" />`;
-          html += `Total: <b>R$ ${total.toFixed(2)}</b>`;
-          return html;
-        }
-      },
-      legend: {
-        orient: 'horizontal',
-        bottom: 0,
-        textStyle: { fontSize: 10 },
-        type: 'scroll'
-      },
-      grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '15%',
-        containLabel: true
-      },
-      xAxis: {
-        type: 'category',
-        data: Array.from({ length: 12 }, (_, i) => this.translate.instant(`MONTHS.${i}`).substring(0, 3)),
-        axisLabel: { fontSize: 10 }
-      },
-      yAxis: {
-        type: 'value',
-        axisLabel: { fontSize: 10 }
-      },
-      series: series
+      series,
+      labels,
+      groups
     };
   });
 
@@ -199,10 +159,6 @@ export class ExpenseChartsComponent {
     }, {} as Record<number, Record<string, number>>);
 
     const sortedYears = Object.keys(annualTypeTotals).map(Number).sort((a, b) => a - b);
-
-    // Se tivermos apenas um tipo selecionado, ou se for a visão geral,
-    // podemos decidir se mostramos linhas individuais ou uma linha total.
-    // O pedido do usuário é mostrar linhas para cada tipo selecionado.
 
     const series = typesToShow.map(type => {
       const chartData = sortedYears.map(year => annualTypeTotals[year][type] || 0);

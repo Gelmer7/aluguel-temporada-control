@@ -19,7 +19,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
-import { ExpenseChartsComponent } from '../../components/expense-charts/expense-charts.component';
+import { ExpenseChartsComponent } from '../../components/charts/expense-charts/expense-charts.component';
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';

@@ -15,8 +15,19 @@
         </div>
 
         <!-- Chart 2: Monthly -->
-        <div class="bg-surface-0 dark:bg-surface-900 p-4 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm min-h-[350px]">
-          <div echarts [options]="monthlyChartOption()" class="h-[300px] w-full"></div>
+        <div class="flex flex-col gap-2">
+          <h3 class="text-sm font-medium text-surface-600 dark:text-surface-400 text-center">
+            {{ selectedYear() === 'ALL' ? ('EXPENSE_CHARTS.MONTHLY_ALL' | translate) : ('EXPENSE_CHARTS.MONTHLY' | translate: { year: selectedYear() }) }}
+          </h3>
+          @if (monthlyChartData(); as data) {
+            <app-stacked-bar-chart
+              [series]="data.series"
+              [labels]="data.labels"
+              [groups]="data.groups"
+              height="300px"
+              minWidth="100%"
+            />
+          }
         </div>
 
         <!-- Chart 3: Annual (Full width on lg) -->
