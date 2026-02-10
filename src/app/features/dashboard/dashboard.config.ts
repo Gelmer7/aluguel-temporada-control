@@ -73,4 +73,10 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     icon: 'pi-comment',
     route: '/dashboard/suggestions',
   },
+  {
+    id: 'reminders',
+    label: 'TERMS.REMINDERS',
+    icon: 'pi-bell',
+    route: '/dashboard/reminders',
+  },
 ];

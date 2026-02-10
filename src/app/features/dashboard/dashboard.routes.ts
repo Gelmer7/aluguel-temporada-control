@@ -67,6 +67,11 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () =>
           import('./pages/suggestions/suggestions.page').then((m) => m.SuggestionsPage),
       },
+      {
+        path: 'reminders',
+        loadComponent: () =>
+          import('./pages/reminders/reminders.page').then((m) => m.RemindersPage),
+      },
     ],
   },
 ];

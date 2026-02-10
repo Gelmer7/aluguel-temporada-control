@@ -1,0 +1,104 @@
+<div class="container mx-auto p-4">
+  <div class="flex flex-col gap-6">
+    <!-- Filtros e Ações (Opcional, mas mantendo padrão) -->
+    <div class="flex justify-between items-center gap-4">
+      <div class="flex items-center gap-2">
+        <p-select
+          [options]="statusOptions"
+          [(ngModel)]="filters().status"
+          (ngModelChange)="onFilterChange($event)"
+          optionLabel="label"
+          optionValue="value"
+          [placeholder]="'TERMS.FILTER_BY_STATUS' | translate"
+          class="w-48"
+        >
+          <ng-template pTemplate="selectedItem">
+            @if (filters().status === 'all') {
+              {{ 'TERMS.ALL' | translate }}
+            } @else {
+              {{ 'REMINDERS_FORM.STATUS.' + filters().status | translate }}
+            }
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            {{ option.label | translate }}
+          </ng-template>
+        </p-select>
+      </div>
+    </div>
+
+    <!-- Lista de Lembretes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      @for (reminder of reminders(); track reminder.id) {
+        <p-card styleClass="h-full shadow-md hover:shadow-lg transition-shadow duration-300">
+          <ng-template pTemplate="header">
+            <div class="flex justify-between items-start p-4 border-b border-gray-100 dark:border-gray-700">
+              <div class="flex flex-col gap-1">
+                <span class="text-xs text-gray-500 dark:text-gray-400">
+                  <i class="pi pi-calendar mr-1"></i>
+                  {{ formatDate(reminder.remind_at) }}
+                </span>
+                <h3 class="m-0 text-lg font-semibold">{{ reminder.title }}</h3>
+              </div>
+              <p-tag [value]="'REMINDERS_FORM.STATUS.' + reminder.status | translate" [severity]="getStatusSeverity(reminder.status)"></p-tag>
+            </div>
+          </ng-template>
+
+          <div class="py-2">
+            <p class="m-0 text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{{ reminder.description }}</p>
+          </div>
+
+          <ng-template pTemplate="footer">
+            <div class="flex justify-end gap-2 border-t border-gray-100 dark:border-gray-700 pt-3">
+              <p-button
+                icon="pi pi-pencil"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                (click)="openEdit(reminder)"
+                [pTooltip]="'ACTIONS.EDIT' | translate"
+              ></p-button>
+              <p-button
+                icon="pi pi-trash"
+                [rounded]="true"
+                [text]="true"
+                severity="danger"
+                (click)="confirmDelete(reminder)"
+                [pTooltip]="'ACTIONS.DELETE' | translate"
+              ></p-button>
+            </div>
+          </ng-template>
+        </p-card>
+      } @empty {
+        <div class="col-span-full flex flex-col items-center justify-center p-12 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+          <i class="pi pi-bell-slash text-5xl text-gray-300 mb-4"></i>
+          <p class="text-xl text-gray-500">{{ 'REMINDERS_FORM.NO_DATA' | translate }}</p>
+          <p-button
+            [label]="'REMINDERS_FORM.NEW' | translate"
+            icon="pi pi-plus"
+            (click)="openNew()"
+            class="mt-4"
+          ></p-button>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Header Actions Template -->
+<ng-template #headerActions>
+  <p-button
+    [label]="'REMINDERS_FORM.NEW' | translate"
+    icon="pi pi-plus"
+    (click)="openNew()"
+  ></p-button>
+</ng-template>
+
+<!-- Form Dialog -->
+<app-reminder-form
+  [(visible)]="isFormVisible"
+  [reminder]="selectedReminder()"
+  (saved)="onSave($event)"
+></app-reminder-form>
+
+<p-toast></p-toast>
+<p-confirm-dialog></p-confirm-dialog>

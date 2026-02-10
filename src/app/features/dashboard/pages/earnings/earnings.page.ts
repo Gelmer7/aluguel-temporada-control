@@ -19,6 +19,7 @@ import { ButtonModule } from 'primeng/button';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { EarningsPaymentsChartsComponent } from '../../components/charts/earnings-payments-charts/earnings-payments-charts.component';
 import { EarningsExpenseChartsComponent } from '../../components/charts/earnings-expense-charts/earnings-expense-charts.component';
+import { EarningsSummaryChartsComponent } from '../../components/charts/earnings-summary-charts/earnings-summary-charts.component';
 
 // Services & Models
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
@@ -47,6 +48,7 @@ import { UnifiedEarning } from '../../../../models/airbnb.model';
     FilterContainerComponent,
     EarningsPaymentsChartsComponent,
     EarningsExpenseChartsComponent,
+    EarningsSummaryChartsComponent,
   ],
   templateUrl: './earnings.page.html',
 })
@@ -65,6 +67,7 @@ export class EarningsPage implements OnInit {
   // Gráfico
   protected readonly showChart = signal<boolean>(false);
   protected readonly showExpenseChart = signal<boolean>(false);
+  protected readonly showSummaryChart = signal<boolean>(false);
 
   // Dados
   protected readonly loading = signal<boolean>(true);

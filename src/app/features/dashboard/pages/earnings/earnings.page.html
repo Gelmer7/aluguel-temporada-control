@@ -93,7 +93,18 @@
     </app-filter-container>
 
     <!-- Resumo -->
-    <div class="shadow-sm border rounded-lg p-1 text-xs">
+    <div class="shadow-sm border rounded-lg p-1 text-xs relative group">
+      <div class="absolute right-2 top-2 z-10">
+        <p-button
+          icon="pi pi-chart-line"
+          [rounded]="true"
+          [text]="true"
+          severity="secondary"
+          (click)="showSummaryChart.set(true)"
+          [pTooltip]="'REPORTS.SUMMARY' | translate"
+          tooltipPosition="left"
+        />
+      </div>
       <p-table [value]="[{}]" [responsiveLayout]="'scroll'" size="small">
         <ng-template pTemplate="header">
           <tr>
@@ -253,3 +264,8 @@
 
 <app-earnings-payments-charts [(visible)]="showChart" [payments]="filteredPayments()" />
 <app-earnings-expense-charts [(visible)]="showExpenseChart" [expenses]="filteredExpenses()" />
+<app-earnings-summary-charts
+  [(visible)]="showSummaryChart"
+  [payments]="filteredPayments()"
+  [expenses]="filteredExpenses()"
+/>

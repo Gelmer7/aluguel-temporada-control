@@ -1,0 +1,79 @@
+<app-dialog
+  [visible]="visible"
+  (visibleChange)="onHide()"
+  [header]="reminder ? ('REMINDERS_FORM.EDIT' | translate) : ('REMINDERS_FORM.NEW' | translate)"
+  modal="true"
+>
+  <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
+      <label for="title" class="block">{{ 'REMINDERS_FORM.TITLE' | translate }}</label>
+      <input
+        pInputText
+        id="title"
+        formControlName="title"
+        [placeholder]="'REMINDERS_FORM.PLACEHOLDER_TITLE' | translate"
+        class="w-full"
+      />
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="description" class="block">{{ 'REMINDERS_FORM.DESCRIPTION' | translate }}</label>
+      <textarea
+        pTextarea
+        id="description"
+        formControlName="description"
+        [placeholder]="'REMINDERS_FORM.PLACEHOLDER_DESCRIPTION' | translate"
+        rows="3"
+        class="w-full"
+      ></textarea>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="remind_at" class="block">{{ 'REMINDERS_FORM.REMIND_AT' | translate }}</label>
+      <p-datepicker
+        id="remind_at"
+        formControlName="remind_at"
+        [minDate]="minDate"
+        [showIcon]="true"
+        appendTo="body"
+        class="w-full"
+        styleClass="w-full"
+      ></p-datepicker>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <label for="status" class="block">{{ 'TERMS.STATUS' | translate }}</label>
+      <p-select
+        id="status"
+        formControlName="status"
+        [options]="statusOptions"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full"
+      >
+        <ng-template pTemplate="selectedItem">
+          @if (form.get('status')?.value) {
+            {{ 'REMINDERS_FORM.STATUS.' + form.get('status')?.value | translate }}
+          }
+        </ng-template>
+        <ng-template let-option pTemplate="item">
+          {{ option.label | translate }}
+        </ng-template>
+      </p-select>
+    </div>
+
+    <div class="flex justify-end gap-2 mt-4">
+      <p-button
+        type="button"
+        [label]="'ACTIONS.CANCEL' | translate"
+        severity="secondary"
+        (click)="onHide()"
+      ></p-button>
+      <p-button
+        type="submit"
+        [label]="'ACTIONS.SAVE' | translate"
+        [disabled]="form.invalid"
+      ></p-button>
+    </div>
+  </form>
+</app-dialog>

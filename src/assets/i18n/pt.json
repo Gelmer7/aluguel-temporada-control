@@ -43,6 +43,7 @@
     "CHARTS": "Gráficos",
     "REPORTS": "Relatórios",
     "SUGGESTIONS": "Sugestões",
+    "REMINDERS": "Lembretes",
     "YEAR": "Ano",
     "MONTH": "Mês",
     "TYPE": "Tipo",
@@ -212,11 +213,31 @@
     "TOTAL_TO_PAY": "Total a Pagar",
     "CALCULATED_VALUES": "Valores Calculados",
     "TITHE_AND_OFFER": "Dízimo e Oferta",
-    "PAYMENTS_LIST": "Lista de Pagamentos",
+    "PAYMENTS_LIST": "Lista de Pagos",
     "EXPENSES_LIST": "Lista de Despesas",
     "HISTORY": "Histórico de Dízimos",
     "NO_HISTORY": "Nenhum histórico de dízimo encontrado.",
     "SAVE_SUCCESS": "Dízimo salvo com sucesso!"
+  },
+  "REMINDERS_FORM": {
+    "NEW": "Novo Lembrete",
+    "EDIT": "Editar Lembrete",
+    "TITLE": "Título",
+    "DESCRIPTION": "Descrição",
+    "REMIND_AT": "Me avisar nesta data",
+    "PLACEHOLDER_TITLE": "Ex: Pagar condomínio",
+    "PLACEHOLDER_DESCRIPTION": "Detalhes do lembrete...",
+    "SUCCESS_CREATE": "Lembrete criado com sucesso!",
+    "SUCCESS_UPDATE": "Lembrete atualizado com sucesso!",
+    "SUCCESS_DELETE": "Lembrete excluído com sucesso!",
+    "CONFIRM_DELETE": "Tem certeza que deseja excluir este lembrete?",
+    "NO_DATA": "Nenhum lembrete encontrado.",
+    "STATUS": {
+      "COMPLETED": "Concluído",
+      "PENDING": "Pendente",
+      "REJECTED": "Rejeitado",
+      "IN_PROGRESS": "Em Progresso"
+    }
   },
   "COMMON": {
     "SUCCESS": "Sucesso",

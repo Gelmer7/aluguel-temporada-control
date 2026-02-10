@@ -1,0 +1,7 @@
+<div class="bg-surface-0 dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm overflow-x-auto">
+  <div [style.height]="height()" [style.min-width]="minWidth()">
+    @if (chartOption()) {
+      <div echarts [options]="chartOption()!" class="w-full h-full"></div>
+    }
+  </div>
+</div>

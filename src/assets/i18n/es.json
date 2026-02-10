@@ -169,5 +169,25 @@
     "TITHE_AND_OFFER": "Diezmo y Ofrenda",
     "PAYMENTS_LIST": "Lista de Pagos",
     "EXPENSES_LIST": "Lista de Gastos"
+  },
+  "REMINDERS_FORM": {
+    "NEW": "Nuevo Recordatorio",
+    "EDIT": "Editar Recordatorio",
+    "TITLE": "Título",
+    "DESCRIPTION": "Descripción",
+    "REMIND_AT": "Avisarme en esta fecha",
+    "PLACEHOLDER_TITLE": "Ej: Pagar condominio",
+    "PLACEHOLDER_DESCRIPTION": "Detalles del recordatorio...",
+    "SUCCESS_CREATE": "¡Recordatorio creado con éxito!",
+    "SUCCESS_UPDATE": "¡Recordatorio actualizado con éxito!",
+    "SUCCESS_DELETE": "¡Recordatorio eliminado con éxito!",
+    "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar este recordatorio?",
+    "NO_DATA": "No se encontraron recordatorios.",
+    "STATUS": {
+      "COMPLETED": "Completado",
+      "PENDING": "Pendiente",
+      "REJECTED": "Rechazado",
+      "IN_PROGRESS": "En Progreso"
+    }
   }
 }

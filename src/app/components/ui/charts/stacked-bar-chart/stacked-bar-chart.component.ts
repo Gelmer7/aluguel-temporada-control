@@ -14,15 +14,7 @@ export interface StackedBarSeries {
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, NgxEchartsDirective, TranslateModule],
-  template: `
-    <div class="bg-surface-0 dark:bg-surface-900 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm overflow-x-auto">
-      <div [style.height]="height()" [style.min-width]="minWidth()">
-        @if (chartOption()) {
-          <div echarts [options]="chartOption()!" class="w-full h-full"></div>
-        }
-      </div>
-    </div>
-  `,
+  templateUrl: './stacked-bar-chart.component.html',
 })
 export class StackedBarChartComponent {
   /** Series data for the chart */
@@ -38,7 +30,7 @@ export class StackedBarChartComponent {
   height = input<string>('500px');
 
   /** Minimum width to ensure horizontal scroll on small screens */
-  minWidth = input<string>('800px');
+  minWidth = input<string>('600px');
 
   /** Show currency in tooltip */
   isCurrency = input<boolean>(true);
