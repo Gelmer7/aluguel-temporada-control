@@ -166,8 +166,9 @@ export class ReportsPage implements OnInit {
       series.push({
         name: this.translate.instant('REPORTS.GROSS'),
         type: 'bar',
+        stack: 'total',
         data: data.map(y => y.totalGross),
-        itemStyle: { color: '#22c55e', borderRadius: [4, 4, 0, 0] }
+        itemStyle: { color: '#22c55e' }
       });
     }
 
@@ -175,8 +176,9 @@ export class ReportsPage implements OnInit {
       series.push({
         name: this.translate.instant('REPORTS.EXPENSES'),
         type: 'bar',
+        stack: 'total',
         data: data.map(y => y.totalExpenses),
-        itemStyle: { color: '#ef4444', borderRadius: [4, 4, 0, 0] }
+        itemStyle: { color: '#ef4444' }
       });
     }
 
@@ -184,15 +186,23 @@ export class ReportsPage implements OnInit {
       series.push({
         name: this.translate.instant('REPORTS.NET'),
         type: 'bar',
+        stack: 'total',
         data: data.map(y => y.totalNet),
-        itemStyle: { color: '#3b82f6', borderRadius: [4, 4, 0, 0] }
+        itemStyle: { color: '#3b82f6' }
       });
     }
 
     return {
       tooltip: {
         trigger: 'axis',
-        axisPointer: { type: 'shadow' }
+        axisPointer: { type: 'shadow' },
+        formatter: (params: any[]) => {
+          let html = `${params[0].name}<br/>`;
+          params.forEach(p => {
+            html += `${p.marker} ${p.seriesName}: <b>R$ ${p.value.toFixed(2)}</b><br/>`;
+          });
+          return html;
+        }
       },
       legend: {
         data: series.map(s => s.name),

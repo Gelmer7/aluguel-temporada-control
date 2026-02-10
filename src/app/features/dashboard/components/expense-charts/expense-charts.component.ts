@@ -86,28 +86,44 @@ export class ExpenseChartsComponent {
     };
   });
 
-  /** Chart 2: Monthly Expenses for Selected Year (Bar Chart) */
+  /** Chart 2: Monthly Expenses for Selected Year (Stacked Bar Chart) */
   monthlyChartOption = computed(() => {
     const data = this.expenses();
     const year = this.selectedYear();
     if (!data.length) return null;
 
-    const monthlyTotals = Array(12).fill(0);
+    // 1. Identificar todos os tipos presentes nos dados
+    const types = Array.from(new Set(data.map(e => e.type || 'OTHER')));
 
-    if (year === 'ALL') {
-      // Se "TODOS" estiver selecionado, somamos todos os meses de todos os anos disponíveis nos dados filtrados
-      data.forEach(e => {
-        const month = new Date(e.purchaseDate).getUTCMonth();
-        monthlyTotals[month] += (e.price || 0);
-      });
-    } else {
-      // Se um ano específico estiver selecionado, filtramos apenas por esse ano
-      data.filter(e => new Date(e.purchaseDate).getUTCFullYear() === Number(year))
-          .forEach(e => {
-            const month = new Date(e.purchaseDate).getUTCMonth();
-            monthlyTotals[month] += (e.price || 0);
-          });
-    }
+    // 2. Inicializar estrutura para totais por tipo e por mês
+    // { 'TIPO_A': [0, 0, ..., 0], 'TIPO_B': [0, 0, ..., 0] }
+    const typeMonthlyTotals: Record<string, number[]> = {};
+    types.forEach(type => {
+      typeMonthlyTotals[type] = Array(12).fill(0);
+    });
+
+    // 3. Preencher os dados
+    const filteredData = year === 'ALL'
+      ? data
+      : data.filter(e => new Date(e.purchaseDate).getUTCFullYear() === Number(year));
+
+    filteredData.forEach(e => {
+      const month = new Date(e.purchaseDate).getUTCMonth();
+      const type = e.type || 'OTHER';
+      const amount = (e.price || 0) + (e.reserveFund || 0) + (e.association || 0);
+      typeMonthlyTotals[type][month] += amount;
+    });
+
+    // 4. Criar as séries para o gráfico
+    const series = types.map(type => {
+      return {
+        name: this.translate.instant(`EXPENSES_FORM.TYPES.${type}`),
+        type: 'bar',
+        stack: 'total',
+        data: typeMonthlyTotals[type],
+        emphasis: { focus: 'series' }
+      };
+    });
 
     const titleText = year === 'ALL'
       ? this.translate.instant('EXPENSE_CHARTS.MONTHLY_ALL')
@@ -122,15 +138,30 @@ export class ExpenseChartsComponent {
       tooltip: {
         trigger: 'axis',
         axisPointer: { type: 'shadow' },
-        formatter: (params: any) => {
-          const p = params[0];
-          return `${p.name}: <b>R$ ${p.value.toFixed(2)}</b>`;
+        formatter: (params: any[]) => {
+          let html = `${params[0].name}<br/>`;
+          let total = 0;
+          params.forEach(p => {
+            if (p.value > 0) {
+              html += `${p.marker} ${p.seriesName}: <b>R$ ${p.value.toFixed(2)}</b><br/>`;
+              total += p.value;
+            }
+          });
+          html += `<hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;" />`;
+          html += `Total: <b>R$ ${total.toFixed(2)}</b>`;
+          return html;
         }
+      },
+      legend: {
+        orient: 'horizontal',
+        bottom: 0,
+        textStyle: { fontSize: 10 },
+        type: 'scroll'
       },
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '10%',
+        bottom: '15%',
         containLabel: true
       },
       xAxis: {
@@ -142,16 +173,7 @@ export class ExpenseChartsComponent {
         type: 'value',
         axisLabel: { fontSize: 10 }
       },
-      series: [
-        {
-          data: monthlyTotals,
-          type: 'bar',
-          itemStyle: {
-            color: '#6366f1',
-            borderRadius: [4, 4, 0, 0]
-          }
-        }
-      ]
+      series: series
     };
   });
 
