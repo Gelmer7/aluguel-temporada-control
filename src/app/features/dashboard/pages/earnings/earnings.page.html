@@ -7,16 +7,26 @@
       <ng-template #filterSummary class="flex flex-wrap items-center gap-4">
         <span
           >{{ 'TERMS.YEAR' | translate }}:
-          <span class="text-primary">{{ selectedYear() === 'ALL' ? ('TERMS.ALL' | translate) : selectedYear() }}</span></span
+          <span class="text-primary">{{
+            selectedYear() === 'ALL' ? ('TERMS.ALL' | translate) : selectedYear()
+          }}</span></span
         >
         <span
           >{{ 'TERMS.MONTH' | translate }}:
-          <span class="text-primary">{{ selectedMonth() === 'ALL' ? ('TERMS.ALL' | translate) : ('MONTHS.' + selectedMonth() | translate) }}</span></span
+          <span class="text-primary">{{
+            selectedMonth() === 'ALL'
+              ? ('TERMS.ALL' | translate)
+              : ('MONTHS.' + selectedMonth() | translate)
+          }}</span></span
         >
         @if (selectedTypes().length > 0) {
           <span
             >{{ 'TERMS.TYPE' | translate }}:
-            <span class="text-primary">{{ selectedTypes().length === availableTypes().length ? ('TERMS.ALL' | translate) : selectedTypes().join(', ') }}</span></span
+            <span class="text-primary">{{
+              selectedTypes().length === availableTypes().length
+                ? ('TERMS.ALL' | translate)
+                : selectedTypes().join(', ')
+            }}</span></span
           >
         }
       </ng-template>
@@ -110,6 +120,12 @@
         class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
       >
         <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate }}</span>
+        <i
+          class="pi pi-chart-line cursor-pointer hover:text-primary transition-colors"
+          (click)="showChart.set(true)"
+          [pTooltip]="'TERMS.CHARTS' | translate"
+          tooltipPosition="left"
+        ></i>
       </div>
       <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
@@ -127,8 +143,12 @@
                 {{ 'EXPENSES_FORM.DATE' | translate }}
               </th>
               <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.GUEST' | translate }}</th>
-              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.CONFIRMATION_CODE' | translate }}</th>
-              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.HOUSE_CODE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TERMS.CONFIRMATION_CODE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'TERMS.HOUSE_CODE' | translate }}
+              </th>
               <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.TYPE' | translate }}</th>
               <th class="bg-surface-50 dark:bg-surface-800">
                 {{ 'TERMS.START_DATE' | translate }}
@@ -171,7 +191,13 @@
       <div
         class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
       >
-        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.EXPENSES_LIST' | translate }}</span>
+        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.EXPENSES_LIST' | translate }}</span
+        ><i
+          class="pi pi-chart-line cursor-pointer hover:text-primary transition-colors"
+          [pTooltip]="'TERMS.CHARTS' | translate"
+          tooltipPosition="left"
+          (click)="showExpenseChart.set(true)"
+        ></i>
       </div>
       <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
@@ -224,3 +250,6 @@
     </div>
   </div>
 </div>
+
+<app-earnings-payments-charts [(visible)]="showChart" [payments]="filteredPayments()" />
+<app-earnings-expense-charts [(visible)]="showExpenseChart" [expenses]="filteredExpenses()" />

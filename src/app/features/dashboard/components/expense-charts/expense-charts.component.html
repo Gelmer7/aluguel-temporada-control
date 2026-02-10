@@ -1,7 +1,7 @@
 <app-dialog
   [(visible)]="visible"
   [header]="'EXPENSE_CHARTS.TITLE' | translate"
-  [icon]="'pi pi-chart-pie'"
+  [icon]="'pi pi-chart-line'"
   [showFooter]="false"
   [width]="'90vw'"
   [maxWidth]="'1200px'"
@@ -26,7 +26,7 @@
       </div>
     } @else {
       <div class="flex flex-col items-center justify-center p-12 text-surface-500 gap-3">
-        <i class="pi pi-chart-bar text-5xl opacity-20"></i>
+        <i class="pi pi-chart-line text-5xl opacity-20"></i>
         <span>{{ 'EXPENSE_CHARTS.NO_DATA' | translate }}</span>
       </div>
     }

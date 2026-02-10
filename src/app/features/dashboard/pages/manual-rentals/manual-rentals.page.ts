@@ -79,7 +79,7 @@ export class ManualRentalsPage implements OnInit {
       if (actions) {
         this.headerService.setHeader({
           title: 'TERMS.MANUAL_RENTALS',
-          icon: 'pi-home',
+          icon: 'pi-warehouse',
           actions: actions
         });
       }
@@ -113,8 +113,8 @@ export class ManualRentalsPage implements OnInit {
     const filter = this.globalFilter().toLowerCase();
 
     if (filter) {
-      result = result.filter(r => 
-        r.hospede.toLowerCase().includes(filter) || 
+      result = result.filter(r =>
+        r.hospede.toLowerCase().includes(filter) ||
         r.anuncio.toLowerCase().includes(filter) ||
         r.informacoes?.toLowerCase().includes(filter)
       );

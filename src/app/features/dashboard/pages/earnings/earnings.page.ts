@@ -17,6 +17,8 @@ import { ButtonModule } from 'primeng/button';
 
 // Components
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
+import { EarningsPaymentsChartsComponent } from '../../../../features/dashboard/components/earnings-payments-charts/earnings-payments-charts.component';
+import { EarningsExpenseChartsComponent } from '../../../../features/dashboard/components/earnings-expense-charts/earnings-expense-charts.component';
 
 // Services & Models
 import { SupabaseService, Expense } from '../../../../services/supabase.service';
@@ -43,6 +45,8 @@ import { UnifiedEarning } from '../../../../models/airbnb.model';
     FloatLabel,
     ToastModule,
     FilterContainerComponent,
+    EarningsPaymentsChartsComponent,
+    EarningsExpenseChartsComponent,
   ],
   templateUrl: './earnings.page.html',
 })
@@ -57,6 +61,10 @@ export class EarningsPage implements OnInit {
   protected readonly selectedYear = signal<number | string>(new Date().getFullYear());
   protected readonly selectedMonth = signal<number | string>(new Date().getMonth());
   protected readonly selectedTypes = signal<string[]>([]);
+
+  // Gráfico
+  protected readonly showChart = signal<boolean>(false);
+  protected readonly showExpenseChart = signal<boolean>(false);
 
   // Dados
   protected readonly loading = signal<boolean>(true);

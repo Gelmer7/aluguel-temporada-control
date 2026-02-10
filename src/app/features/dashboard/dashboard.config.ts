@@ -21,8 +21,14 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   {
     id: 'manual-rentals',
     label: 'TERMS.MANUAL_RENTALS',
-    icon: 'pi-wallet',
+    icon: 'pi-warehouse',
     route: '/dashboard/manual-rentals',
+  },
+  {
+    id:'payments',
+    label: 'TERMS.PAYMENTS',
+    icon: 'pi-credit-card',
+    route: '/dashboard/payments',
   },
   {
     id: 'expenses',
@@ -58,7 +64,7 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   {
     id: 'reports',
     label: 'TERMS.REPORTS',
-    icon: 'pi-chart-bar',
+    icon: 'pi-file',
     route: '/dashboard/reports',
   },
   {

@@ -1,0 +1,25 @@
+<app-dialog
+  [(visible)]="visible"
+  [header]="'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate"
+  icon="pi pi-chart-line"
+  [showFooter]="false"
+  width="90vw"
+  maxWidth="1200px"
+>
+  <div class="p-2 sm:p-4">
+    @if (payments().length > 0) {
+      <div class="bg-surface-0 dark:bg-surface-900 p-4 rounded-xl border border-surface-200 dark:border-surface-700 shadow-sm overflow-x-auto">
+        <div class="min-w-[800px] h-[500px]">
+          @if (chartOption()) {
+            <div echarts [options]="chartOption()!" class="w-full h-full"></div>
+          }
+        </div>
+      </div>
+    } @else {
+      <div class="flex flex-col items-center justify-center p-12 text-surface-500 gap-3">
+        <i class="pi pi-chart-line text-5xl opacity-20"></i>
+        <span>{{ 'EXPENSE_CHARTS.NO_DATA' | translate }}</span>
+      </div>
+    }
+  </div>
+</app-dialog>

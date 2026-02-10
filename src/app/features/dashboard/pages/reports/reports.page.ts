@@ -61,7 +61,7 @@ export class ReportsPage implements OnInit {
     effect(() => {
       this.headerService.setHeader({
         title: 'TERMS.REPORTS',
-        icon: 'pi-chart-bar',
+        icon: 'pi-file',
         actions: this.headerActions()
       });
     });
