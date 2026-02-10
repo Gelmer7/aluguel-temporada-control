@@ -22,32 +22,73 @@ CREATE TABLE IF NOT EXISTS manual_rentals (
 ALTER TABLE manual_rentals ENABLE ROW LEVEL SECURITY;
 
 -- Política de acesso total
+DROP POLICY IF EXISTS "Acesso total manual_rentals" ON manual_rentals;
 CREATE POLICY "Acesso total manual_rentals" ON manual_rentals
 FOR ALL USING (true) WITH CHECK (true);
 
 -- View para unificar ganhos do Airbnb e Aluguéis Manuais
--- Ajustado para usar 'house_code' (snake_case) conforme estrutura atual do banco
--- Remover a view antiga primeiro
+-- Esta view simplifica o fluxo do Airbnb transformando as múltiplas linhas (Reserva, Payout, Recebimento)
+-- em duas entradas claras e positivas: uma para o Anfitrião e outra para o Co-anfitrião.
 DROP VIEW IF EXISTS v_unified_earnings;
 
--- Recriar a View com tratamento para strings vazias no JSON
 CREATE OR REPLACE VIEW v_unified_earnings AS
+WITH cohost_sums AS (
+    -- Agrupa os valores pagos aos co-anfitriões por código de confirmação
+    -- Os valores no CSV do Airbnb para co-anfitrião são negativos, por isso somamos
+    SELECT 
+        codigo_confirmacao,
+        SUM(valor) as total_cohost_negativo,
+        house_code
+    FROM airbnb_logs
+    WHERE tipo = 'Recebimento do coanfitrião'
+    GROUP BY codigo_confirmacao, house_code
+)
+-- 1. Parte do Anfitrião (Derivada da linha de 'Reserva')
+-- O valor recebido pelo anfitrião é o total da reserva menos o que foi para o co-anfitrião
 SELECT
-    id,
-    data::DATE as data,
-    tipo,
-    (NULLIF(raw_data->>'Data de início', ''))::DATE as data_inicio,
-    (NULLIF(raw_data->>'Data de término', ''))::DATE as data_termino,
-    noites,
-    hospede,
-    anuncio,
-    valor,
-    (NULLIF(raw_data->>'Pago', ''))::NUMERIC as pago,
-    taxa_limpeza,
+    l.id,
+    l.data::DATE as data,
+    'Pagamento Anfitrião' as tipo,
+    (NULLIF(l.raw_data->>'Data de início', ''))::DATE as data_inicio,
+    (NULLIF(l.raw_data->>'Data de término', ''))::DATE as data_termino,
+    l.noites,
+    l.hospede,
+    l.anuncio,
+    (l.valor + COALESCE(c.total_cohost_negativo, 0)) as valor,
+    (l.valor + COALESCE(c.total_cohost_negativo, 0)) as pago,
+    l.taxa_limpeza,
     'Airbnb' as fonte,
-    house_code
-FROM airbnb_logs
+    l.house_code,
+    l.codigo_confirmacao
+FROM airbnb_logs l
+LEFT JOIN cohost_sums c ON l.codigo_confirmacao = c.codigo_confirmacao AND l.house_code = c.house_code
+WHERE l.tipo = 'Reserva'
+
 UNION ALL
+
+-- 2. Parte do Co-anfitrião (Derivada da linha de 'Recebimento do coanfitrião')
+-- Transformamos o valor negativo em positivo para visualização simples
+SELECT
+    l.id,
+    l.data::DATE as data,
+    'Pagamento Co-anfitrião' as tipo,
+    (NULLIF(l.raw_data->>'Data de início', ''))::DATE as data_inicio,
+    (NULLIF(l.raw_data->>'Data de término', ''))::DATE as data_termino,
+    l.noites,
+    l.hospede,
+    l.anuncio,
+    ABS(l.valor) as valor,
+    ABS(l.valor) as pago,
+    0 as taxa_limpeza,
+    'Airbnb' as fonte,
+    l.house_code,
+    l.codigo_confirmacao
+FROM airbnb_logs l
+WHERE l.tipo = 'Recebimento do coanfitrião'
+
+UNION ALL
+
+-- 3. Aluguéis Manuais (Permanecem inalterados)
 SELECT
     id,
     data_pagamento as data,
@@ -61,5 +102,6 @@ SELECT
     valor_pago as pago,
     taxa_limpeza,
     'Manual' as fonte,
-    house_code
+    house_code,
+    NULL as codigo_confirmacao
 FROM manual_rentals;

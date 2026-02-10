@@ -45,7 +45,7 @@ export class DialogComponent {
   maxWidth = input<string>('none');
 
   /** Breakpoints for responsiveness */
-  breakpoints = input<{ [key: string]: string }>({ '960px': '75vw', '640px': '90vw' });
+  breakpoints = input<{ [key: string]: string }>({ '960px': '75vw', '640px': '98vw' });
 
   /** Event emitted when save button is clicked */
   onSave = output<void>();

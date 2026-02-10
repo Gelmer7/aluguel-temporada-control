@@ -143,12 +143,15 @@
               <th class="bg-surface-50 dark:bg-surface-800">
                 {{ 'EXPENSES_FORM.DATE' | translate }}
               </th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.GUEST' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.CONFIRMATION_CODE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.HOUSE_CODE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.TYPE' | translate }}</th>
               <th class="bg-surface-50 dark:bg-surface-800">
-                {{ 'EXPENSES_FORM.DESCRIPTION' | translate }}
+                {{ 'TERMS.START_DATE' | translate }}
               </th>
-              <th class="bg-surface-50 dark:bg-surface-800">
-                {{ 'EXPENSES_FORM.PRICE' | translate }}
-              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.END_DATE' | translate }}</th>
+              <th class="bg-surface-50 dark:bg-surface-800">{{ 'TERMS.PAID' | translate }}</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-payment>
@@ -156,13 +159,18 @@
               class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
             >
               <td class="truncate">{{ payment.data | date: 'dd/MM/yy' }}</td>
-              <td class="truncate">{{ payment.informacoes }}</td>
-              <td class="truncate font-medium">{{ payment.valor | currency: 'BRL' }}</td>
+              <td class="truncate">{{ payment.hospede }}</td>
+              <td class="truncate">{{ payment.codigo_confirmacao }}</td>
+              <td class="truncate">{{ payment.house_code }}</td>
+              <td class="truncate">{{ payment.tipo }}</td>
+              <td class="truncate">{{ payment.data_inicio | date: 'dd/MM/yy' }}</td>
+              <td class="truncate">{{ payment.data_termino | date: 'dd/MM/yy' }}</td>
+              <td class="truncate font-medium">{{ payment.pago | currency: 'BRL' }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
             <tr>
-              <td colspan="2" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+              <td colspan="7" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
                 Total:
               </td>
               <td class="font-bold text-primary bg-surface-50/50 dark:bg-surface-800/50">
@@ -200,6 +208,9 @@
                 {{ 'EXPENSES_FORM.DESCRIPTION' | translate }}
               </th>
               <th class="bg-surface-50 dark:bg-surface-800">
+                {{ 'EXPENSES_FORM.TYPE' | translate }}
+              </th>
+              <th class="bg-surface-50 dark:bg-surface-800">
                 {{ 'EXPENSES_FORM.PRICE' | translate }}
               </th>
             </tr>
@@ -210,12 +221,13 @@
             >
               <td class="truncate">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
               <td class="truncate">{{ expense.description }}</td>
+              <td class="truncate">{{ expense.type }}</td>
               <td class="truncate font-medium">{{ expense.price | currency: 'BRL' }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
             <tr>
-              <td colspan="2" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+              <td colspan="3" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
                 Total:
               </td>
               <td class="font-bold text-red-500 bg-surface-50/50 dark:bg-surface-800/50">

@@ -28,29 +28,6 @@
     </ng-template>
 
     <!-- Conteúdo dos filtros -->
-    <!-- Tipo -->
-    <p-floatlabel class="flex-1 min-w-[150px]" variant="in">
-      <p-multiselect
-        inputId="type_select"
-        [options]="expenseTypes"
-        [ngModel]="selectedTypes()"
-        (ngModelChange)="selectedTypes.set($event || []); onFilterChange()"
-        class="w-full"
-        appendTo="body"
-        optionLabel="label"
-        optionValue="value"
-        [maxSelectedLabels]="2"
-        [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
-      >
-        <ng-template pTemplate="selectedItem" let-selectedOption>
-          {{ selectedOption.label | translate }}
-        </ng-template>
-        <ng-template pTemplate="item" let-option>
-          {{ option.label | translate }}
-        </ng-template>
-      </p-multiselect>
-      <label for="type_select">{{ 'TERMS.TYPE' | translate }}</label>
-    </p-floatlabel>
     <!-- Ano -->
     <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
       <p-select
@@ -80,7 +57,6 @@
         [options]="monthOptions"
         [ngModel]="selectedMonth()"
         (ngModelChange)="selectedMonth.set($event || 'ALL'); onFilterChange()"
-        [disabled]="selectedYear() === 'ALL'"
         [showClear]="true"
         class="w-full"
         appendTo="body"
@@ -95,6 +71,29 @@
         </ng-template>
       </p-select>
       <label for="month_select">{{ 'TERMS.MONTH' | translate }}</label>
+    </p-floatlabel>
+    <!-- Tipo -->
+    <p-floatlabel class="flex-1 min-w-[150px]" variant="in">
+      <p-multiselect
+        inputId="type_select"
+        [options]="expenseTypes"
+        [ngModel]="selectedTypes()"
+        (ngModelChange)="selectedTypes.set($event || []); onFilterChange()"
+        class="w-full"
+        appendTo="body"
+        optionLabel="label"
+        optionValue="value"
+        [maxSelectedLabels]="2"
+        [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
+      >
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          {{ selectedOption.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-option>
+          {{ option.label | translate }}
+        </ng-template>
+      </p-multiselect>
+      <label for="type_select">{{ 'TERMS.TYPE' | translate }}</label>
     </p-floatlabel>
     <!-- Limpar Filtros -->
     <div class="flex items-center">
@@ -275,8 +274,9 @@
   <app-expense-charts
     [visible]="showCharts()"
     (visibleChange)="showCharts.set($event)"
-    [expenses]="filteredExpenses()"
+    [expenses]="expenses()"
     [selectedYear]="selectedYear()"
+    [selectedTypes]="selectedTypes()"
   />
 
   <!-- Confirmations and Toasts -->

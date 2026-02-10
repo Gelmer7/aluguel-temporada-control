@@ -26,6 +26,9 @@ export class ExpenseChartsComponent {
   /** The year currently selected for the monthly chart */
   selectedYear = input<number | string>(new Date().getFullYear());
 
+  /** The types of expenses currently selected */
+  selectedTypes = input<string[]>([]);
+
   /** Chart 1: Distribution by Type (Pie Chart) */
   typeChartOption = computed(() => {
     const data = this.expenses();
@@ -50,7 +53,9 @@ export class ExpenseChartsComponent {
       },
       tooltip: {
         trigger: 'item',
-        formatter: '{b}: R$ {c} ({d}%)'
+        formatter: (params: any) => {
+          return `${params.name}: <b>R$ ${params.value.toFixed(2)}</b> (${params.percent}%)`;
+        }
       },
       legend: {
         orient: 'horizontal',
@@ -153,16 +158,43 @@ export class ExpenseChartsComponent {
   /** Chart 3: Annual Expenses (Line Chart) */
   annualChartOption = computed(() => {
     const data = this.expenses();
+    const selectedTypes = this.selectedTypes();
     if (!data.length) return null;
 
-    const annualTotals = data.reduce((acc, curr) => {
-      const year = new Date(curr.purchaseDate).getUTCFullYear();
-      acc[year] = (acc[year] || 0) + (curr.price || 0);
-      return acc;
-    }, {} as Record<number, number>);
+    // Se nenhum tipo for passado (opcional), pegamos todos os tipos presentes nos dados
+    const typesToShow = selectedTypes.length > 0
+      ? selectedTypes
+      : Array.from(new Set(data.map(e => e.type || 'OTHER')));
 
-    const sortedYears = Object.keys(annualTotals).map(Number).sort((a, b) => a - b);
-    const chartData = sortedYears.map(year => annualTotals[year]);
+    // Agrupar por ano e tipo
+    const annualTypeTotals = data.reduce((acc, curr) => {
+      const year = new Date(curr.purchaseDate).getUTCFullYear();
+      const type = curr.type || 'OTHER';
+
+      if (!acc[year]) acc[year] = {};
+      acc[year][type] = (acc[year][type] || 0) + (curr.price || 0);
+      return acc;
+    }, {} as Record<number, Record<string, number>>);
+
+    const sortedYears = Object.keys(annualTypeTotals).map(Number).sort((a, b) => a - b);
+
+    // Se tivermos apenas um tipo selecionado, ou se for a visão geral,
+    // podemos decidir se mostramos linhas individuais ou uma linha total.
+    // O pedido do usuário é mostrar linhas para cada tipo selecionado.
+
+    const series = typesToShow.map(type => {
+      const chartData = sortedYears.map(year => annualTypeTotals[year][type] || 0);
+      const typeLabel = this.translate.instant(`EXPENSES_FORM.TYPES.${type}`);
+
+      return {
+        name: typeLabel,
+        data: chartData,
+        type: 'line',
+        smooth: true,
+        symbolSize: 8,
+        lineStyle: { width: 3 }
+      };
+    });
 
     return {
       title: {
@@ -172,15 +204,23 @@ export class ExpenseChartsComponent {
       },
       tooltip: {
         trigger: 'axis',
-        formatter: (params: any) => {
-          const p = params[0];
-          return `${p.name}: <b>R$ ${p.value.toFixed(2)}</b>`;
+        formatter: (params: any[]) => {
+          let html = `${params[0].name}<br/>`;
+          params.forEach(p => {
+            html += `${p.marker} ${p.seriesName}: <b>R$ ${p.value.toFixed(2)}</b><br/>`;
+          });
+          return html;
         }
+      },
+      legend: {
+        orient: 'horizontal',
+        bottom: 0,
+        textStyle: { fontSize: 10 }
       },
       grid: {
         left: '3%',
         right: '4%',
-        bottom: '10%',
+        bottom: '15%',
         containLabel: true
       },
       xAxis: {
@@ -192,22 +232,7 @@ export class ExpenseChartsComponent {
         type: 'value',
         axisLabel: { fontSize: 10 }
       },
-      series: [
-        {
-          data: chartData,
-          type: 'line',
-          smooth: true,
-          symbolSize: 8,
-          lineStyle: { width: 3, color: '#10b981' },
-          itemStyle: { color: '#10b981' },
-          areaStyle: {
-            color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-              { offset: 0, color: 'rgba(16, 185, 129, 0.3)' },
-              { offset: 1, color: 'rgba(16, 185, 129, 0)' }
-            ])
-          }
-        }
-      ]
+      series: series
     };
   });
 }

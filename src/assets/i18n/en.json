@@ -60,7 +60,9 @@
     "STATUS": "Status",
     "SELECT": "Select",
     "SELECTED": "selected",
-    "FILTER_BY_STATUS": "Filter by Status"
+    "FILTER_BY_STATUS": "Filter by Status",
+    "CONFIRMATION_CODE": "Conf. Code",
+    "HOUSE_CODE": "House Code"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "New Suggestion",
@@ -140,7 +142,8 @@
       "GAS": "Gas",
       "MAINTENANCE": "Maintenance",
       "CLEANING": "Cleaning",
-      "OTHER": "Other"
+      "OTHER": "Other",
+      "CARNE_LEAO": "Carnê-Leão"
     },
     "QUICK": {
       "ELECTRICITY": "Light",

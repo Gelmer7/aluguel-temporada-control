@@ -107,6 +107,7 @@ export interface UnifiedEarning {
   taxa_limpeza: number;
   fonte: 'Airbnb' | 'Manual';
   house_code: string;
+  codigo_confirmacao?: string;
 }
 
 export const AirbnbKeyToHeader: Partial<Record<keyof AirbnbNormalizedRow, AirbnbHeaderKey>> = {

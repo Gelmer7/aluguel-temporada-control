@@ -7,6 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -34,6 +35,7 @@ import { UnifiedEarning } from '../../../../models/airbnb.model';
     CardModule,
     TableModule,
     SelectModule,
+    MultiSelectModule,
     InputNumberModule,
     ButtonModule,
     TooltipModule,
@@ -52,8 +54,9 @@ export class EarningsPage implements OnInit {
   private readonly headerService = inject(HeaderService);
 
   // Filtros
-  protected readonly selectedYear = signal<number>(new Date().getFullYear());
-  protected readonly selectedMonth = signal<number>(new Date().getMonth());
+  protected readonly selectedYear = signal<number | string>(new Date().getFullYear());
+  protected readonly selectedMonth = signal<number | string>(new Date().getMonth());
+  protected readonly selectedTypes = signal<string[]>([]);
 
   // Dados
   protected readonly loading = signal<boolean>(true);
@@ -62,11 +65,27 @@ export class EarningsPage implements OnInit {
 
   // Opções de Filtro
   protected readonly years = signal<number[]>([]);
-  protected readonly months = computed(() => {
-    return Array.from({ length: 12 }, (_, i) => ({
+  protected readonly yearOptions = computed(() => [
+    { label: 'TERMS.ALL', value: 'ALL' },
+    ...this.years().map((y) => ({ label: y.toString(), value: y })),
+  ]);
+
+  protected readonly monthOptions = computed(() => [
+    { label: 'TERMS.ALL', value: 'ALL' },
+    ...Array.from({ length: 12 }, (_, i) => ({
       label: this.translate.instant(`MONTHS.${i}`),
       value: i,
-    }));
+    })),
+  ]);
+
+  protected readonly availableTypes = computed(() => {
+    const types = new Set(this.payments().map((p) => p.tipo).filter(Boolean));
+    return Array.from(types)
+      .sort()
+      .map((type) => ({
+        label: type,
+        value: type,
+      }));
   });
 
   constructor() {
@@ -86,9 +105,14 @@ export class EarningsPage implements OnInit {
   protected readonly filteredPayments = computed(() => {
     const year = this.selectedYear();
     const month = this.selectedMonth();
+    const types = this.selectedTypes();
+
     return this.payments().filter((p) => {
       const date = new Date(p.data);
-      return date.getUTCFullYear() === year && date.getUTCMonth() === month;
+      const matchesYear = year === 'ALL' || date.getUTCFullYear() === year;
+      const matchesMonth = month === 'ALL' || date.getUTCMonth() === month;
+      const matchesType = types.length === 0 || types.includes(p.tipo);
+      return matchesYear && matchesMonth && matchesType;
     });
   });
 
@@ -97,7 +121,9 @@ export class EarningsPage implements OnInit {
     const month = this.selectedMonth();
     return this.expenses().filter((e) => {
       const date = new Date(e.purchaseDate);
-      return date.getUTCFullYear() === year && date.getUTCMonth() === month;
+      const matchesYear = year === 'ALL' || date.getUTCFullYear() === year;
+      const matchesMonth = month === 'ALL' || date.getUTCMonth() === month;
+      return matchesYear && matchesMonth;
     });
   });
 
@@ -135,7 +161,12 @@ export class EarningsPage implements OnInit {
         this.supabase.getExpenses(),
       ]);
 
-      if (earningsRes.data) this.payments.set(earningsRes.data);
+      if (earningsRes.data) {
+        this.payments.set(earningsRes.data);
+        // Selecionar todos os tipos por padrão após carregar os dados
+        const types = Array.from(new Set(earningsRes.data.map((p) => p.tipo).filter(Boolean)));
+        this.selectedTypes.set(types);
+      }
       if (expensesRes.data) this.expenses.set(expensesRes.data);
     } finally {
       this.loading.set(false);
