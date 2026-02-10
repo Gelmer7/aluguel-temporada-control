@@ -10,13 +10,7 @@
       pTooltip="Carregar novo relatório do Airbnb"
       tooltipPosition="left"
     />
-    <input
-      #fileInput
-      type="file"
-      (change)="onFileSelected($event)"
-      accept=".csv"
-      class="hidden"
-    />
+    <input #fileInput type="file" (change)="onFileSelected($event)" accept=".csv" class="hidden" />
 
     <p-button
       icon="pi pi-sync"
@@ -90,33 +84,6 @@
       ></p-select>
       <label for="type_select">Tipo</label>
     </p-floatlabel>
-    <div
-      class="flex items-center gap-1.5 sm:border-l sm:border-surface-200 sm:dark:border-surface-700 sm:pl-3"
-    >
-      <span class="text-surface-600 dark:text-surface-400 font-medium whitespace-nowrap"
-        >Payout</span
-      >
-      <p-checkbox
-        [ngModel]="hidePayout()"
-        (ngModelChange)="onHidePayoutChange($event)"
-        binary="true"
-      ></p-checkbox>
-    </div>
-    <p-floatlabel class="w-full" variant="in">
-      <p-multiselect
-        inputId="cols_select"
-        display="chip"
-        [options]="cols()"
-        [ngModel]="selectedColumns()"
-        (ngModelChange)="onColumnsChange($event)"
-        optionLabel="headerFull"
-        selectedItemsLabel="{0} colunas"
-        appendTo="body"
-        class="w-full"
-        [maxSelectedLabels]="3"
-      ></p-multiselect>
-      <label for="cols_select">Colunas</label>
-    </p-floatlabel>
   </app-filter-container>
 
   <!-- Summary Cards Agrupados -->
@@ -189,7 +156,16 @@
           class="w-full p-inputtext-sm"
         />
       </p-iconfield>
-      <p-button icon="pi pi-info-circle" [text]="true" (click)="op.toggle($event)" />
+
+      <!-- Icon de informação -->
+      <p-button
+        icon="pi pi-info-circle"
+        [text]="true"
+        (click)="op.toggle($event)"
+        class="ml-auto"
+        pTooltip="Informações do Arquivo"
+        tooltipPosition="left"
+      />
       <p-popover #op>
         <div class="flex flex-col gap-2 p-1">
           <div
@@ -225,6 +201,57 @@
                 >Status: {{ rows().length > 0 ? 'Sincronizado' : 'Aguardando Sincronização' }}</span
               >
             </div>
+          </div>
+        </div>
+      </p-popover>
+      <!-- Icon de configurações -->
+      <p-button
+        icon="pi pi-cog"
+        [text]="true"
+        (click)="opSettings.toggle($event)"
+        pTooltip="Configurações de Visualização"
+      />
+      <p-popover #opSettings>
+        <div class="flex flex-col gap-4 p-3 min-w-[300px]">
+          <div
+            class="flex items-center gap-2 border-b border-surface-200 dark:border-surface-700 pb-2"
+          >
+            <i class="pi pi-cog text-primary text-sm"></i>
+            <span class="font-bold text-xs uppercase tracking-wider"
+              >Configurações de Visualização</span
+            >
+          </div>
+
+          <!-- Opção Payout -->
+          <div class="flex items-center justify-between gap-4">
+            <span class="text-sm font-medium text-surface-700 dark:text-surface-300"
+              >Ocultar Payouts</span
+            >
+            <p-checkbox
+              [ngModel]="hidePayout()"
+              (ngModelChange)="onHidePayoutChange($event)"
+              binary="true"
+            ></p-checkbox>
+          </div>
+
+          <!-- Seleção de Colunas -->
+          <div class="flex flex-col gap-2">
+            <span class="text-sm font-medium text-surface-700 dark:text-surface-300"
+              >Colunas Visíveis</span
+            >
+            <p-multiselect
+              inputId="cols_select"
+              display="chip"
+              [options]="cols()"
+              [ngModel]="selectedColumns()"
+              (ngModelChange)="onColumnsChange($event)"
+              optionLabel="headerFull"
+              selectedItemsLabel="{0} colunas"
+              appendTo="body"
+              class="w-full"
+              [maxSelectedLabels]="2"
+              placeholder="Selecionar colunas"
+            ></p-multiselect>
           </div>
         </div>
       </p-popover>
