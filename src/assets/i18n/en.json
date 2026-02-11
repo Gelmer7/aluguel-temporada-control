@@ -169,7 +169,11 @@
     "CALCULATED_VALUES": "Calculated Values",
     "TITHE_AND_OFFER": "Tithe and Offer",
     "PAYMENTS_LIST": "Payments List",
-    "EXPENSES_LIST": "Expenses List"
+    "EXPENSES_LIST": "Expenses List",
+    "HISTORY": "Tithe History",
+    "NO_HISTORY": "No tithe history found.",
+    "SAVE_SUCCESS": "Tithe saved successfully!",
+    "DOWNLOAD_PDF": "Download PDF"
   },
   "REMINDERS_FORM": {
     "NEW": "New Reminder",

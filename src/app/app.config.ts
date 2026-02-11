@@ -17,6 +17,12 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
+import { registerLocaleData } from '@angular/common';
+import localePt from '@angular/common/locales/pt';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localePt);
+registerLocaleData(localeEs);
 
 export const appConfig: ApplicationConfig = {
   providers: [

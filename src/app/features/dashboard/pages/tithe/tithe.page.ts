@@ -25,6 +25,7 @@ import { FilterContainerComponent } from '../../../../components/ui/filter-conta
 import { SupabaseService, Expense, Tithe } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
+import { PdfService } from '../../../../services/pdf.service';
 
 @Component({
   selector: 'app-tithe-page',
@@ -56,6 +57,7 @@ export class TithePage implements OnInit {
   private readonly houseService = inject(HouseService);
   private readonly messageService = inject(MessageService);
   private readonly headerService = inject(HeaderService);
+  private readonly pdfService = inject(PdfService);
 
   headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
@@ -245,5 +247,24 @@ export class TithePage implements OnInit {
         detail: err.message
       });
     }
+  }
+
+  protected onDownloadPDF() {
+    this.pdfService.generateTithePdf({
+      year: this.selectedYear(),
+      month: Number(this.selectedMonth()),
+      tithePercentage: this.tithePercentage(),
+      offerPercentage: this.offerPercentage(),
+      payments: this.filteredPayments(),
+      expenses: this.filteredExpenses(),
+      history: this.titheHistory(),
+      totals: {
+        airbnb: this.totalAirbnb(),
+        expenses: this.totalExpenses(),
+        tithe: this.titheValue(),
+        offer: this.offerValue(),
+        total: this.totalToPay()
+      }
+    });
   }
 }

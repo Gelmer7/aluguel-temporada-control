@@ -36,6 +36,8 @@
     "@tailwindcss/postcss": "^4.1.17",
     "chart.js": "^4.5.1",
     "echarts": "^6.0.0",
+    "jspdf": "^4.1.0",
+    "jspdf-autotable": "^5.0.7",
     "ngx-echarts": "^19.0.0",
     "papaparse": "^5.5.3",
     "postcss": "^8.5.6",

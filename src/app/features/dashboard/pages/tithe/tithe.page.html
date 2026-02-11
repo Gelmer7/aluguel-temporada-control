@@ -6,6 +6,14 @@
     tooltipPosition="left"
     [size]="'small'"
   />
+  <p-button
+    icon="pi pi-file-pdf"
+    severity="secondary"
+    (onClick)="onDownloadPDF()"
+    [pTooltip]="'TITHE_MANAGEMENT.DOWNLOAD_PDF' | translate"
+    tooltipPosition="left"
+    [size]="'small'"
+  />
 </ng-template>
 
 <p-toast />

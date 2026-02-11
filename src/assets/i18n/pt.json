@@ -217,7 +217,8 @@
     "EXPENSES_LIST": "Lista de Despesas",
     "HISTORY": "Histórico de Dízimos",
     "NO_HISTORY": "Nenhum histórico de dízimo encontrado.",
-    "SAVE_SUCCESS": "Dízimo salvo com sucesso!"
+    "SAVE_SUCCESS": "Dízimo salvo com sucesso!",
+    "DOWNLOAD_PDF": "Baixar PDF"
   },
   "REMINDERS_FORM": {
     "NEW": "Novo Lembrete",

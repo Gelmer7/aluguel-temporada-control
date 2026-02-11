@@ -168,7 +168,11 @@
     "CALCULATED_VALUES": "Valores Calculados",
     "TITHE_AND_OFFER": "Diezmo y Ofrenda",
     "PAYMENTS_LIST": "Lista de Pagos",
-    "EXPENSES_LIST": "Lista de Gastos"
+    "EXPENSES_LIST": "Lista de Gastos",
+    "HISTORY": "Historial de Diezmos",
+    "NO_HISTORY": "No se encontró historial de diezmo.",
+    "SAVE_SUCCESS": "¡Diezmo guardado con éxito!",
+    "DOWNLOAD_PDF": "Descargar PDF"
   },
   "REMINDERS_FORM": {
     "NEW": "Nuevo Recordatorio",
