@@ -15,7 +15,7 @@ export class PdfService {
    */
   generateTithePdf(data: {
     year: number;
-    month: number;
+    months: number[];
     tithePercentage: number;
     offerPercentage: number;
     payments: any[];
@@ -30,17 +30,24 @@ export class PdfService {
     };
   }) {
     const doc = new jsPDF();
-    const monthName = this.translate.instant(`MONTHS.${data.month}`);
-    const title = `${this.translate.instant('TERMS.TITHE')} - ${monthName} / ${data.year}`;
+    const titheLabel = this.translate.instant('TERMS.TITHE');
+    const monthsNames = data.months.map(m => this.translate.instant(`MONTHS.${m}`)).join(', ');
+    const yearLabel = data.year;
 
     // Header
     doc.setFontSize(18);
-    doc.text(title, 14, 22);
+    doc.text(titheLabel, 14, 22);
+    
+    // Sub-header (Months and Year) with smaller font
+    doc.setFontSize(12);
+    doc.setTextColor(100);
+    doc.text(`${monthsNames} / ${yearLabel}`, 14, 28);
+    
     doc.setFontSize(11);
     doc.setTextColor(100);
 
     // Summary Info
-    const summaryY = 30;
+    const summaryY = 35;
     doc.text(`${this.translate.instant('TITHE_MANAGEMENT.TITHE_PERCENTAGE')}: ${data.tithePercentage}%`, 14, summaryY);
     doc.text(`${this.translate.instant('TITHE_MANAGEMENT.OFFER_PERCENTAGE')}: ${data.offerPercentage}%`, 70, summaryY);
 
@@ -86,6 +93,14 @@ export class PdfService {
         p.tipo,
         this.formatBRL(p.pago || p.valor)
       ]),
+      foot: [[
+        '',
+        '',
+        '',
+        'Total:',
+        this.formatBRL(data.totals.airbnb)
+      ]],
+      footStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' }
     });
 
     // Expenses Table
@@ -106,6 +121,13 @@ export class PdfService {
         this.translate.instant(`EXPENSES_FORM.TYPES.${e.type}`),
         this.formatBRL(e.price)
       ]),
+      foot: [[
+        '',
+        '',
+        'Total:',
+        this.formatBRL(data.totals.expenses)
+      ]],
+      footStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold' }
     });
 
     // History Table
@@ -131,7 +153,8 @@ export class PdfService {
     });
 
     // Save
-    doc.save(`Dizimo_${monthName}_${data.year}.pdf`);
+    const fileNameMonths = data.months.length > 1 ? 'Multiplos' : this.translate.instant(`MONTHS.${data.months[0]}`);
+    doc.save(`Dizimo_${fileNameMonths}_${data.year}.pdf`);
   }
 
   private formatBRL(value: number): string {

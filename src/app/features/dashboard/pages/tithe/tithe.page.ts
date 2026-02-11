@@ -7,6 +7,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
 import { SelectModule } from 'primeng/select';
+import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
 import { FloatLabel } from 'primeng/floatlabel';
@@ -38,6 +39,7 @@ import { PdfService } from '../../../../services/pdf.service';
     CardModule,
     TableModule,
     SelectModule,
+    MultiSelectModule,
     InputNumberModule,
     ButtonModule,
     TooltipModule,
@@ -63,7 +65,7 @@ export class TithePage implements OnInit {
 
   // Filtros
   protected readonly selectedYear = signal<number>(new Date().getFullYear());
-  protected readonly selectedMonth = signal<number>(new Date().getMonth());
+  protected readonly selectedMonths = signal<number[]>([new Date().getMonth()]);
   protected readonly tithePercentage = signal<number>(10);
   protected readonly offerPercentage = signal<number>(5);
 
@@ -111,19 +113,19 @@ export class TithePage implements OnInit {
   // Cálculos
   protected readonly filteredPayments = computed(() => {
     const year = this.selectedYear();
-    const month = this.selectedMonth();
+    const months = this.selectedMonths();
     return this.payments().filter((p) => {
       const date = new Date(p.data);
-      return date.getUTCFullYear() === year && date.getUTCMonth() === month;
+      return date.getUTCFullYear() === year && months.includes(date.getUTCMonth());
     });
   });
 
   protected readonly filteredExpenses = computed(() => {
     const year = this.selectedYear();
-    const month = this.selectedMonth();
+    const months = this.selectedMonths();
     return this.expenses().filter((e) => {
       const date = new Date(e.purchaseDate);
-      return date.getUTCFullYear() === year && date.getUTCMonth() === month;
+      return date.getUTCFullYear() === year && months.includes(date.getUTCMonth());
     });
   });
 
@@ -186,7 +188,12 @@ export class TithePage implements OnInit {
   }
 
   protected async onSaveTithe() {
-    const month = this.selectedMonth() + 1;
+    const selectedMonths = this.selectedMonths();
+    if (selectedMonths.length === 0) return;
+
+    // Se múltiplos meses selecionados, salvar para o primeiro (ou poderíamos fazer um loop, mas dízimo costuma ser por mês)
+    // Para manter a simplicidade e consistência, usaremos o primeiro mês selecionado para a data de referência
+    const month = selectedMonths[0] + 1;
     const monthStr = month < 10 ? `0${month}` : month;
     const monthYear = `${this.selectedYear()}-${monthStr}-01`;
 
@@ -252,7 +259,7 @@ export class TithePage implements OnInit {
   protected onDownloadPDF() {
     this.pdfService.generateTithePdf({
       year: this.selectedYear(),
-      month: Number(this.selectedMonth()),
+      months: this.selectedMonths(),
       tithePercentage: this.tithePercentage(),
       offerPercentage: this.offerPercentage(),
       payments: this.filteredPayments(),
