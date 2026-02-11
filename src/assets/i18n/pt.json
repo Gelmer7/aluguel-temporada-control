@@ -171,16 +171,6 @@
       "CLEANING": "Limpeza",
       "OTHER": "Outros",
       "CARNE_LEAO": "Carne de Leão"
-    },
-    "QUICK": {
-      "ELECTRICITY": "Luz",
-      "WATER": "Água",
-      "CONDOMINIUM": "Condomínio",
-      "INTERNET": "Internet",
-      "DESC_ELECTRICITY": "Conta de Luz",
-      "DESC_WATER": "Conta de Água",
-      "DESC_CONDOMINIUM": "Condomínio Mensal",
-      "DESC_INTERNET": "Internet Fibra"
     }
   },
   "MANUAL_RENTALS_FORM": {

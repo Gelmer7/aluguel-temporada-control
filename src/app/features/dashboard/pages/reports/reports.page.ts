@@ -17,7 +17,8 @@ import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 
 // Services & Models
-import { SupabaseService, Expense } from '../../../../services/supabase.service';
+import { SupabaseService } from '../../../../services/supabase.service';
+import { Expense } from '../../../../models/expense.model';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { FinancialYear, FinancialSummary, FinancialMonth } from './reports.model';
@@ -108,8 +109,8 @@ export class ReportsPage implements OnInit {
     // Processar Ganhos
     pays.forEach(p => {
       const date = new Date(p.data);
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth();
+      const year = date.getFullYear();
+      const month = date.getMonth();
       const value = parseFloat(p.valor) || 0;
 
       if (!yearMap.has(year)) this.initYear(yearMap, year);
@@ -121,8 +122,8 @@ export class ReportsPage implements OnInit {
     // Processar Gastos
     exps.forEach(e => {
       const date = new Date(e.purchaseDate);
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth();
+      const year = date.getFullYear();
+      const month = date.getMonth();
 
       let amount = e.price || 0;
       // Lógica do sistema: para condomínio, somamos o fundo de reserva e associação ao valor base

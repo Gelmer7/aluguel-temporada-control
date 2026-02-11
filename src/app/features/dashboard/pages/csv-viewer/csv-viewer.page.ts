@@ -25,6 +25,7 @@ import { SupabaseService } from '../../../../services/supabase.service';
 import { HeaderService } from '../../../../services/header';
 import { StringUtils } from '../../../../shared/utils/string.utils';
 import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 import Papa from 'papaparse';
 
 // Models & Helpers
@@ -205,6 +206,7 @@ export class CsvViewerPage {
       const month = parseInt(parts[0], 10) - 1;
       const day = parseInt(parts[1], 10);
       const year = parseInt(parts[2], 10);
+      // Create date using local time
       return new Date(year, month, day);
     }
     return null;
@@ -215,6 +217,7 @@ export class CsvViewerPage {
     const date = this.parseAirbnbDate(dateStr);
     if (!date) return dateStr;
 
+    // Use local time for formatting
     const day = String(date.getDate()).padStart(2, '0');
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = String(date.getFullYear()).slice(-2);
@@ -340,20 +343,25 @@ export class CsvViewerPage {
     this.syncing.set(true);
     try {
       // Criar os registros para o banco
-      const allRecords = this.rows().map((row) => ({
-        unique_key: `${row.__norm.codigoConfirmacao || 'N/A'}_${row.__norm.data}_${row.__norm.tipo}_${
-          row.__norm.valor
-        }`,
-        data: row.__norm.data,
-        tipo: row.__norm.tipo,
-        codigo_confirmacao: row.__norm.codigoConfirmacao,
-        noites: AirbnbUtils.parseNumber(row.__norm.noites),
-        hospede: row.__norm.hospede,
-        anuncio: row.__norm.anuncio,
-        valor: AirbnbUtils.parseCurrency(row.__norm.valor),
-        taxa_limpeza: AirbnbUtils.parseCurrency(row.__norm.taxaLimpeza),
-        raw_data: row.__raw,
-      }));
+      const allRecords = this.rows().map((row) => {
+        const parsedDate = this.parseAirbnbDate(row.__norm.data);
+        const normalizedDate = parsedDate ? DateUtils.toLocalISOString(parsedDate) : row.__norm.data;
+
+        return {
+          unique_key: `${row.__norm.codigoConfirmacao || 'N/A'}_${row.__norm.data}_${row.__norm.tipo}_${
+            row.__norm.valor
+          }`,
+          data: normalizedDate,
+          tipo: row.__norm.tipo,
+          codigo_confirmacao: row.__norm.codigoConfirmacao,
+          noites: AirbnbUtils.parseNumber(row.__norm.noites),
+          hospede: row.__norm.hospede,
+          anuncio: row.__norm.anuncio,
+          valor: AirbnbUtils.parseCurrency(row.__norm.valor),
+          taxa_limpeza: AirbnbUtils.parseCurrency(row.__norm.taxaLimpeza),
+          raw_data: row.__raw,
+        };
+      });
 
       // Deduplicar no frontend antes de enviar para o Supabase
       // O erro "ON CONFLICT DO UPDATE command cannot affect row a second time" ocorre

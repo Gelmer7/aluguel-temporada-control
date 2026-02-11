@@ -4,7 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { DialogComponent } from '../../../../../components/ui/dialog/dialog.component';
-import { Expense } from '../../../../../services/supabase.service';
+import { Expense } from '../../../../../models/expense.model';
 import { StackedBarChartComponent, StackedBarSeries } from '../../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
 
 @Component({
@@ -105,10 +105,10 @@ export class ExpenseChartsComponent {
     // 3. Preencher os dados
     const filteredData = year === 'ALL'
       ? data
-      : data.filter(e => new Date(e.purchaseDate).getUTCFullYear() === Number(year));
+      : data.filter(e => new Date(e.purchaseDate).getFullYear() === Number(year));
 
     filteredData.forEach(e => {
-      const month = new Date(e.purchaseDate).getUTCMonth();
+      const month = new Date(e.purchaseDate).getMonth();
       const type = e.type || 'OTHER';
       const amount = (e.price || 0) + (e.reserveFund || 0) + (e.association || 0);
       typeMonthlyTotals[type][month] += amount;
@@ -150,7 +150,7 @@ export class ExpenseChartsComponent {
 
     // Agrupar por ano e tipo
     const annualTypeTotals = data.reduce((acc, curr) => {
-      const year = new Date(curr.purchaseDate).getUTCFullYear();
+      const year = new Date(curr.purchaseDate).getFullYear();
       const type = curr.type || 'OTHER';
 
       if (!acc[year]) acc[year] = {};

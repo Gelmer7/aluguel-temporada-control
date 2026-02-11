@@ -13,6 +13,8 @@ import { IftaLabelModule } from 'primeng/iftalabel';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
+import { Expense, EXPENSE_TYPES, QUICK_EXPENSE_TYPES } from '../../../../models/expense.model';
+import { SupabaseService } from '../../../../services/supabase.service';
 
 @Component({
   selector: 'app-expense-form',
@@ -73,23 +75,8 @@ export class ExpenseFormComponent implements OnInit {
   form: FormGroup;
   isEdit: boolean = false;
 
-  expenseTypes = [
-    { label: 'EXPENSES_FORM.TYPES.ELECTRICITY', value: 'ELECTRICITY', icon: 'pi pi-bolt' },
-    { label: 'EXPENSES_FORM.TYPES.WATER', value: 'WATER', icon: 'pi pi-tint' },
-    { label: 'EXPENSES_FORM.TYPES.CONDOMINIUM', value: 'CONDOMINIUM', icon: 'pi pi-building' },
-    { label: 'EXPENSES_FORM.TYPES.INTERNET', value: 'INTERNET', icon: 'pi pi-wifi' },
-    { label: 'EXPENSES_FORM.TYPES.GAS', value: 'GAS', icon: 'pi pi-fire' },
-    { label: 'EXPENSES_FORM.TYPES.MAINTENANCE', value: 'MAINTENANCE', icon: 'pi pi-wrench' },
-    { label: 'EXPENSES_FORM.TYPES.CLEANING', value: 'CLEANING', icon: 'pi pi-trash' },
-    { label: 'EXPENSES_FORM.TYPES.OTHER', value: 'OTHER', icon: 'pi pi-box' }
-  ];
-
-  quickExpenseTypes = [
-    { label: 'EXPENSES_FORM.QUICK.ELECTRICITY', value: 'ELECTRICITY', description: 'EXPENSES_FORM.QUICK.DESC_ELECTRICITY', icon: 'pi pi-bolt' },
-    { label: 'EXPENSES_FORM.QUICK.WATER', value: 'WATER', description: 'EXPENSES_FORM.QUICK.DESC_WATER', icon: 'pi pi-tint' },
-    { label: 'EXPENSES_FORM.QUICK.CONDOMINIUM', value: 'CONDOMINIUM', description: 'EXPENSES_FORM.QUICK.DESC_CONDOMINIUM', icon: 'pi pi-building' },
-    { label: 'EXPENSES_FORM.QUICK.INTERNET', value: 'INTERNET', description: 'EXPENSES_FORM.QUICK.DESC_INTERNET', icon: 'pi pi-wifi' }
-  ];
+  expenseTypes = EXPENSE_TYPES;
+  quickExpenseTypes = QUICK_EXPENSE_TYPES;
 
   condominiumDefaults = {
     price: 300.00,

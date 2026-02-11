@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/layout';
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
 import { ManualRental } from '../../../../models/airbnb.model';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-manual-rental-form',
@@ -105,10 +106,10 @@ export class ManualRentalFormComponent implements OnInit {
       // Convert dates to ISO strings for Supabase
       const rentalData: ManualRental = {
         ...formValue,
-        data_pagamento: formValue.data_pagamento.toISOString(),
-        data_reserva: formValue.data_reserva.toISOString(),
-        data_inicio: formValue.data_inicio.toISOString(),
-        data_termino: formValue.data_termino.toISOString(),
+        data_pagamento: DateUtils.toLocalISOString(formValue.data_pagamento),
+        data_reserva: DateUtils.toLocalISOString(formValue.data_reserva),
+        data_inicio: DateUtils.toLocalISOString(formValue.data_inicio),
+        data_termino: DateUtils.toLocalISOString(formValue.data_termino),
       };
       this.save.emit(rentalData);
       this.onClose();

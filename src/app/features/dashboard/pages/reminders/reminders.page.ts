@@ -172,7 +172,8 @@ export class RemindersPage implements OnInit {
   }
 
   formatDate(date: string) {
-    return new Date(date).toLocaleDateString(this.translateService.currentLang === 'pt' ? 'pt-BR' :
+    const d = new Date(date);
+    return d.toLocaleDateString(this.translateService.currentLang === 'pt' ? 'pt-BR' :
                                             this.translateService.currentLang === 'es' ? 'es-ES' : 'en-US', {
       day: '2-digit',
       month: '2-digit',

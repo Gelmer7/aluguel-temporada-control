@@ -20,11 +20,13 @@ import { TablePaginatorComponent } from '../../../../components/ui/table-paginat
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { ExpenseChartsComponent } from '../../components/charts/expense-charts/expense-charts.component';
-import { SupabaseService, Expense } from '../../../../services/supabase.service';
+import { Expense, EXPENSE_TYPES, ExpenseTypeValue } from '../../../../models/expense.model';
+import { SupabaseService } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StringUtils } from '../../../../shared/utils/string.utils';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-expenses-page',
@@ -112,16 +114,7 @@ export class ExpensesPage implements OnInit {
     { label: 'MONTHS.11', value: 12 }
   ];
 
-  expenseTypes = [
-    { label: 'EXPENSES_FORM.TYPES.ELECTRICITY', value: 'ELECTRICITY' },
-    { label: 'EXPENSES_FORM.TYPES.WATER', value: 'WATER' },
-    { label: 'EXPENSES_FORM.TYPES.CONDOMINIUM', value: 'CONDOMINIUM' },
-    { label: 'EXPENSES_FORM.TYPES.INTERNET', value: 'INTERNET' },
-    { label: 'EXPENSES_FORM.TYPES.GAS', value: 'GAS' },
-    { label: 'EXPENSES_FORM.TYPES.MAINTENANCE', value: 'MAINTENANCE' },
-    { label: 'EXPENSES_FORM.TYPES.CLEANING', value: 'CLEANING' },
-    { label: 'EXPENSES_FORM.TYPES.OTHER', value: 'OTHER' }
-  ];
+  expenseTypes = EXPENSE_TYPES;
 
   yearOptions = computed(() => [
     { label: 'TERMS.ALL', value: 'ALL' },
@@ -240,12 +233,18 @@ export class ExpensesPage implements OnInit {
 
     const year = this.selectedYear();
     if (year !== 'ALL') {
-      filtered = filtered.filter(e => new Date(e.purchaseDate).getFullYear() === year);
+      filtered = filtered.filter(e => {
+        const date = new Date(e.purchaseDate);
+        return date.getFullYear() === year;
+      });
     }
 
     const month = this.selectedMonth();
     if (month !== 'ALL') {
-      filtered = filtered.filter(e => new Date(e.purchaseDate).getMonth() + 1 === month);
+      filtered = filtered.filter(e => {
+        const date = new Date(e.purchaseDate);
+        return date.getMonth() + 1 === month;
+      });
     }
 
     const types = this.selectedTypes();
@@ -325,7 +324,7 @@ export class ExpensesPage implements OnInit {
         description: expenseData.description || '',
         observation: expenseData.observation || '',
         type: expenseData.type || 'OTHER',
-        purchaseDate: expenseData.purchaseDate?.toISOString() || new Date().toISOString(),
+        purchaseDate: DateUtils.toLocalISOString(expenseData.purchaseDate),
       };
 
       // Adicionar campos condicionais apenas se necessário
@@ -377,12 +376,16 @@ export class ExpensesPage implements OnInit {
   }
 
   getSeverity(type: string): "success" | "secondary" | "info" | "warn" | "danger" | undefined {
-    switch (type) {
+    const typeValue = type as ExpenseTypeValue;
+    switch (typeValue) {
       case 'ELECTRICITY': return 'warn';
       case 'WATER': return 'info';
       case 'CONDOMINIUM': return 'success';
       case 'INTERNET': return 'secondary';
+      case 'GAS': return 'warn';
       case 'MAINTENANCE': return 'danger';
+      case 'CLEANING': return 'info';
+      case 'CARNE_LEAO': return 'danger';
       default: return 'secondary';
     }
   }

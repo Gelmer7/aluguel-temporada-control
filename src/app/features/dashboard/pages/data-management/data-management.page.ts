@@ -6,7 +6,9 @@ import { MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { SupabaseService } from '../../../../services/supabase.service';
 import { HeaderService } from '../../../../services/header';
+import { HouseService } from '../../../../services/house.service';
 import { TranslateModule } from '@ngx-translate/core';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-data-management-page',
@@ -20,6 +22,7 @@ export class DataManagementPage {
   private supabaseService = inject(SupabaseService);
   private messageService = inject(MessageService);
   private headerService = inject(HeaderService);
+  private houseService = inject(HouseService);
 
   loading = signal<boolean>(false);
 
@@ -42,7 +45,11 @@ export class DataManagementPage {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `gastos-${new Date().toISOString().split('T')[0]}.json`;
+
+      const houseName = this.houseService.currentHouse().name.toLowerCase().replace(/\s+/g, '-');
+      const date = DateUtils.toLocalISOString(new Date()).split('T')[0];
+      link.download = `gastos-${houseName}-${date}.json`;
+
       link.click();
       window.URL.revokeObjectURL(url);
 
@@ -77,7 +84,7 @@ export class DataManagementPage {
             description: item.description || '',
             observation: item.observation || '',
             type: item.type || 'OTHER',
-            purchaseDate: item.purchaseDate?.$date || item.purchaseDate || item.purchase_date || new Date().toISOString(),
+            purchaseDate: item.purchaseDate?.$date || item.purchaseDate || item.purchase_date || DateUtils.toLocalISOString(new Date()),
             createUser: item.createUser || item.create_user || 'gelmer7@gmail.com'
           };
 

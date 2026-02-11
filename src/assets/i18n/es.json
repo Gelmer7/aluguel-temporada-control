@@ -144,16 +144,6 @@
       "CLEANING": "Limpieza",
       "OTHER": "Otros",
       "CARNE_LEAO": "Carnê-Leão"
-    },
-    "QUICK": {
-      "ELECTRICITY": "Luz",
-      "WATER": "Agua",
-      "CONDOMINIUM": "Condo",
-      "INTERNET": "Internet",
-      "DESC_ELECTRICITY": "Factura de Luz",
-      "DESC_WATER": "Factura de Agua",
-      "DESC_CONDOMINIUM": "Condominio Mensual",
-      "DESC_INTERNET": "Internet Fibra"
     }
   },
   "TITHE_MANAGEMENT": {

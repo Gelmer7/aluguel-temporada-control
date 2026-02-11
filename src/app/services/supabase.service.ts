@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { AirbnbNormalizedRow, ManualRental, UnifiedEarning } from '../models/airbnb.model';
+import { Expense } from '../models/expense.model';
 import { HouseService } from './house.service';
 
 @Injectable({
@@ -203,22 +204,6 @@ export interface Tithe {
   offerValue: number;
   totalPaid: number;
   observation?: string;
-  createDate?: string;
-  house_code?: string;
-  createUser?: string;
-}
-
-export interface Expense {
-  id: string;
-  price: number;
-  description: string;
-  observation?: string;
-  type: string;
-  purchaseDate: string;
-  cubicMeters?: number;
-  reserveFund?: number;
-  association?: number;
-  kws?: number;
   createDate?: string;
   house_code?: string;
   createUser?: string;

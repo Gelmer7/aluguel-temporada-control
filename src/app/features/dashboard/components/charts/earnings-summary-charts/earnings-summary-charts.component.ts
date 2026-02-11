@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, input, computed, inject, model } fr
 import { CommonModule } from '@angular/common';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UnifiedEarning } from '../../../../../models/airbnb.model';
-import { Expense } from '../../../../../services/supabase.service';
+import { Expense } from '../../../../../models/expense.model';
 import { DialogComponent } from '../../../../../components/ui/dialog/dialog.component';
 import { StackedBarChartComponent, StackedBarSeries } from '../../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
 
@@ -37,8 +37,8 @@ export class EarningsSummaryChartsComponent {
 
     paymentsData.forEach((p) => {
       const date = new Date(p.data);
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth();
+      const year = date.getFullYear();
+      const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;
 
       if (!monthlyData[key]) monthlyData[key] = { income: 0, expense: 0 };
@@ -47,8 +47,8 @@ export class EarningsSummaryChartsComponent {
 
     expensesData.forEach((e) => {
       const date = new Date(e.purchaseDate);
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth();
+      const year = date.getFullYear();
+      const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;
 
       if (!monthlyData[key]) monthlyData[key] = { income: 0, expense: 0 };

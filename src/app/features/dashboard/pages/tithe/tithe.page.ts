@@ -23,10 +23,11 @@ import { DialogComponent } from '../../../../components/ui/dialog/dialog.compone
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 
 // Services & Models
-import { SupabaseService, Expense, Tithe } from '../../../../services/supabase.service';
+import { SupabaseService, Tithe } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { PdfService } from '../../../../services/pdf.service';
+import { Expense } from '../../../../models/expense.model';
 
 @Component({
   selector: 'app-tithe-page',
@@ -116,7 +117,8 @@ export class TithePage implements OnInit {
     const months = this.selectedMonths();
     return this.payments().filter((p) => {
       const date = new Date(p.data);
-      return date.getUTCFullYear() === year && months.includes(date.getUTCMonth());
+      // Usar fuso horário local para filtrar corretamente
+      return date.getFullYear() === year && months.includes(date.getMonth());
     });
   });
 
@@ -125,7 +127,8 @@ export class TithePage implements OnInit {
     const months = this.selectedMonths();
     return this.expenses().filter((e) => {
       const date = new Date(e.purchaseDate);
-      return date.getUTCFullYear() === year && months.includes(date.getUTCMonth());
+      // Usar fuso horário local para filtrar corretamente
+      return date.getFullYear() === year && months.includes(date.getMonth());
     });
   });
 

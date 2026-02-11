@@ -9,6 +9,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { TranslateModule } from '@ngx-translate/core';
 import { Reminder, ReminderStatus } from '../../../../models/reminder.model';
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-reminder-form',
@@ -88,7 +89,7 @@ export class ReminderFormComponent implements OnInit, OnChanges {
       const formValue = this.form.value;
       const payload = {
         ...formValue,
-        remind_at: formValue.remind_at.toISOString()
+        remind_at: DateUtils.toLocalISOString(formValue.remind_at)
       };
       this.saved.emit(payload);
       this.onHide();

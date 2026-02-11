@@ -32,8 +32,8 @@ export class EarningsPaymentsChartsComponent {
 
     data.forEach((p) => {
       const date = new Date(p.data);
-      const year = date.getUTCFullYear();
-      const month = date.getUTCMonth();
+      const year = date.getFullYear();
+      const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;
       const type = p.tipo || 'OTHER';
 

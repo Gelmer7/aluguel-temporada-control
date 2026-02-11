@@ -22,10 +22,11 @@ import { EarningsExpenseChartsComponent } from '../../components/charts/earnings
 import { EarningsSummaryChartsComponent } from '../../components/charts/earnings-summary-charts/earnings-summary-charts.component';
 
 // Services & Models
-import { SupabaseService, Expense } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { UnifiedEarning } from '../../../../models/airbnb.model';
+import { SupabaseService } from '../../../../services/supabase.service';
+import { Expense } from '../../../../models/expense.model';
 
 @Component({
   selector: 'app-earnings-page',
@@ -120,8 +121,8 @@ export class EarningsPage implements OnInit {
 
     return this.payments().filter((p) => {
       const date = new Date(p.data);
-      const matchesYear = year === 'ALL' || date.getUTCFullYear() === year;
-      const matchesMonth = month === 'ALL' || date.getUTCMonth() === month;
+      const matchesYear = year === 'ALL' || date.getFullYear() === year;
+      const matchesMonth = month === 'ALL' || date.getMonth() === month;
       const matchesType = types.length === 0 || types.includes(p.tipo);
       return matchesYear && matchesMonth && matchesType;
     });
@@ -132,8 +133,8 @@ export class EarningsPage implements OnInit {
     const month = this.selectedMonth();
     return this.expenses().filter((e) => {
       const date = new Date(e.purchaseDate);
-      const matchesYear = year === 'ALL' || date.getUTCFullYear() === year;
-      const matchesMonth = month === 'ALL' || date.getUTCMonth() === month;
+      const matchesYear = year === 'ALL' || date.getFullYear() === year;
+      const matchesMonth = month === 'ALL' || date.getMonth() === month;
       return matchesYear && matchesMonth;
     });
   });
