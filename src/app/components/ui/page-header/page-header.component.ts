@@ -40,6 +40,9 @@ export class PageHeaderComponent {
   /** Ícone decorativo (ex: pi-wallet) */
   iconInput = input<string>('', { alias: 'icon' });
 
+  /** Ícone de imagem customizado (ex: airbnb.svg) */
+  imageInput = input<string>('', { alias: 'image' });
+
   /** Se deve mostrar o botão de ação padrão (legado) */
   showAction = input<boolean>(false);
 
@@ -60,6 +63,9 @@ export class PageHeaderComponent {
 
   /** Ícone final (input ou serviço) */
   displayIcon = computed(() => this.iconInput() || this.headerService.icon());
+
+  /** Ícone de imagem final (input ou serviço) */
+  displayImage = computed(() => this.imageInput() || this.headerService.image());
 
   /** Template de ações do serviço */
   actionsTemplate = this.headerService.actionsTemplate;

@@ -6,7 +6,11 @@
     <div
       class="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-50 dark:bg-primary-900/20 flex items-center justify-center"
     >
-      <i [class]="'pi ' + displayIcon() + ' text-primary text-lg sm:text-xl'"></i>
+      @if (displayImage()) {
+        <img [src]="displayImage()" class="w-5 h-5 sm:w-6 sm:h-6 object-contain dark:invert" />
+      } @else {
+        <i [class]="'pi ' + displayIcon() + ' text-primary text-lg sm:text-xl'"></i>
+      }
     </div>
 
     <!-- Título da Página -->

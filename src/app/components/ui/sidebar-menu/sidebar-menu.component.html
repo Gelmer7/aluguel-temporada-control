@@ -27,7 +27,11 @@
           [pTooltip]="item.label | translate"
           tooltipPosition="right"
         >
-          <span [class]="'pi ' + item.icon" class="text-xl"></span>
+          @if (item.image) {
+            <img [src]="item.image" class="w-6 h-6 object-contain dark:invert" />
+          } @else {
+            <span [class]="'pi ' + item.icon" class="text-xl"></span>
+          }
           @if (item.badge) {
             <p-badge
               class="absolute -top-1 -right-1"
@@ -93,7 +97,11 @@
             class="flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 group active:scale-95"
             (click)="closeDrawer()"
           >
-            <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0 text-primary"></span>
+            @if (item.image) {
+              <img [src]="item.image" class="w-6 h-6 object-contain flex-shrink-0 dark:invert" />
+            } @else {
+              <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0 text-primary"></span>
+            }
             <span class="ml-3 truncate">{{ item.label | translate }}</span>
             @if (item.badge) {
               <p-badge class="ml-auto" [value]="item.badge" severity="danger" />

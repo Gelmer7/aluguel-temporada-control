@@ -10,6 +10,9 @@ export class HeaderService {
   /** Ícone da página */
   icon = signal<string>('');
 
+  /** Ícone customizado (SVG/IMG) */
+  image = signal<string>('');
+
   /** Template para as ações do lado direito */
   actionsTemplate = signal<TemplateRef<any> | null>(null);
 
@@ -17,9 +20,10 @@ export class HeaderService {
    * Atualiza as informações do cabeçalho
    * @param config Objeto de configuração do cabeçalho
    */
-  setHeader(config: { title: string; icon: string; actions?: TemplateRef<any> | null }): void {
+  setHeader(config: { title: string; icon: string; image?: string; actions?: TemplateRef<any> | null }): void {
     this.title.set(config.title);
     this.icon.set(config.icon);
+    this.image.set(config.image || '');
     this.actionsTemplate.set(config.actions || null);
   }
 
@@ -29,6 +33,7 @@ export class HeaderService {
   clearHeader(): void {
     this.title.set('');
     this.icon.set('');
+    this.image.set('');
     this.actionsTemplate.set(null);
   }
 }

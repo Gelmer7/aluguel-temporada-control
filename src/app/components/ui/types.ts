@@ -8,6 +8,8 @@ export interface NavItem {
   label: string;
   /** Sufixo de ícone PrimeIcons (ex.: 'pi-file'). */
   icon: string;
+  /** Caminho para um ícone customizado (SVG/IMG) (opcional). */
+  image?: string;
   /** Rota Angular (routerLink). */
   route: string;
   /** Valor do badge no item (opcional). */

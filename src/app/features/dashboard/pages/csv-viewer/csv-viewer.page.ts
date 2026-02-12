@@ -1,4 +1,13 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed, effect, viewChild, TemplateRef } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  signal,
+  inject,
+  computed,
+  effect,
+  viewChild,
+  TemplateRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
@@ -95,8 +104,9 @@ export class CsvViewerPage {
       if (actions) {
         this.headerService.setHeader({
           title: 'ACTIONS.VIEW_CSV',
-          icon: 'pi-table',
-          actions: actions
+          icon: '',
+          image: 'airbnb_black.svg',
+          actions: actions,
         });
       }
     });
@@ -122,7 +132,9 @@ export class CsvViewerPage {
 
   protected readonly years = computed(() => {
     const years = this.rows().map((r) => this.parseAirbnbDate(r.__norm.data)?.getFullYear());
-    const uniqueYears = Array.from(new Set(years.filter((y): y is number => !!y))).sort((a, b) => b - a);
+    const uniqueYears = Array.from(new Set(years.filter((y): y is number => !!y))).sort(
+      (a, b) => b - a,
+    );
     return ['Todos', ...uniqueYears];
   });
 
@@ -252,7 +264,7 @@ export class CsvViewerPage {
   protected getSelectedMonthLabel(): string {
     const month = this.selectedMonth();
     if (!month || month === 'Todos') return 'Todos';
-    return this.months.find(m => m.value === month)?.label || 'Todos';
+    return this.months.find((m) => m.value === month)?.label || 'Todos';
   }
 
   // Summary Totals
@@ -342,7 +354,9 @@ export class CsvViewerPage {
       // Criar os registros para o banco
       const allRecords = this.rows().map((row) => {
         const parsedDate = this.parseAirbnbDate(row.__norm.data);
-        const normalizedDate = parsedDate ? DateUtils.toLocalISOString(parsedDate) : row.__norm.data;
+        const normalizedDate = parsedDate
+          ? DateUtils.toLocalISOString(parsedDate)
+          : row.__norm.data;
 
         return {
           unique_key: `${row.__norm.codigoConfirmacao || 'N/A'}_${row.__norm.data}_${row.__norm.tipo}_${
@@ -670,7 +684,7 @@ export class CsvViewerPage {
     this.selectedColumns.set(
       initialSelected.length
         ? initialSelected
-        : mappedWithDerived.slice(0, Math.min(8, mappedWithDerived.length))
+        : mappedWithDerived.slice(0, Math.min(8, mappedWithDerived.length)),
     );
   }
 

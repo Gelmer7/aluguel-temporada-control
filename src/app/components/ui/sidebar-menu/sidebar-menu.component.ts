@@ -41,14 +41,7 @@ export class SidebarMenuComponent {
 
   readonly activeHouseName = computed(() => this.houseService.currentHouse().name);
 
-  items = input.required<{
-    id: string;
-    label: string;
-    icon: string;
-    route: string;
-    badge?: string | number;
-    shortcut?: string;
-  }[]>();
+  items = input.required<NavItem[]>();
 
   visible = input.required<boolean>();
   onVisibleChange = output<boolean>();
