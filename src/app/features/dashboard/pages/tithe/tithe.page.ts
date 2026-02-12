@@ -145,7 +145,7 @@ export class TithePage implements OnInit {
   });
 
   protected readonly titheValue = computed(() => {
-    return (this.totalAirbnb() * this.tithePercentage()) / 100;
+    return (this.totalEarnings() * this.tithePercentage()) / 100;
   });
 
   protected readonly offerValue = computed(() => {

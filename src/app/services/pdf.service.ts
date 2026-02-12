@@ -87,7 +87,10 @@ export class PdfService {
           this.formatBRL(data.totals.earnings),
           this.formatBRL(data.totals.tithe),
           this.formatBRL(data.totals.offer),
-          this.formatBRL(data.totals.total),
+          {
+            content: this.formatBRL(data.totals.total),
+            styles: { fontStyle: 'bold', fontSize: 8 },
+          },
         ],
       ],
       theme: 'striped',
@@ -121,7 +124,12 @@ export class PdfService {
         this.formatBRL(p.pago || p.valor),
       ]),
       foot: [['', '', '', 'Total:', this.formatBRL(data.totals.airbnb)]],
-      footStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 7 },
+      footStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        fontSize: 7,
+      },
     });
 
     // Expenses Table
@@ -148,7 +156,12 @@ export class PdfService {
         this.formatBRL(e.price),
       ]),
       foot: [['', '', 'Total:', this.formatBRL(data.totals.expenses)]],
-      footStyles: { fillColor: [240, 240, 240], textColor: [0, 0, 0], fontStyle: 'bold', fontSize: 7 },
+      footStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        fontSize: 7,
+      },
     });
 
     // History Table
@@ -174,7 +187,7 @@ export class PdfService {
         this.formatBRL(h.airbnbGross),
         this.formatBRL(h.titheValue),
         this.formatBRL(h.offerValue),
-        this.formatBRL(h.totalPaid),
+        { content: this.formatBRL(h.totalPaid), styles: { fontStyle: 'bold' } },
       ]),
     });
 
