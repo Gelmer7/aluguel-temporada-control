@@ -140,6 +140,10 @@ export class TithePage implements OnInit {
     return this.filteredExpenses().reduce((acc, e) => acc + (e.price || 0), 0);
   });
 
+  protected readonly totalEarnings = computed(() => {
+    return this.totalAirbnb() - this.totalExpenses();
+  });
+
   protected readonly titheValue = computed(() => {
     return (this.totalAirbnb() * this.tithePercentage()) / 100;
   });
@@ -265,12 +269,14 @@ export class TithePage implements OnInit {
       months: this.selectedMonths(),
       tithePercentage: this.tithePercentage(),
       offerPercentage: this.offerPercentage(),
+      houseCode: this.houseService.currentHouseCode() || undefined,
       payments: this.filteredPayments(),
       expenses: this.filteredExpenses(),
       history: this.titheHistory(),
       totals: {
         airbnb: this.totalAirbnb(),
         expenses: this.totalExpenses(),
+        earnings: this.totalEarnings(),
         tithe: this.titheValue(),
         offer: this.offerValue(),
         total: this.totalToPay()

@@ -63,7 +63,8 @@
     "SELECTED": "selected",
     "FILTER_BY_STATUS": "Filter by Status",
     "CONFIRMATION_CODE": "Conf. Code",
-    "HOUSE_CODE": "House Code"
+    "HOUSE_CODE": "House Code",
+    "HOUSE": "House"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "New Suggestion",
@@ -153,6 +154,7 @@
     "OFFER_PERCENTAGE": "Offer (%)",
     "AIRBNB_PAYMENTS": "Airbnb Payments",
     "TOTAL_EXPENSES": "Total Expenses",
+    "TOTAL_EARNINGS": "Total Earnings",
     "TITHE_VALUE": "Tithe ({{percentage}}%)",
     "OFFER_VALUE": "Offer ({{percentage}}%)",
     "TOTAL_TO_PAY": "Total to Pay",

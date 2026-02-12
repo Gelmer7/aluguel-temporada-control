@@ -112,6 +112,7 @@
             <tr>
               <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}</th>
               <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.TOTAL_EXPENSES' | translate }}</th>
+              <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.TOTAL_EARNINGS' | translate }}</th>
               <th class="!bg-transparent">
                 {{ 'TITHE_MANAGEMENT.TITHE_VALUE' | translate: { percentage: tithePercentage() } }}
               </th>
@@ -125,6 +126,7 @@
             <tr>
               <td class="font-semibold">{{ totalAirbnb() | currency: 'BRL' }}</td>
               <td class="font-semibold text-red-500">{{ totalExpenses() | currency: 'BRL' }}</td>
+              <td class="font-semibold text-green-500">{{ totalEarnings() | currency: 'BRL' }}</td>
               <td class="font-semibold text-primary">{{ titheValue() | currency: 'BRL' }}</td>
               <td class="font-semibold text-primary">{{ offerValue() | currency: 'BRL' }}</td>
               <td class="font-semibold bg-primary/10">{{ totalToPay() | currency: 'BRL' }}</td>

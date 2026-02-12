@@ -68,7 +68,8 @@
     "SELECTED": "selecionado(s)",
     "FILTER_BY_STATUS": "Filtrar por Status",
     "CONFIRMATION_CODE": "Cód. Confirmação",
-    "HOUSE_CODE": "Cód. Casa"
+    "HOUSE_CODE": "Cód. Casa",
+    "HOUSE": "Casa"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "Nova Sugestão",
@@ -198,6 +199,7 @@
     "OFFER_PERCENTAGE": "Oferta (%)",
     "AIRBNB_PAYMENTS": "Pagamentos Airbnb",
     "TOTAL_EXPENSES": "Total de Despesas",
+    "TOTAL_EARNINGS": "Total de Ganhos",
     "TITHE_VALUE": "Dízimo ({{percentage}}%)",
     "OFFER_VALUE": "Oferta ({{percentage}}%)",
     "TOTAL_TO_PAY": "Total a Pagar",
