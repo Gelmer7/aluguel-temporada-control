@@ -283,7 +283,6 @@ export class CsvViewerPage {
   protected readonly summary = computed(() => {
     const data = this.visibleRows();
     let luizaValor = 0;
-    let gelmerValor = 0;
 
     // Totais financeiros (soma tudo por pessoa)
     data.forEach((row) => {
@@ -292,8 +291,6 @@ export class CsvViewerPage {
 
       if (person === 'Luiza') {
         luizaValor += valor;
-      } else if (person === 'Gelmer') {
-        gelmerValor += valor;
       }
     });
 
@@ -302,8 +299,8 @@ export class CsvViewerPage {
     const { totalNoites, totalLimpeza } = AirbnbUtils.calculateGroupedTotals(normalizedRows);
 
     return {
+      totalValor: luizaValor,
       luizaValor,
-      gelmerValor,
       totalLimpeza,
       totalNoites,
     };

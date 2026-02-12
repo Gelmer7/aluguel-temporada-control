@@ -86,52 +86,19 @@
     </p-floatlabel>
   </app-filter-container>
 
-  <!-- Summary Cards Agrupados -->
-  <div class="flex-none grid grid-cols-1 sm:grid-cols-2 gap-2">
-    <!-- Card 1: Financeiro (Luiza & Gelmer) -->
-    <div
-      class="bg-surface-0 dark:bg-surface-900 p-2 rounded-lg shadow-sm border border-surface-200 dark:border-surface-700 flex items-center justify-around gap-4"
-    >
-      <!-- Luiza -->
-      <div class="flex items-center gap-2">
-        <div
-          class="w-8 h-8 rounded bg-pink-50 dark:bg-pink-900/20 flex items-center justify-center"
-        >
-          <i class="pi pi-user text-pink-500 text-xs"></i>
-        </div>
-        <div>
-          <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Luiza</p>
-          <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0">
-            {{ summary().luizaValor | currency: 'BRL' }}
-          </p>
-        </div>
-      </div>
-      <!-- Separador vertical -->
-      <div class="h-8 border-l border-surface-200 dark:border-surface-700"></div>
-      <!-- Gelmer -->
-      <div class="flex items-center gap-2">
-        <div
-          class="w-8 h-8 rounded bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center"
-        >
-          <i class="pi pi-user text-blue-500 text-xs"></i>
-        </div>
-        <div>
-          <p class="text-[9px] text-surface-500 uppercase font-bold m-0 leading-tight">Gelmer</p>
-          <p class="text-sm font-bold text-surface-900 dark:text-surface-0 m-0">
-            {{ summary().gelmerValor | currency: 'BRL' }}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Limpeza/ Noites -->
-    <div class="flex items-center justify-end gap-2 px-2">
-      <div>
-        <p class="text-sm text-end">
-          Limpeza: {{ summary().totalLimpeza | currency: 'BRL' }} | Noites:
-          {{ summary().totalNoites }}
-        </p>
-      </div>
+  <!-- Resumo alinhado à direita em linha única -->
+  <div class="flex-none flex justify-end">
+    <div class="flex items-center gap-4 px-2 text-sm">
+      <span class="text-surface-500 uppercase font-bold">Total:</span>
+      <span class="font-bold text-surface-900 dark:text-surface-0">
+        {{ summary().totalValor | currency: 'BRL' }}
+      </span>
+      <span class="text-surface-600 dark:text-surface-400">
+        Limpeza: {{ summary().totalLimpeza | currency: 'BRL' }}
+      </span>
+      <span class="text-surface-600 dark:text-surface-400">
+        Noites: {{ summary().totalNoites }}
+      </span>
     </div>
   </div>
 
