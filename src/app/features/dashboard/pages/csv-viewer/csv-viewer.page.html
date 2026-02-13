@@ -44,6 +44,7 @@
     </ng-template>
 
     <!-- Conteúdo dos filtros -->
+    <!-- filtro Ano  -->
     <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
       <p-select
         inputId="year_select"
@@ -56,22 +57,23 @@
       ></p-select>
       <label for="year_select">Ano</label>
     </p-floatlabel>
-
+    <!-- Filtro de Mês -->
     <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
-      <p-select
+      <p-multiselect
         inputId="month_select"
         [options]="months"
         [ngModel]="selectedMonth()"
         (ngModelChange)="onMonthChange($event)"
         optionLabel="label"
         optionValue="value"
-        [showClear]="true"
         class="w-full"
         appendTo="body"
-      ></p-select>
+        [maxSelectedLabels]="2"
+        selectedItemsLabel="{0} meses"
+      ></p-multiselect>
       <label for="month_select">Mês</label>
     </p-floatlabel>
-
+    <!-- filtro Tipo -->
     <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
       <p-select
         inputId="type_select"

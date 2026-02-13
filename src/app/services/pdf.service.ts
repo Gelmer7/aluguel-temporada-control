@@ -212,6 +212,110 @@ export class PdfService {
     doc.save(`Dizimo_${fileNameMonths}_${data.year}.pdf`);
   }
 
+  /**
+   * Generates a PDF from the expenses data
+   */
+  generateExpensesPdf(data: {
+    year: number | string;
+    months: number[];
+    types: string[];
+    houseCode?: string;
+    expenses: any[];
+    total: number;
+  }) {
+    const doc = new jsPDF();
+    const expensesLabel = this.translate.instant('TERMS.EXPENSES');
+    const yearLabel = data.year === 'ALL' ? this.translate.instant('TERMS.ALL') : data.year;
+
+    // Traduzir nomes dos meses
+    const monthsNames = data.months.length === 12
+      ? this.translate.instant('TERMS.ALL')
+      : data.months.map((m) => this.translate.instant(`MONTHS.${m - 1}`)).join(', ');
+
+    // Header
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text(expensesLabel, 14, 15);
+
+    // Generation Date and Time (Top Right)
+    const now = new Date();
+    const generationDate = formatDate(now, 'dd/MM/yyyy HH:mm', 'en-US');
+    doc.setFontSize(7);
+    doc.setTextColor(150);
+    doc.text(generationDate, 196, 10, { align: 'right' });
+
+    // House, Months and Year
+    doc.setFontSize(9);
+    doc.setTextColor(80);
+    let subHeaderText = `${monthsNames} / ${yearLabel}`;
+    if (data.houseCode) {
+      subHeaderText = `${this.translate.instant('TERMS.HOUSE')}: ${data.houseCode} | ${subHeaderText}`;
+    }
+    doc.text(subHeaderText, 14, 21);
+
+    // Types filter info
+    if (data.types.length > 0) {
+      const typesLabel = data.types.length === 8 // Total de tipos
+        ? this.translate.instant('TERMS.ALL')
+        : data.types.map(t => this.translate.instant(`EXPENSES_FORM.TYPES.${t}`)).join(', ');
+      doc.text(`${this.translate.instant('TERMS.TYPE')}: ${typesLabel}`, 14, 26);
+    }
+
+    // Summary Table
+    autoTable(doc, {
+      startY: 30,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 9, cellPadding: 2 },
+      head: [
+        [
+          this.translate.instant('TERMS.TOTAL'),
+          this.translate.instant('COMMON.QUANTITY')
+        ]
+      ],
+      body: [
+        [
+          { content: this.formatBRL(data.total), styles: { fontStyle: 'bold' } },
+          data.expenses.length.toString()
+        ]
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [67, 56, 202] },
+    });
+
+    // Expenses List Table
+    const lastY = (doc as any).lastAutoTable.finalY;
+    autoTable(doc, {
+      startY: lastY + 10,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 8, cellPadding: 1.5 },
+      head: [
+        [
+          this.translate.instant('EXPENSES_FORM.DATE'),
+          this.translate.instant('EXPENSES_FORM.DESCRIPTION'),
+          this.translate.instant('EXPENSES_FORM.TYPE'),
+          this.translate.instant('EXPENSES_FORM.PRICE'),
+        ],
+      ],
+      body: data.expenses.map((e) => [
+        this.formatDate(e.purchaseDate),
+        e.description,
+        this.translate.instant(`EXPENSES_FORM.TYPES.${e.type}`),
+        this.formatBRL(e.price),
+      ]),
+      foot: [['', '', 'Total:', this.formatBRL(data.total)]],
+      footStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        fontSize: 8,
+      },
+    });
+
+    // Save
+    doc.save(`Gastos_${data.houseCode || ''}_${yearLabel}.pdf`);
+  }
+
+
   private formatBRL(value: number): string {
     return formatCurrency(value, 'pt-BR', 'R$');
   }

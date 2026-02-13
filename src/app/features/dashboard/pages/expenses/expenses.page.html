@@ -1,11 +1,21 @@
 <ng-template #headerActions>
-  <p-button
-    icon="pi pi-plus"
-    (onClick)="onAddExpense()"
-    pTooltip="Novo Gasto"
-    tooltipPosition="left"
-    [size]="'small'"
-  />
+  <div class="flex items-center gap-2">
+    <p-button
+      icon="pi pi-file-pdf"
+      severity="secondary"
+      (onClick)="onDownloadPDF()"
+      [pTooltip]="'TITHE_MANAGEMENT.DOWNLOAD_PDF' | translate"
+      tooltipPosition="left"
+      [size]="'small'"
+    />
+    <p-button
+      icon="pi pi-plus"
+      (onClick)="onAddExpense()"
+      pTooltip="Novo Gasto"
+      tooltipPosition="left"
+      [size]="'small'"
+    />
+  </div>
 </ng-template>
 
 <div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
@@ -52,16 +62,17 @@
     </p-floatlabel>
     <!-- Mês -->
     <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
-      <p-select
+      <p-multiselect
         inputId="month_select"
         [options]="monthOptions"
         [ngModel]="selectedMonth()"
-        (ngModelChange)="selectedMonth.set($event || 'ALL'); onFilterChange()"
-        [showClear]="true"
+        (ngModelChange)="selectedMonth.set($event || []); onFilterChange()"
         class="w-full"
         appendTo="body"
         optionLabel="label"
         optionValue="value"
+        [maxSelectedLabels]="2"
+        [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
       >
         <ng-template pTemplate="selectedItem" let-selectedOption>
           {{ selectedOption.label | translate }}
@@ -69,7 +80,7 @@
         <ng-template pTemplate="item" let-option>
           {{ option.label | translate }}
         </ng-template>
-      </p-select>
+      </p-multiselect>
       <label for="month_select">{{ 'TERMS.MONTH' | translate }}</label>
     </p-floatlabel>
     <!-- Tipo -->

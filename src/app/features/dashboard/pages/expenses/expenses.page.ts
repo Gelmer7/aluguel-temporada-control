@@ -27,6 +27,7 @@ import { HeaderService } from '../../../../services/header';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { StringUtils } from '../../../../shared/utils/string.utils';
 import { DateUtils } from '../../../../shared/utils/date.utils';
+import { PdfService } from '../../../../services/pdf.service';
 
 @Component({
   selector: 'app-expenses-page',
@@ -67,6 +68,7 @@ export class ExpensesPage implements OnInit {
   private translateService = inject(TranslateService);
   private houseService = inject(HouseService);
   private headerService = inject(HeaderService);
+  private pdfService = inject(PdfService);
 
   headerActions = viewChild.required<TemplateRef<any>>('headerActions');
 
@@ -121,10 +123,7 @@ export class ExpensesPage implements OnInit {
     ...this.years().map(y => ({ label: y.toString(), value: y }))
   ]);
 
-  monthOptions = [
-    { label: 'TERMS.ALL', value: 'ALL' },
-    ...this.months
-  ];
+  monthOptions = this.months;
 
   typeOptions = [
     { label: 'TERMS.ALL', value: 'ALL' },
@@ -132,7 +131,7 @@ export class ExpensesPage implements OnInit {
   ];
 
   selectedYear = signal<number | string>('ALL');
-  selectedMonth = signal<number | string>('ALL');
+  selectedMonth = signal<number[]>(this.months.map(m => m.value));
   selectedTypes = signal<string[]>(this.expenseTypes.map(t => t.value));
   globalFilter = signal<string>('');
 
@@ -178,9 +177,12 @@ export class ExpensesPage implements OnInit {
   }
 
   protected getSelectedMonthLabel(): string {
-    const month = this.selectedMonth();
-    if (month === 'ALL') return 'TERMS.ALL';
-    return this.months.find(m => m.value === month)?.label || 'TERMS.ALL';
+    const months = this.selectedMonth();
+    if (months.length === 0 || months.length === this.months.length) return 'TERMS.ALL';
+    if (months.length === 1) {
+      return this.months.find(m => m.value === months[0])?.label || 'TERMS.ALL';
+    }
+    return `${months.length} ${this.translateService.instant('TERMS.SELECTED')}`;
   }
 
   protected getSelectedTypeLabel(): string {
@@ -239,11 +241,11 @@ export class ExpensesPage implements OnInit {
       });
     }
 
-    const month = this.selectedMonth();
-    if (month !== 'ALL') {
+    const months = this.selectedMonth();
+    if (months.length > 0 && months.length < this.months.length) {
       filtered = filtered.filter(e => {
         const date = DateUtils.parseLocal(e.purchaseDate);
-        return date.getMonth() + 1 === month;
+        return months.includes(date.getMonth() + 1);
       });
     }
 
@@ -267,7 +269,7 @@ export class ExpensesPage implements OnInit {
 
   clearFilters() {
     this.selectedYear.set('ALL');
-    this.selectedMonth.set('ALL');
+    this.selectedMonth.set(this.months.map(m => m.value));
     this.selectedTypes.set(this.expenseTypes.map(t => t.value));
     this.onFilterChange();
   }
@@ -373,6 +375,17 @@ export class ExpensesPage implements OnInit {
         detail: 'Erro ao salvar gasto: ' + error.message
       });
     }
+  }
+
+  protected onDownloadPDF() {
+    this.pdfService.generateExpensesPdf({
+      year: this.selectedYear(),
+      months: this.selectedMonth(),
+      types: this.selectedTypes(),
+      houseCode: this.houseService.currentHouseCode() || undefined,
+      expenses: this.filteredExpenses(),
+      total: this.totalExpenses()
+    });
   }
 
   getSeverity(type: string): "success" | "secondary" | "info" | "warn" | "danger" | undefined {

@@ -130,7 +130,7 @@ export class CsvViewerPage {
   protected readonly hidePayout = signal<boolean>(true);
   protected readonly filterQuery = signal<string>('');
   protected readonly selectedYear = signal<number | string | null>('Todos');
-  protected readonly selectedMonth = signal<number | string | null>('Todos');
+  protected readonly selectedMonth = signal<number[]>([]);
   protected readonly selectedType = signal<string | null>('Todos');
   protected readonly filterDateRange = signal<Date[] | null>(null);
 
@@ -143,7 +143,6 @@ export class CsvViewerPage {
   });
 
   protected readonly months = [
-    { label: 'Todos', value: 'Todos' },
     { label: 'Janeiro', value: 1 },
     { label: 'Fevereiro', value: 2 },
     { label: 'Março', value: 3 },
@@ -187,11 +186,11 @@ export class CsvViewerPage {
     }
 
     // Filter by Month
-    const month = this.selectedMonth();
-    if (month && month !== 'Todos') {
+    const months = this.selectedMonth();
+    if (months && months.length > 0) {
       data = data.filter((r) => {
         const date = this.parseAirbnbDate(r.__norm.data);
-        return date ? date.getMonth() + 1 === month : false;
+        return date ? months.includes(date.getMonth() + 1) : false;
       });
     }
 
@@ -281,9 +280,12 @@ export class CsvViewerPage {
   });
 
   protected getSelectedMonthLabel(): string {
-    const month = this.selectedMonth();
-    if (!month || month === 'Todos') return 'Todos';
-    return this.months.find((m) => m.value === month)?.label || 'Todos';
+    const months = this.selectedMonth();
+    if (!months || months.length === 0) return 'Todos';
+    if (months.length === 1) {
+      return this.months.find((m) => m.value === months[0])?.label || 'Todos';
+    }
+    return `${months.length} meses`;
   }
 
   // Summary Totals
@@ -512,8 +514,8 @@ export class CsvViewerPage {
     this.first.set(0);
   }
 
-  protected onMonthChange(month: number | string | null) {
-    this.selectedMonth.set(month);
+  protected onMonthChange(months: number[] | null) {
+    this.selectedMonth.set(months || []);
     this.first.set(0);
   }
 
