@@ -29,6 +29,7 @@ import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { PdfService } from '../../../../services/pdf.service';
 import { Expense } from '../../../../models/expense.model';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-tithe-page',
@@ -119,7 +120,7 @@ export class TithePage implements OnInit {
     const year = this.selectedYear();
     const months = this.selectedMonths();
     return this.payments().filter((p) => {
-      const date = new Date(p.data);
+      const date = DateUtils.parseLocal(p.data);
       // Usar fuso horário local para filtrar corretamente
       return date.getFullYear() === year && months.includes(date.getMonth());
     });
@@ -130,13 +131,13 @@ export class TithePage implements OnInit {
     const months = this.selectedMonths();
 
     return this.expenses().filter((e) => {
-      const date = new Date(e.purchaseDate);
+      const date = DateUtils.parseLocal(e.purchaseDate);
       return date.getFullYear() === year && months.includes(date.getMonth());
     });
   });
 
   protected readonly totalAirbnb = computed(() => {
-    return this.filteredPayments().reduce((acc, p) => acc + (parseFloat(p.valor) || 0), 0);
+    return this.filteredPayments().reduce((acc, p) => acc + (p.pago || 0), 0);
   });
 
   protected readonly totalExpenses = computed(() => {

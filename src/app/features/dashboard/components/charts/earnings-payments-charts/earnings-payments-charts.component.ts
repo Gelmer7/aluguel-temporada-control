@@ -4,6 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { UnifiedEarning } from '../../../../../models/airbnb.model';
 import { DialogComponent } from '../../../../../components/ui/dialog/dialog.component';
 import { StackedBarChartComponent, StackedBarSeries } from '../../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
+import { DateUtils } from '../../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-earnings-payments-charts',
@@ -31,14 +32,14 @@ export class EarningsPaymentsChartsComponent {
     const typesSet = new Set<string>();
 
     data.forEach((p) => {
-      const date = new Date(p.data);
+      const date = DateUtils.parseLocal(p.data);
       const year = date.getFullYear();
       const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;
       const type = p.tipo || 'OTHER';
 
       if (!monthlyData[key]) monthlyData[key] = {};
-      monthlyData[key][type] = (monthlyData[key][type] || 0) + (p.valor || 0);
+      monthlyData[key][type] = (monthlyData[key][type] || 0) + (p.pago || 0);
       typesSet.add(type);
     });
 

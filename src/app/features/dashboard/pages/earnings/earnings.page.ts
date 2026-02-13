@@ -27,6 +27,7 @@ import { HeaderService } from '../../../../services/header';
 import { UnifiedEarning } from '../../../../models/airbnb.model';
 import { SupabaseService } from '../../../../services/supabase.service';
 import { Expense } from '../../../../models/expense.model';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-earnings-page',
@@ -120,7 +121,7 @@ export class EarningsPage implements OnInit {
     const types = this.selectedTypes();
 
     return this.payments().filter((p) => {
-      const date = new Date(p.data);
+      const date = DateUtils.parseLocal(p.data);
       const matchesYear = year === 'ALL' || date.getFullYear() === year;
       const matchesMonth = month === 'ALL' || date.getMonth() === month;
       const matchesType = types.length === 0 || types.includes(p.tipo);
@@ -132,7 +133,7 @@ export class EarningsPage implements OnInit {
     const year = this.selectedYear();
     const month = this.selectedMonth();
     return this.expenses().filter((e) => {
-      const date = new Date(e.purchaseDate);
+      const date = DateUtils.parseLocal(e.purchaseDate);
       const matchesYear = year === 'ALL' || date.getFullYear() === year;
       const matchesMonth = month === 'ALL' || date.getMonth() === month;
       return matchesYear && matchesMonth;
@@ -140,7 +141,7 @@ export class EarningsPage implements OnInit {
   });
 
   protected readonly totalReceived = computed(() => {
-    return this.filteredPayments().reduce((acc, p) => acc + (p.valor || 0), 0);
+    return this.filteredPayments().reduce((acc, p) => acc + (p.pago || 0), 0);
   });
 
   protected readonly totalExpenses = computed(() => {

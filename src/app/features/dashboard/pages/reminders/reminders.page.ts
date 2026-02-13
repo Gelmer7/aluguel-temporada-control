@@ -14,6 +14,7 @@ import { ReminderService } from '../../../../services/reminder.service';
 import { Reminder, ReminderStatus, ReminderFilters } from '../../../../models/reminder.model';
 import { ReminderFormComponent } from '../../components/reminder-form/reminder-form.component';
 import { HeaderService } from '../../../../services/header';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-reminders-page',
@@ -172,7 +173,7 @@ export class RemindersPage implements OnInit {
   }
 
   formatDate(date: string) {
-    const d = new Date(date);
+    const d = DateUtils.parseLocal(date);
     return d.toLocaleDateString(this.translateService.currentLang === 'pt' ? 'pt-BR' :
                                             this.translateService.currentLang === 'es' ? 'es-ES' : 'en-US', {
       day: '2-digit',

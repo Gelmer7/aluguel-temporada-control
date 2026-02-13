@@ -4,6 +4,7 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { Expense } from '../../../../../models/expense.model';
 import { DialogComponent } from '../../../../../components/ui/dialog/dialog.component';
 import { StackedBarChartComponent, StackedBarSeries } from '../../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
+import { DateUtils } from '../../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-earnings-expense-charts',
@@ -31,7 +32,7 @@ export class EarningsExpenseChartsComponent {
     const typesSet = new Set<string>();
 
     data.forEach((e) => {
-      const date = new Date(e.purchaseDate);
+      const date = DateUtils.parseLocal(e.purchaseDate);
       const year = date.getFullYear();
       const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;

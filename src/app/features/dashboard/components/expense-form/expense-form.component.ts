@@ -15,6 +15,7 @@ import { BreakpointObserver, Breakpoints, BreakpointState } from '@angular/cdk/l
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
 import { Expense, EXPENSE_TYPES, QUICK_EXPENSE_TYPES } from '../../../../models/expense.model';
 import { SupabaseService } from '../../../../services/supabase.service';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-expense-form',
@@ -49,7 +50,7 @@ export class ExpenseFormComponent implements OnInit {
         description: value.description,
         price: value.price,
         type: value.type,
-        purchaseDate: new Date(value.purchaseDate),
+        purchaseDate: DateUtils.parseLocal(value.purchaseDate),
         observation: value.observation,
         kws: value.kws,
         cubicMeters: value.cubicMeters,

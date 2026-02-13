@@ -67,7 +67,7 @@ export class ReminderFormComponent implements OnInit, OnChanges {
       this.form.patchValue({
         title: this.reminder.title,
         description: this.reminder.description,
-        remind_at: new Date(this.reminder.remind_at),
+        remind_at: DateUtils.parseLocal(this.reminder.remind_at),
         status: this.reminder.status,
       });
     } else {

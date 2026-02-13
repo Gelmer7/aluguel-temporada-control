@@ -46,4 +46,22 @@ export class DateUtils {
     const pad = (num: number) => (num < 10 ? '0' : '') + num;
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
   }
+
+  /**
+   * Cria um objeto Date a partir de uma string ISO (YYYY-MM-DD) tratando-a como hora local
+   * em vez de UTC, evitando problemas de fuso horário.
+   */
+  static parseLocal(dateStr: string | null | undefined): Date {
+    if (!dateStr) return new Date();
+    
+    // Se for uma string de data pura (YYYY-MM-DD), forçamos a interpretação local
+    if (typeof dateStr === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      return new Date(year, month - 1, day);
+    }
+    
+    // Se for data/hora sem timezone, o JS já interpreta como local
+    // Se tiver 'Z' ou offset, o JS interpreta corretamente como UTC/Offset
+    return new Date(dateStr);
+  }
 }

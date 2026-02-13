@@ -5,6 +5,7 @@ import { UnifiedEarning } from '../../../../../models/airbnb.model';
 import { Expense } from '../../../../../models/expense.model';
 import { DialogComponent } from '../../../../../components/ui/dialog/dialog.component';
 import { StackedBarChartComponent, StackedBarSeries } from '../../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
+import { DateUtils } from '../../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-earnings-summary-charts',
@@ -36,17 +37,17 @@ export class EarningsSummaryChartsComponent {
     const monthlyData: Record<string, { income: number; expense: number }> = {};
 
     paymentsData.forEach((p) => {
-      const date = new Date(p.data);
+      const date = DateUtils.parseLocal(p.data);
       const year = date.getFullYear();
       const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;
 
       if (!monthlyData[key]) monthlyData[key] = { income: 0, expense: 0 };
-      monthlyData[key].income += (p.valor || 0);
+      monthlyData[key].income += (p.pago || 0);
     });
 
     expensesData.forEach((e) => {
-      const date = new Date(e.purchaseDate);
+      const date = DateUtils.parseLocal(e.purchaseDate);
       const year = date.getFullYear();
       const month = date.getMonth();
       const key = `${year}-${month.toString().padStart(2, '0')}`;

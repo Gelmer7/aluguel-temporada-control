@@ -146,8 +146,8 @@ export class ExpensesPage implements OnInit {
 
     // Sort by purchaseDate descending
     data.sort((a, b) => {
-      const dateA = new Date(a.purchaseDate).getTime();
-      const dateB = new Date(b.purchaseDate).getTime();
+      const dateA = DateUtils.parseLocal(a.purchaseDate).getTime();
+      const dateB = DateUtils.parseLocal(b.purchaseDate).getTime();
       return dateB - dateA;
     });
 
@@ -234,7 +234,7 @@ export class ExpensesPage implements OnInit {
     const year = this.selectedYear();
     if (year !== 'ALL') {
       filtered = filtered.filter(e => {
-        const date = new Date(e.purchaseDate);
+        const date = DateUtils.parseLocal(e.purchaseDate);
         return date.getFullYear() === year;
       });
     }
@@ -242,7 +242,7 @@ export class ExpensesPage implements OnInit {
     const month = this.selectedMonth();
     if (month !== 'ALL') {
       filtered = filtered.filter(e => {
-        const date = new Date(e.purchaseDate);
+        const date = DateUtils.parseLocal(e.purchaseDate);
         return date.getMonth() + 1 === month;
       });
     }

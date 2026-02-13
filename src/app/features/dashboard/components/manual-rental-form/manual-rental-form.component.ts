@@ -46,10 +46,10 @@ export class ManualRentalFormComponent implements OnInit {
       this.isEdit = true;
       this.form.patchValue({
         ...value,
-        data_pagamento: new Date(value.data_pagamento),
-        data_reserva: new Date(value.data_reserva),
-        data_inicio: new Date(value.data_inicio),
-        data_termino: new Date(value.data_termino),
+        data_pagamento: DateUtils.parseLocal(value.data_pagamento),
+        data_reserva: DateUtils.parseLocal(value.data_reserva),
+        data_inicio: DateUtils.parseLocal(value.data_inicio),
+        data_termino: DateUtils.parseLocal(value.data_termino),
       });
     } else {
       this.isEdit = false;

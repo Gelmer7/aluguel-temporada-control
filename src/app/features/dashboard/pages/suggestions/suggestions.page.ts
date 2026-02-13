@@ -15,6 +15,7 @@ import { Suggestion, SuggestionStatus, SuggestionFilters } from '../../../../mod
 import { SuggestionFormComponent } from '../../components/suggestion-form/suggestion-form.component';
 import { HeaderService } from '../../../../services/header';
 import { SupabaseService } from '../../../../services/supabase.service';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-suggestions-page',
@@ -181,7 +182,7 @@ export class SuggestionsPage implements OnInit {
   }
 
   formatDate(date: string) {
-    return new Date(date).toLocaleDateString(this.translateService.currentLang === 'pt' ? 'pt-BR' :
+    return DateUtils.parseLocal(date).toLocaleDateString(this.translateService.currentLang === 'pt' ? 'pt-BR' :
                                             this.translateService.currentLang === 'es' ? 'es-ES' : 'en-US', {
       day: '2-digit',
       month: '2-digit',

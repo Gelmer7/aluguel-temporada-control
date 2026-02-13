@@ -22,6 +22,7 @@ import { Expense } from '../../../../models/expense.model';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { FinancialYear, FinancialSummary, FinancialMonth } from './reports.model';
+import { DateUtils } from '../../../../shared/utils/date.utils';
 
 @Component({
   selector: 'app-reports-page',
@@ -108,10 +109,10 @@ export class ReportsPage implements OnInit {
 
     // Processar Ganhos
     pays.forEach(p => {
-      const date = new Date(p.data);
+      const date = DateUtils.parseLocal(p.data);
       const year = date.getFullYear();
       const month = date.getMonth();
-      const value = parseFloat(p.valor) || 0;
+      const value = (p.pago || 0);
 
       if (!yearMap.has(year)) this.initYear(yearMap, year);
       const yearData = yearMap.get(year)!;
@@ -121,7 +122,7 @@ export class ReportsPage implements OnInit {
 
     // Processar Gastos
     exps.forEach(e => {
-      const date = new Date(e.purchaseDate);
+      const date = DateUtils.parseLocal(e.purchaseDate);
       const year = date.getFullYear();
       const month = date.getMonth();
 

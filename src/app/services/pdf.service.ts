@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { formatCurrency, formatDate } from '@angular/common';
+import { DateUtils } from '../shared/utils/date.utils';
 
 @Injectable({
   providedIn: 'root',
@@ -216,10 +217,12 @@ export class PdfService {
   }
 
   private formatDate(date: any): string {
-    return formatDate(date, 'dd/MM/yyyy', 'en-US');
+    const d = DateUtils.parseLocal(date);
+    return formatDate(d, 'dd/MM/yyyy', 'en-US');
   }
 
   private formatDateMonth(date: any): string {
-    return formatDate(date, 'MM/yyyy', 'en-US');
+    const d = DateUtils.parseLocal(date);
+    return formatDate(d, 'MM/yyyy', 'en-US');
   }
 }
