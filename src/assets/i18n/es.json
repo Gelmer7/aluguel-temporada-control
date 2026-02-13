@@ -23,12 +23,15 @@
     "CANCEL": "Cancelar",
     "SAVE": "Guardar",
     "SAVE_EXPENSE": "Guardar Gasto",
-    "CLEAR_FILTERS": "Limpiar Filtros",
+    "CLEAR_FILTERS": "Limpar Filtros",
     "EDIT": "Editar",
     "DELETE": "Eliminar",
     "CONFIRM": "Confirmar",
     "SUCCESS": "Éxito",
     "CREATED_AT": "Creado el"
+  },
+  "COMMON": {
+    "QUANTITY": "Cantidad"
   },
   "TERMS": {
     "HOME": "Inicio",

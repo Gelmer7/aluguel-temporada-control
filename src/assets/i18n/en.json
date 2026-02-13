@@ -30,6 +30,9 @@
     "SUCCESS": "Success",
     "CREATED_AT": "Created at"
   },
+  "COMMON": {
+    "QUANTITY": "Quantity"
+  },
   "TERMS": {
     "HOME": "Home",
     "ENTRIES": "Entries",

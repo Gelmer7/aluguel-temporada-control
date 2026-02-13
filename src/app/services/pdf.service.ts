@@ -268,14 +268,14 @@ export class PdfService {
       styles: { fontSize: 9, cellPadding: 2 },
       head: [
         [
-          this.translate.instant('TERMS.TOTAL'),
-          this.translate.instant('COMMON.QUANTITY')
+          this.translate.instant('COMMON.QUANTITY'),
+          this.translate.instant('TERMS.TOTAL')
         ]
       ],
       body: [
         [
-          { content: this.formatBRL(data.total), styles: { fontStyle: 'bold' } },
-          data.expenses.length.toString()
+          data.expenses.length.toString(),
+          { content: this.formatBRL(data.total), styles: { fontStyle: 'bold' } }
         ]
       ],
       theme: 'striped',

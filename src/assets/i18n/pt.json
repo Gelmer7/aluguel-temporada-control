@@ -31,6 +31,9 @@
     "SUCCESS": "Sucesso",
     "CREATED_AT": "Criado em"
   },
+  "COMMON": {
+    "QUANTITY": "Quantidade"
+  },
   "TERMS": {
     "HOME": "Início",
     "ENTRIES": "Entradas",

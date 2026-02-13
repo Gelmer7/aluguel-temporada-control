@@ -14,6 +14,8 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { Toast } from 'primeng/toast';
 import { Select } from 'primeng/select';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { DatePicker } from 'primeng/datepicker';
+import { Popover } from 'primeng/popover';
 import { FloatLabel } from 'primeng/floatlabel';
 import { AccordionModule } from 'primeng/accordion';
 import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
@@ -50,6 +52,8 @@ import { PdfService } from '../../../../services/pdf.service';
     Toast,
     Select,
     MultiSelectModule,
+    DatePicker,
+    Popover,
     FloatLabel,
     AccordionModule,
     TablePaginatorComponent,
@@ -133,6 +137,7 @@ export class ExpensesPage implements OnInit {
   selectedYear = signal<number | string>('ALL');
   selectedMonth = signal<number[]>(this.months.map(m => m.value));
   selectedTypes = signal<string[]>(this.expenseTypes.map(t => t.value));
+  filterDateRange = signal<Date[] | null>(null);
   globalFilter = signal<string>('');
 
   // Pagination
@@ -192,6 +197,25 @@ export class ExpensesPage implements OnInit {
       return this.expenseTypes.find(t => t.value === types[0])?.label || 'TERMS.ALL';
     }
     return `${types.length} ${this.translateService.instant('TERMS.SELECTED')}`;
+  }
+
+  protected getFormattedDateRange(): string {
+    const range = this.filterDateRange();
+    if (!range || !range[0]) return '';
+
+    const format = (d: Date) => d.toLocaleDateString('pt-BR');
+    if (range[1]) {
+      return `${format(range[0])} - ${format(range[1])}`;
+    }
+    return format(range[0]);
+  }
+
+  onDateRangeChange(range: Date[] | null) {
+    this.filterDateRange.set(range);
+    // Só aplica o filtro se tivermos um range completo (duas datas) ou se estiver limpando (null)
+    if (!range || (range[0] && range[1])) {
+      this.onFilterChange();
+    }
   }
 
   totalExpenses = computed(() => {
@@ -255,6 +279,21 @@ export class ExpensesPage implements OnInit {
       filtered = filtered.filter(e => types.includes(e.type));
     }
 
+    // Filter by Date Range
+    const range = this.filterDateRange();
+    if (range && range[0] && range[1]) {
+      const start = range[0];
+      const end = range[1];
+      // Reset hours to compare only dates
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+
+      filtered = filtered.filter((e) => {
+        const date = DateUtils.parseLocal(e.purchaseDate);
+        return date >= start && date <= end;
+      });
+    }
+
     const query = StringUtils.normalize(this.globalFilter());
     if (query) {
       filtered = filtered.filter(e =>
@@ -271,6 +310,7 @@ export class ExpensesPage implements OnInit {
     this.selectedYear.set('ALL');
     this.selectedMonth.set(this.months.map(m => m.value));
     this.selectedTypes.set(this.expenseTypes.map(t => t.value));
+    this.filterDateRange.set(null);
     this.onFilterChange();
   }
 
