@@ -41,6 +41,11 @@
       <span
         >Tipo: <span class="text-primary">{{ selectedType() || 'Todos' }}</span></span
       >
+      @if (getFormattedDateRange()) {
+        <span
+          >Período: <span class="text-primary">{{ getFormattedDateRange() }}</span></span
+        >
+      }
     </ng-template>
 
     <!-- Conteúdo dos filtros -->
@@ -86,6 +91,66 @@
       ></p-select>
       <label for="type_select">Tipo</label>
     </p-floatlabel>
+
+    <!-- Filtro de Período via Popover -->
+    <div class="flex items-center self-center h-full">
+      <p-button
+        icon="pi pi-calendar"
+        [rounded]="true"
+        [text]="true"
+        (click)="op_date_filter.toggle($event)"
+        [pTooltip]="'Filtrar por período'"
+        tooltipPosition="top"
+        [severity]="filterDateRange() ? 'primary' : 'secondary'"
+        [styleClass]="filterDateRange() ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10' : ''"
+      >
+        @if (filterDateRange()) {
+          <span
+            class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white animate-pulse"
+          >
+            !
+          </span>
+        }
+      </p-button>
+
+      <p-popover #op_date_filter>
+        <div class="p-3 flex flex-col gap-3 min-w-[280px]">
+          <div class="flex items-center justify-between border-b border-surface-200 dark:border-surface-700 pb-2">
+            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">Selecionar Período</span>
+            @if (filterDateRange()) {
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                size="small"
+                (click)="onDateRangeChange(null); op_date_filter.hide()"
+                pTooltip="Limpar Filtro"
+              />
+            }
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">Intervalo de Datas</label>
+            <p-datepicker
+              inputId="popover_range_date"
+              [ngModel]="filterDateRange()"
+              (ngModelChange)="onDateRangeChange($event)"
+              selectionMode="range"
+              [showIcon]="true"
+              [showClear]="false"
+              [readonlyInput]="false"
+              class="w-full"
+              appendTo="body"
+              dateFormat="dd/mm/yy"
+              placeholder="00/00/0000 - 00/00/0000"
+              styleClass="w-full"
+            ></p-datepicker>
+          </div>
+          <div class="text-[10px] text-surface-400 italic">
+            Dica: Você pode digitar as datas ou usar o calendário.
+          </div>
+        </div>
+      </p-popover>
+    </div>
   </app-filter-container>
 
   <!-- Resumo alinhado à direita em linha única -->
@@ -128,50 +193,7 @@
       </p-iconfield>
 
       <div class="flex items-center gap-1">
-        <p-button
-          icon="pi pi-calendar"
-          [text]="true"
-          [rounded]="true"
-          (click)="op_date.toggle($event)"
-          [pTooltip]="'Filtrar por data'"
-          tooltipPosition="top"
-          [severity]="filterDateRange() ? 'primary' : 'secondary'"
-        >
-          @if (filterDateRange() && filterDateRange()![0]) {
-            <span
-              class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white"
-            >
-              !
-            </span>
-          }
-        </p-button>
-
-        <p-popover #op_date>
-          <div class="p-3 flex flex-col gap-3">
-            <div class="flex items-center justify-between border-b pb-2 mb-1">
-              <span class="text-sm font-semibold text-surface-700 dark:text-surface-100"
-                >Selecionar Período</span
-              >
-              @if (filterDateRange()) {
-                <p-button
-                  label="Limpar"
-                  [text]="true"
-                  severity="danger"
-                  size="small"
-                  (click)="filterDateRange.set(null); op_date.hide()"
-                />
-              }
-            </div>
-            <p-datepicker
-              [(ngModel)]="filterDateRange"
-              selectionMode="range"
-              [inline]="true"
-              class="border-0"
-              styleClass="border-0 shadow-none bg-transparent"
-              dateFormat="dd/mm/yy"
-            />
-          </div>
-        </p-popover>
+        <!-- O filtro de calendário foi movido para o topo nos filtros gerais -->
       </div>
 
       <!-- Icon de informação -->

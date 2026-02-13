@@ -115,6 +115,21 @@ export class CsvViewerPage {
     });
   }
 
+  protected readonly months = [
+    { label: 'Janeiro', value: 1 },
+    { label: 'Fevereiro', value: 2 },
+    { label: 'Março', value: 3 },
+    { label: 'Abril', value: 4 },
+    { label: 'Maio', value: 5 },
+    { label: 'Junho', value: 6 },
+    { label: 'Julho', value: 7 },
+    { label: 'Agosto', value: 8 },
+    { label: 'Setembro', value: 9 },
+    { label: 'Outubro', value: 10 },
+    { label: 'Novembro', value: 11 },
+    { label: 'Dezembro', value: 12 },
+  ];
+
   protected readonly syncing = signal<boolean>(false);
   protected readonly loading = signal<boolean>(false);
   protected readonly headers = signal<string[]>([]);
@@ -130,7 +145,7 @@ export class CsvViewerPage {
   protected readonly hidePayout = signal<boolean>(true);
   protected readonly filterQuery = signal<string>('');
   protected readonly selectedYear = signal<number | string | null>('Todos');
-  protected readonly selectedMonth = signal<number[]>([]);
+  protected readonly selectedMonth = signal<number[]>(this.months.map((m) => m.value));
   protected readonly selectedType = signal<string | null>('Todos');
   protected readonly filterDateRange = signal<Date[] | null>(null);
 
@@ -141,21 +156,6 @@ export class CsvViewerPage {
     );
     return ['Todos', ...uniqueYears];
   });
-
-  protected readonly months = [
-    { label: 'Janeiro', value: 1 },
-    { label: 'Fevereiro', value: 2 },
-    { label: 'Março', value: 3 },
-    { label: 'Abril', value: 4 },
-    { label: 'Maio', value: 5 },
-    { label: 'Junho', value: 6 },
-    { label: 'Julho', value: 7 },
-    { label: 'Agosto', value: 8 },
-    { label: 'Setembro', value: 9 },
-    { label: 'Outubro', value: 10 },
-    { label: 'Novembro', value: 11 },
-    { label: 'Dezembro', value: 12 },
-  ];
 
   protected readonly types = computed(() => {
     const types = this.rows().map((r) => (r.__norm.tipo ?? '').trim());
@@ -281,11 +281,29 @@ export class CsvViewerPage {
 
   protected getSelectedMonthLabel(): string {
     const months = this.selectedMonth();
-    if (!months || months.length === 0) return 'Todos';
+    if (!months || months.length === 0 || months.length === this.months.length) return 'Todos';
     if (months.length === 1) {
       return this.months.find((m) => m.value === months[0])?.label || 'Todos';
     }
     return `${months.length} meses`;
+  }
+
+  protected getFormattedDateRange(): string {
+    const range = this.filterDateRange();
+    if (!range || range.length === 0 || !range[0]) return '';
+
+    const format = (d: Date) => {
+      const day = String(d.getDate()).padStart(2, '0');
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    };
+
+    if (range.length === 1 || !range[1]) {
+      return format(range[0]);
+    }
+
+    return `${format(range[0])} - ${format(range[1])}`;
   }
 
   // Summary Totals
@@ -315,16 +333,12 @@ export class CsvViewerPage {
 
   protected readonly summary = computed(() => {
     const data = this.visibleRows();
-    let luizaValor = 0;
+    let totalPago = 0;
 
-    // Totais financeiros (soma tudo por pessoa)
+    // Totais financeiros (soma tudo da coluna Pago)
     data.forEach((row) => {
-      const valor = AirbnbUtils.parseCurrency(row.__norm.valor);
-      const person = personFromTipo(row.__norm.tipo);
-
-      if (person === 'Luiza') {
-        luizaValor += valor;
-      }
+      const pago = AirbnbUtils.parseCurrency(row.__norm.pago);
+      totalPago += pago;
     });
 
     // Totais agrupados (Noites e Limpeza) usando utilitário global
@@ -332,8 +346,8 @@ export class CsvViewerPage {
     const { totalNoites, totalLimpeza } = AirbnbUtils.calculateGroupedTotals(normalizedRows);
 
     return {
-      totalValor: luizaValor,
-      luizaValor,
+      totalValor: totalPago,
+      totalPago,
       totalLimpeza,
       totalNoites,
     };
@@ -538,6 +552,11 @@ export class CsvViewerPage {
 
   protected onTypeChange(type: string | null) {
     this.selectedType.set(type);
+    this.first.set(0);
+  }
+
+  protected onDateRangeChange(range: Date[] | null) {
+    this.filterDateRange.set(range);
     this.first.set(0);
   }
 
@@ -764,7 +783,7 @@ export class CsvViewerPage {
   private applyCsvText(text: string): void {
     const result = Papa.parse(text, { header: true, skipEmptyLines: true });
     let data = Array.isArray(result.data) ? (result.data as any[]) : [];
-    
+
     // Refatorar os dados do Airbnb (Mesclar Payouts, etc.)
     data = AirbnbUtils.processAirbnbReport(data);
 
