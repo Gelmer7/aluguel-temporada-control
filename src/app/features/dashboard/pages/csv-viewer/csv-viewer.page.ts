@@ -457,7 +457,7 @@ export class CsvViewerPage {
   protected readonly rowTrackBy = (_: number, r: { __id: number }) => r.__id;
 
   protected onColumnsChange(cols: { field: string; headerFull: string; headerAbbr: string }[]) {
-    this.selectedColumns.set(cols || []);
+    this.selectedColumns.set([...(cols || [])]);
   }
 
   protected onHidePayoutChange(hide: boolean) {
@@ -508,11 +508,17 @@ export class CsvViewerPage {
   }
 
   protected isColumnSelected(field: string): boolean {
-    return this.selectedColumns().some((col) => col.field === field);
+    const selected = this.selectedColumns();
+    if (!selected) return false;
+    const isSelected = selected.some((col) => col.field.trim() === field.trim());
+    return isSelected;
   }
 
   protected getColumn(field: string) {
-    return this.selectedColumns().find((col) => col.field === field);
+    const selected = this.selectedColumns();
+    if (!selected) return undefined;
+    const col = selected.find((col) => col.field.trim() === field.trim());
+    return col;
   }
 
   protected calculateDateTotal(date: string): number {
@@ -651,15 +657,42 @@ export class CsvViewerPage {
     return rd(row, field, this.inicioFimField, this.pessoaField);
   }
 
+  public isCurrencyField(field: string): boolean {
+    const currencyFields = [
+      'Valor',
+      'Taxa de limpeza',
+      'Taxa de serviço',
+      'Ganhos brutos',
+      'Pago',
+      'Imposto de ocupação',
+      'Taxa de pagamento rápido',
+    ];
+    return currencyFields.includes(field) || field.toLowerCase().includes('imposto');
+  }
+
   public getCellValue(row: ViewerRow, field: string): string {
-    return this.isDerived(field) ? this.renderDerived(row, field) : gv(row, field);
+    if (this.isDerived(field)) {
+      return this.renderDerived(row, field);
+    }
+    const val = gv(row, field);
+    if (this.isDateField(field)) {
+      return this.formatDateBR(val);
+    }
+    return val;
   }
 
   private setupColumns(fields: string[]): void {
     this.headers.set(fields);
     this.applyColumnSizes(fields);
 
-    const mapped = fields.map((f: string) => ({ field: f, headerFull: f, headerAbbr: f }));
+    // Mapear campos reais
+    const mapped = fields.map((f: string) => ({
+      field: f.trim(),
+      headerFull: f.trim(),
+      headerAbbr: f.trim(),
+    }));
+
+    // Definir colunas virtuais
     const derivedInicioFim = {
       field: this.inicioFimField,
       headerFull: this.inicioFimHeader,
@@ -670,16 +703,16 @@ export class CsvViewerPage {
       headerFull: this.pessoaHeader,
       headerAbbr: this.pessoaHeader,
     };
+
+    // Combinar tudo
     const mappedWithDerived = [...mapped, derivedInicioFim, derivedPessoa];
     this.cols.set(mappedWithDerived);
 
+    // Seleção inicial preferencial
     const colFields = new Set(mappedWithDerived.map((c) => c.field));
     const initialSelected = this.preferredInitial
       .filter((n) => colFields.has(n))
-      .map((n) => {
-        const m = mappedWithDerived.find((c) => c.field === n)!;
-        return { field: m.field, headerFull: m.headerFull, headerAbbr: m.headerAbbr };
-      });
+      .map((n) => mappedWithDerived.find((c) => c.field === n)!);
 
     this.selectedColumns.set(
       initialSelected.length

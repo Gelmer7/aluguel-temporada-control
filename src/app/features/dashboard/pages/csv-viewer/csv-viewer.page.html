@@ -110,6 +110,7 @@
     <div
       class="flex items-center justify-start p-1 border-b border-surface-200 dark:border-surface-700"
     >
+      <!-- campo de busca -->
       <p-iconfield iconPosition="left" class="flex-1 sm:flex-none sm:w-80">
         <p-inputicon>
           <i class="pi pi-search"></i>
@@ -213,6 +214,7 @@
               [ngModel]="selectedColumns()"
               (ngModelChange)="onColumnsChange($event)"
               optionLabel="headerFull"
+              dataKey="field"
               selectedItemsLabel="{0} colunas"
               appendTo="body"
               class="w-full"
@@ -227,7 +229,6 @@
     <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
       <p-table
         #dt
-        [columns]="selectedColumns()"
         [value]="pagedRows()"
         [scrollable]="true"
         scrollHeight="flex"
@@ -236,12 +237,13 @@
         dataKey="__id"
         [rowTrackBy]="rowTrackBy"
         [loading]="loading()"
+        [columns]="selectedColumns()"
         class="p-datatable-sm h-full flex flex-col text-xs sm:text-base"
       >
         <!-- Cabeçalho das colunas (th) -->
-        <ng-template pTemplate="header">
+        <ng-template pTemplate="header" let-columns>
           <tr class="text-xs sm:text-base">
-            @if (getColumn('Data'); as col) {
+            @for (col of columns; track col.field) {
               <th
                 [pSortableColumn]="col.field"
                 [style.minWidth]="getColMinWidth(col.field)"
@@ -258,321 +260,7 @@
                     hideDelay="0"
                     >{{ col.headerAbbr }}</span
                   >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Hóspede'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Tipo'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Código de Confirmação'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Pessoa Pago'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Data Inicio-Fim'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Noites'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Taxa de limpeza'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Valor'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Data de início'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Data de término'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Taxa de serviço'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Informações'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Ganhos brutos'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Pago'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
-                </div>
-              </th>
-            }
-
-            @if (getColumn('Anúncio'); as col) {
-              <th
-                [pSortableColumn]="col.field"
-                [style.minWidth]="getColMinWidth(col.field)"
-                [style.width]="getColMaxWidth(col.field)"
-                [ngClass]="colHeaderClass(col.field)"
-                class="bg-surface-50 dark:bg-surface-800"
-              >
-                <div class="flex items-center gap-1">
-                  <span
-                    class="truncate"
-                    [pTooltip]="col.headerFull"
-                    tooltipPosition="top"
-                    showDelay="200"
-                    hideDelay="0"
-                    >{{ col.headerAbbr }}</span
-                  >
+                  <p-sortIcon [field]="col.field" />
                 </div>
               </th>
             }
@@ -580,306 +268,50 @@
         </ng-template>
 
         <!-- Corpo das linhas (td) -->
-        <ng-template pTemplate="body" let-row>
+        <ng-template pTemplate="body" let-row let-columns="columns">
           <tr
             class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs sm:text-base"
           >
-            <!-- Data -->
-            @if (isColumnSelected('Data')) {
+            @for (col of columns; track col.field) {
               <td
-                [pTooltip]="colTooltip(row, 'Data')"
+                [pTooltip]="colTooltip(row, col.field)"
                 tooltipPosition="top"
                 [showDelay]="200"
                 [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Data')"
-                [style.width]="getColMaxWidth('Data')"
-                [ngClass]="tdClass(row, 'Data')"
+                [style.minWidth]="getColMinWidth(col.field)"
+                [style.width]="getColMaxWidth(col.field)"
+                [ngClass]="tdClass(row, col.field)"
               >
-                <span class="block truncate" [style.maxWidth]="getColMaxWidth('Data')">{{
-                  formatDateBR(getCellValue(row, 'Data'))
-                }}</span>
-              </td>
-            }
-
-            <!-- Hóspede -->
-            @if (isColumnSelected('Hóspede')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Hóspede')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Hóspede')"
-                [style.width]="getColMaxWidth('Hóspede')"
-                [ngClass]="tdClass(row, 'Hóspede')"
-              >
-                <a
-                  [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="text-primary dark:text-primary-400 hover:underline block truncate"
-                  [style.maxWidth]="getColMaxWidth('Hóspede')"
-                  >{{ getCellValue(row, 'Hóspede') }}
-                </a>
-              </td>
-            }
-
-            <!-- Tipo -->
-            @if (isColumnSelected('Tipo')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Tipo')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Tipo')"
-                [style.width]="getColMaxWidth('Tipo')"
-                [ngClass]="tdClass(row, 'Tipo')"
-              >
-                <div
-                  class="px-2 py-0.5 rounded text-xs font-medium inline-block transition-colors"
-                  [class]="tdClass(row, 'Tipo')"
-                >
-                  {{ getCellValue(row, 'Tipo') }}
-                </div>
-              </td>
-            }
-
-            <!-- Código de Confirmação -->
-            @if (isColumnSelected('Código de Confirmação')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Código de Confirmação')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Código de Confirmação')"
-                [style.width]="getColMaxWidth('Código de Confirmação')"
-                [ngClass]="tdClass(row, 'Código de Confirmação')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Código de Confirmação')"
-                  >{{ getCellValue(row, 'Código de Confirmação') }}</span
-                >
-              </td>
-            }
-
-            <!-- Pessoa Pago -->
-            @if (isColumnSelected('Pessoa Pago')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Pessoa Pago')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Pessoa Pago')"
-                [style.width]="getColMaxWidth('Pessoa Pago')"
-                [ngClass]="tdClass(row, 'Pessoa Pago')"
-              >
-                <div class="flex items-center gap-2">
-                  <i class="pi pi-user text-xs opacity-70"></i>
-                  <span class="truncate">{{ renderDerived(row, 'Pessoa Pago') }}</span>
-                </div>
-              </td>
-            }
-
-            <!-- Data Inicio-Fim -->
-            @if (isColumnSelected('Data Inicio-Fim')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Data Inicio-Fim')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Data Inicio-Fim')"
-                [style.width]="getColMaxWidth('Data Inicio-Fim')"
-                [ngClass]="tdClass(row, 'Data Inicio-Fim')"
-              >
-                <span class="block truncate" [style.maxWidth]="getColMaxWidth('Data Inicio-Fim')">{{
-                  renderDerived(row, 'Data Inicio-Fim')
-                }}</span>
-              </td>
-            }
-
-            <!-- Noites -->
-            @if (isColumnSelected('Noites')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Noites')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Noites')"
-                [style.width]="getColMaxWidth('Noites')"
-                [ngClass]="tdClass(row, 'Noites')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Noites')"
-                  >{{ getCellValue(row, 'Noites') }}</span
-                >
-              </td>
-            }
-
-            <!-- Taxa de limpeza -->
-            @if (isColumnSelected('Taxa de limpeza')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Taxa de limpeza')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Taxa de limpeza')"
-                [style.width]="getColMaxWidth('Taxa de limpeza')"
-                [ngClass]="tdClass(row, 'Taxa de limpeza')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Taxa de limpeza')"
-                  >{{ getCellValue(row, 'Taxa de limpeza') }}</span
-                >
-              </td>
-            }
-
-            <!-- Valor -->
-            @if (isColumnSelected('Valor')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Valor')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Valor')"
-                [style.width]="getColMaxWidth('Valor')"
-                [ngClass]="tdClass(row, 'Valor')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Valor')"
-                  >{{ getCellValue(row, 'Valor') }}</span
-                >
-              </td>
-            }
-
-            <!-- Data de início -->
-            @if (isColumnSelected('Data de início')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Data de início')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Data de início')"
-                [style.width]="getColMaxWidth('Data de início')"
-                [ngClass]="tdClass(row, 'Data de início')"
-              >
-                <span class="block truncate" [style.maxWidth]="getColMaxWidth('Data de início')">{{
-                  formatDateBR(getCellValue(row, 'Data de início'))
-                }}</span>
-              </td>
-            }
-
-            <!-- Data de término -->
-            @if (isColumnSelected('Data de término')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Data de término')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Data de término')"
-                [style.width]="getColMaxWidth('Data de término')"
-                [ngClass]="tdClass(row, 'Data de término')"
-              >
-                <span class="block truncate" [style.maxWidth]="getColMaxWidth('Data de término')">{{
-                  formatDateBR(getCellValue(row, 'Data de término'))
-                }}</span>
-              </td>
-            }
-
-            <!-- Taxa de serviço -->
-            @if (isColumnSelected('Taxa de serviço')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Taxa de serviço')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Taxa de serviço')"
-                [style.width]="getColMaxWidth('Taxa de serviço')"
-                [ngClass]="tdClass(row, 'Taxa de serviço')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Taxa de serviço')"
-                  >{{ getCellValue(row, 'Taxa de serviço') }}</span
-                >
-              </td>
-            }
-
-            <!-- Informações -->
-            @if (isColumnSelected('Informações')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Informações')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Informações')"
-                [style.width]="getColMaxWidth('Informações')"
-                [ngClass]="tdClass(row, 'Informações')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Informações')"
-                  >{{ getCellValue(row, 'Informações') }}</span
-                >
-              </td>
-            }
-
-            <!-- Ganhos brutos -->
-            @if (isColumnSelected('Ganhos brutos')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Ganhos brutos')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Ganhos brutos')"
-                [style.width]="getColMaxWidth('Ganhos brutos')"
-                [ngClass]="tdClass(row, 'Ganhos brutos')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Ganhos brutos')"
-                  >{{ getCellValue(row, 'Ganhos brutos') }}</span
-                >
-              </td>
-            }
-
-            <!-- Pago -->
-            @if (isColumnSelected('Pago')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Pago')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Pago')"
-                [style.width]="getColMaxWidth('Pago')"
-                [ngClass]="tdClass(row, 'Pago')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Pago')"
-                  >{{ getCellValue(row, 'Pago') }}</span
-                >
-              </td>
-            }
-
-            <!-- Anúncio -->
-            @if (isColumnSelected('Anúncio')) {
-              <td
-                [pTooltip]="colTooltip(row, 'Anúncio')"
-                tooltipPosition="top"
-                [showDelay]="200"
-                [hideDelay]="0"
-                [style.minWidth]="getColMinWidth('Anúncio')"
-                [style.width]="getColMaxWidth('Anúncio')"
-                [ngClass]="tdClass(row, 'Anúncio')"
-              >
-                <span
-                  class="block truncate font-medium"
-                  [style.maxWidth]="getColMaxWidth('Anúncio')"
-                  >{{ getCellValue(row, 'Anúncio') }}</span
-                >
+                @if (col.field === 'Hóspede') {
+                  <a
+                    [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary dark:text-primary-400 hover:underline block truncate"
+                    [style.maxWidth]="getColMaxWidth('Hóspede')"
+                    >{{ getCellValue(row, 'Hóspede') }}
+                  </a>
+                } @else if (col.field === 'Tipo') {
+                  <div
+                    class="px-2 py-0.5 rounded text-xs font-medium inline-block transition-colors"
+                    [class]="tdClass(row, 'Tipo')"
+                  >
+                    {{ getCellValue(row, 'Tipo') }}
+                  </div>
+                } @else if (col.field === 'Pessoa Pago') {
+                  <div class="flex items-center gap-2">
+                    <i class="pi pi-user text-xs opacity-70"></i>
+                    <span class="truncate">{{ renderDerived(row, 'Pessoa Pago') }}</span>
+                  </div>
+                } @else {
+                  <span
+                    class="block truncate"
+                    [class.font-medium]="isCurrencyField(col.field)"
+                    [style.maxWidth]="getColMaxWidth(col.field)"
+                  >
+                    {{ getCellValue(row, col.field) }}
+                  </span>
+                }
               </td>
             }
           </tr>
