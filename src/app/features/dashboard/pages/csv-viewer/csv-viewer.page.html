@@ -125,6 +125,53 @@
         />
       </p-iconfield>
 
+      <div class="flex items-center gap-1">
+        <p-button
+          icon="pi pi-calendar"
+          [text]="true"
+          [rounded]="true"
+          (click)="op_date.toggle($event)"
+          [pTooltip]="'Filtrar por data'"
+          tooltipPosition="top"
+          [severity]="filterDateRange() ? 'primary' : 'secondary'"
+        >
+          @if (filterDateRange() && filterDateRange()![0]) {
+            <span
+              class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white"
+            >
+              !
+            </span>
+          }
+        </p-button>
+
+        <p-popover #op_date>
+          <div class="p-3 flex flex-col gap-3">
+            <div class="flex items-center justify-between border-b pb-2 mb-1">
+              <span class="text-sm font-semibold text-surface-700 dark:text-surface-100"
+                >Selecionar Período</span
+              >
+              @if (filterDateRange()) {
+                <p-button
+                  label="Limpar"
+                  [text]="true"
+                  severity="danger"
+                  size="small"
+                  (click)="filterDateRange.set(null); op_date.hide()"
+                />
+              }
+            </div>
+            <p-datepicker
+              [(ngModel)]="filterDateRange"
+              selectionMode="range"
+              [inline]="true"
+              class="border-0"
+              styleClass="border-0 shadow-none bg-transparent"
+              dateFormat="dd/mm/yy"
+            />
+          </div>
+        </p-popover>
+      </div>
+
       <!-- Icon de informação -->
       <p-button
         icon="pi pi-info-circle"
@@ -260,7 +307,6 @@
                     hideDelay="0"
                     >{{ col.headerAbbr }}</span
                   >
-                  <p-sortIcon [field]="col.field" />
                 </div>
               </th>
             }

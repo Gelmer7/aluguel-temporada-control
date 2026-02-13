@@ -13,6 +13,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { DatePicker } from 'primeng/datepicker';
+
 // PrimeNG Components
 import { TableModule } from 'primeng/table';
 import { Button } from 'primeng/button';
@@ -77,6 +79,7 @@ import { ColorService } from '../../../../services/color.service';
     InputText,
     IconField,
     InputIcon,
+    DatePicker,
     AccordionModule,
     // Shared
     TablePaginatorComponent,
@@ -129,6 +132,7 @@ export class CsvViewerPage {
   protected readonly selectedYear = signal<number | string | null>('Todos');
   protected readonly selectedMonth = signal<number | string | null>('Todos');
   protected readonly selectedType = signal<string | null>('Todos');
+  protected readonly filterDateRange = signal<Date[] | null>(null);
 
   protected readonly years = computed(() => {
     const years = this.rows().map((r) => this.parseAirbnbDate(r.__norm.data)?.getFullYear());
@@ -195,6 +199,21 @@ export class CsvViewerPage {
     const type = this.selectedType();
     if (type && type !== 'Todos') {
       data = data.filter((r) => (r.__norm.tipo ?? '').trim() === type);
+    }
+
+    // Filter by Date Range
+    const range = this.filterDateRange();
+    if (range && range.length === 2 && range[0] && range[1]) {
+      const start = range[0];
+      const end = range[1];
+      // Set hours to include the full day
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+
+      data = data.filter((r) => {
+        const date = this.parseAirbnbDate(r.__norm.data);
+        return date ? date >= start && date <= end : false;
+      });
     }
 
     // Filter by Global Query
@@ -462,6 +481,19 @@ export class CsvViewerPage {
 
   protected onHidePayoutChange(hide: boolean) {
     this.hidePayout.set(hide);
+
+    // Quando for FALSO (mostrar payouts), habilitar a coluna "Pago"
+    if (!hide) {
+      const current = this.selectedColumns();
+      const hasPago = current.some((c) => c.field.trim() === 'Pago');
+
+      if (!hasPago) {
+        const pagoCol = this.cols().find((c) => c.field.trim() === 'Pago');
+        if (pagoCol) {
+          this.selectedColumns.set([...current, pagoCol]);
+        }
+      }
+    }
     this.first.set(0);
   }
 
@@ -621,16 +653,17 @@ export class CsvViewerPage {
   }
 
   public colClass(field: string): string {
-    return field === 'Valor' ? this.colorService.colors().pagamentos : '';
+    return field === 'Valor' || field === 'Pago' ? this.colorService.colors().pagamentos : '';
   }
 
   public colHeaderClass(field: string): string {
-    const base = field === 'Valor' ? this.colorService.colors().pagamentos : '';
+    const base = field === 'Valor' || field === 'Pago' ? this.colorService.colors().pagamentos : '';
     return (base ? base + ' ' : '') + '!p-1';
   }
 
   public tdClass(row: ViewerRow, field: string): string {
-    const base = field === 'Valor' ? this.colClass(field) : this.rowClass(row);
+    const isSpecialCol = field === 'Valor' || field === 'Pago';
+    const base = isSpecialCol ? this.colClass(field) : this.rowClass(row);
     return base + ' !p-1';
   }
 

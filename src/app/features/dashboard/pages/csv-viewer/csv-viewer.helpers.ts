@@ -36,10 +36,11 @@ export function renderDerived(row: ViewerRow, field: string, inicioFimField: str
 }
 
 export function getCellValue(row: ViewerRow, field: string): string {
-  const normKey = AirbnbHeaderToKey[field as keyof typeof AirbnbHeaderToKey];
-  if (normKey && row.__norm) return row.__norm[normKey] as string;
+  const f = (field ?? '').trim();
+  const normKey = AirbnbHeaderToKey[f as keyof typeof AirbnbHeaderToKey];
+  if (normKey && row.__norm) return (row.__norm[normKey] as string) || '';
   const raw = row.__raw;
-  return raw ? raw[field] ?? '' : '';
+  return raw ? raw[f] ?? raw[field] ?? '' : '';
 }
 
 export function colTooltip(row: ViewerRow, field: string, inicioFimField: string, pessoaField: string): string {
