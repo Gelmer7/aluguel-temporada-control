@@ -19,6 +19,7 @@ export class PdfService {
     tithePercentage: number;
     offerPercentage: number;
     houseCode?: string;
+    includeCarneLeao?: boolean;
     payments: any[];
     expenses: any[];
     history: any[];
@@ -155,6 +156,19 @@ export class PdfService {
         this.translate.instant(`EXPENSES_FORM.TYPES.${e.type}`),
         this.formatBRL(e.price),
       ]),
+      didParseCell: (dataCell) => {
+        // Se for uma linha do corpo e a despesa for do tipo CARNE_LEAO e o total de despesas for diferente da soma total
+        // (indicando que algumas foram desconsideradas)
+        if (dataCell.section === 'body') {
+          const expense = data.expenses[dataCell.row.index];
+          const includeCarneLeao = data.includeCarneLeao !== false;
+
+          if (!includeCarneLeao && expense.type === 'CARNE_LEAO') {
+            dataCell.cell.styles.textColor = [180, 180, 180]; // Cinza claro
+            dataCell.cell.styles.fontStyle = 'italic';
+          }
+        }
+      },
       foot: [['', '', 'Total:', this.formatBRL(data.totals.expenses)]],
       footStyles: {
         fillColor: [240, 240, 240],

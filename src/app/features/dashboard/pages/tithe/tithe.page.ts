@@ -16,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { IftaLabelModule } from 'primeng/iftalabel';
 import { ButtonModule } from 'primeng/button';
 import { TextareaModule } from 'primeng/textarea';
+import { CheckboxModule } from 'primeng/checkbox';
 
 
 // Components
@@ -50,7 +51,8 @@ import { Expense } from '../../../../models/expense.model';
     DialogComponent,
     FilterContainerComponent,
     IftaLabelModule,
-    TextareaModule
+    TextareaModule,
+    CheckboxModule
   ],
   templateUrl: './tithe.page.html',
 })
@@ -69,6 +71,7 @@ export class TithePage implements OnInit {
   protected readonly selectedMonths = signal<number[]>([new Date().getMonth()]);
   protected readonly tithePercentage = signal<number>(10);
   protected readonly offerPercentage = signal<number>(5);
+  protected readonly includeCarneLeao = signal<boolean>(false);
 
   constructor() {
     // Reload data when house changes
@@ -125,9 +128,9 @@ export class TithePage implements OnInit {
   protected readonly filteredExpenses = computed(() => {
     const year = this.selectedYear();
     const months = this.selectedMonths();
+
     return this.expenses().filter((e) => {
       const date = new Date(e.purchaseDate);
-      // Usar fuso horário local para filtrar corretamente
       return date.getFullYear() === year && months.includes(date.getMonth());
     });
   });
@@ -137,7 +140,10 @@ export class TithePage implements OnInit {
   });
 
   protected readonly totalExpenses = computed(() => {
-    return this.filteredExpenses().reduce((acc, e) => acc + (e.price || 0), 0);
+    const includeCarneLeao = this.includeCarneLeao();
+    return this.filteredExpenses()
+      .filter((e) => includeCarneLeao || e.type !== 'CARNE_LEAO')
+      .reduce((acc, e) => acc + (e.price || 0), 0);
   });
 
   protected readonly totalEarnings = computed(() => {
@@ -149,7 +155,7 @@ export class TithePage implements OnInit {
   });
 
   protected readonly offerValue = computed(() => {
-    return (this.totalAirbnb() * this.offerPercentage()) / 100;
+    return (this.totalEarnings() * this.offerPercentage()) / 100;
   });
 
   protected readonly totalToPay = computed(() => {
@@ -270,6 +276,7 @@ export class TithePage implements OnInit {
       tithePercentage: this.tithePercentage(),
       offerPercentage: this.offerPercentage(),
       houseCode: this.houseService.currentHouseCode() || undefined,
+      includeCarneLeao: this.includeCarneLeao(),
       payments: this.filteredPayments(),
       expenses: this.filteredExpenses(),
       history: this.titheHistory(),

@@ -165,7 +165,8 @@
     "HISTORY": "Tithe History",
     "NO_HISTORY": "No tithe history found.",
     "SAVE_SUCCESS": "Tithe saved successfully!",
-    "DOWNLOAD_PDF": "Download PDF"
+    "DOWNLOAD_PDF": "Download PDF",
+    "INCLUDE_CARNE_LEAO": "Include Carnê-Leão"
   },
   "REMINDERS_FORM": {
     "NEW": "New Reminder",
@@ -186,5 +187,12 @@
       "REJECTED": "Rejected",
       "IN_PROGRESS": "In Progress"
     }
+  },
+  "COMMON": {
+    "SUCCESS": "Success",
+    "ERROR": "Error",
+    "DELETE_SUCCESS": "Deleted successfully",
+    "INCLUDED": "Included",
+    "EXCLUDED": "Excluded"
   }
 }

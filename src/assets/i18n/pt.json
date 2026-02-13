@@ -210,7 +210,8 @@
     "HISTORY": "Histórico de Dízimos",
     "NO_HISTORY": "Nenhum histórico de dízimo encontrado.",
     "SAVE_SUCCESS": "Dízimo salvo com sucesso!",
-    "DOWNLOAD_PDF": "Baixar PDF"
+    "DOWNLOAD_PDF": "Baixar PDF",
+    "INCLUDE_CARNE_LEAO": "Incluir Carnê-Leão"
   },
   "REMINDERS_FORM": {
     "NEW": "Novo Lembrete",
@@ -235,6 +236,8 @@
   "COMMON": {
     "SUCCESS": "Sucesso",
     "ERROR": "Erro",
-    "DELETE_SUCCESS": "Excluído com sucesso"
+    "DELETE_SUCCESS": "Excluído com sucesso",
+    "INCLUDED": "Incluído",
+    "EXCLUDED": "Excluído"
   }
 }

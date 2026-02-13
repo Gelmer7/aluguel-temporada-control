@@ -43,6 +43,12 @@
           <span
             >Oferta: <span class="text-primary">{{ offerPercentage() }}%</span></span
           >
+          <span
+            >Carnê Leão:
+            <span class="text-primary">{{
+              (includeCarneLeao() ? 'COMMON.INCLUDED' : 'COMMON.EXCLUDED') | translate
+            }}</span></span
+          >
         </ng-template>
         <!-- filtros -->
         <div class="flex flex-wrap items-center gap-4 w-full p-1">
@@ -102,6 +108,17 @@
             />
             <label for="offer-percent">{{ 'TITHE_MANAGEMENT.OFFER_PERCENTAGE' | translate }}</label>
           </p-floatLabel>
+
+          <!-- <div class="flex items-center gap-2 px-2">
+            <p-checkbox
+              [(ngModel)]="includeCarneLeao"
+              [binary]="true"
+              inputId="include-carne-leao"
+            />
+            <label for="include-carne-leao" class="text-sm cursor-pointer select-none">
+              {{ 'TITHE_MANAGEMENT.INCLUDE_CARNE_LEAO' | translate }}
+            </label>
+          </div> -->
         </div>
       </app-filter-container>
 
@@ -237,11 +254,15 @@
           <ng-template pTemplate="body" let-expense>
             <tr
               class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
+              [class.opacity-40]="!includeCarneLeao() && expense.type === 'CARNE_LEAO'"
+              [class.italic]="!includeCarneLeao() && expense.type === 'CARNE_LEAO'"
             >
               <td class="truncate">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
               <td class="truncate">{{ expense.description }}</td>
               <td class="truncate">{{ expense.type }}</td>
-              <td class="truncate font-medium">{{ expense.price | currency: 'BRL' }}</td>
+              <td class="truncate font-medium" [class.line-through]="!includeCarneLeao() && expense.type === 'CARNE_LEAO'">
+                {{ expense.price | currency: 'BRL' }}
+              </td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">

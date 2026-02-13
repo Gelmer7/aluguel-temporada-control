@@ -164,7 +164,8 @@
     "HISTORY": "Historial de Diezmos",
     "NO_HISTORY": "No se encontró historial de diezmo.",
     "SAVE_SUCCESS": "¡Diezmo guardado con éxito!",
-    "DOWNLOAD_PDF": "Descargar PDF"
+    "DOWNLOAD_PDF": "Descargar PDF",
+    "INCLUDE_CARNE_LEAO": "Incluir Carnê-Leão"
   },
   "REMINDERS_FORM": {
     "NEW": "Nuevo Recordatorio",
@@ -185,5 +186,12 @@
       "REJECTED": "Rechazado",
       "IN_PROGRESS": "En Progreso"
     }
+  },
+  "COMMON": {
+    "SUCCESS": "Éxito",
+    "ERROR": "Error",
+    "DELETE_SUCCESS": "Eliminado con éxito",
+    "INCLUDED": "Incluido",
+    "EXCLUDED": "Excluido"
   }
 }
