@@ -102,10 +102,11 @@ export class StackedBarChartComponent {
           let html = `<b>${label} ${group}</b><br/>`;
           let total = 0;
           params.forEach((p) => {
-            if (p.value > 0) {
+            if (p.value !== 0) {
+              const absValue = Math.abs(p.value);
               const valueFormatted = isCurrency
-                ? `${currencySymbol} ${p.value.toLocaleString(locale, { minimumFractionDigits: 2 })}`
-                : p.value.toLocaleString(locale);
+                ? `${currencySymbol} ${absValue.toLocaleString(locale, { minimumFractionDigits: 2 })}`
+                : absValue.toLocaleString(locale);
 
               html += `${p.marker} ${p.seriesName}: <b>${valueFormatted}</b><br/>`;
               total += p.value;
@@ -113,11 +114,12 @@ export class StackedBarChartComponent {
           });
           html += `<hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;" />`;
 
+          const absTotal = Math.abs(total);
           const totalFormatted = isCurrency
-            ? `${currencySymbol} ${total.toLocaleString(locale, { minimumFractionDigits: 2 })}`
-            : total.toLocaleString(locale);
+            ? `${currencySymbol} ${absTotal.toLocaleString(locale, { minimumFractionDigits: 2 })}`
+            : absTotal.toLocaleString(locale);
 
-          html += `Total: <b>${totalFormatted}</b>`;
+          html += `Total: <b>${total < 0 ? '-' : ''}${totalFormatted}</b>`;
           return html;
         },
       },
