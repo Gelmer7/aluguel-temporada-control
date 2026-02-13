@@ -26,48 +26,46 @@ DROP POLICY IF EXISTS "Acesso total manual_rentals" ON manual_rentals;
 CREATE POLICY "Acesso total manual_rentals" ON manual_rentals
 FOR ALL USING (true) WITH CHECK (true);
 
+-- Adicionar coluna 'pago' na tabela airbnb_logs caso não exista
+DO $$ 
+BEGIN 
+    IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='airbnb_logs' AND column_name='pago') THEN
+        ALTER TABLE airbnb_logs ADD COLUMN pago NUMERIC;
+    END IF;
+END $$;
+
 -- View para unificar ganhos do Airbnb e Aluguéis Manuais
 -- Esta view simplifica o fluxo do Airbnb transformando as múltiplas linhas (Reserva, Payout, Recebimento)
 -- em duas entradas claras e positivas: uma para o Anfitrião e outra para o Co-anfitrião.
 DROP VIEW IF EXISTS v_unified_earnings;
 
 CREATE OR REPLACE VIEW v_unified_earnings AS
-WITH cohost_sums AS (
-    -- Agrupa os valores pagos aos co-anfitriões por código de confirmação
-    -- Os valores no CSV do Airbnb para co-anfitrião são negativos, por isso somamos
-    SELECT 
-        codigo_confirmacao,
-        SUM(valor) as total_cohost_negativo,
-        house_code
-    FROM airbnb_logs
-    WHERE tipo = 'Recebimento do coanfitrião'
-    GROUP BY codigo_confirmacao, house_code
-)
--- 1. Parte do Anfitrião (Derivada da linha de 'Reserva')
--- O valor recebido pelo anfitrião é o total da reserva menos o que foi para o co-anfitrião
+-- 1. Parte do Anfitrião (Derivada de 'Reserva', 'Créditos Diversos', etc.)
 SELECT
     l.id,
     l.data::DATE as data,
-    'Pagamento Anfitrião' as tipo,
+    CASE 
+        WHEN l.tipo LIKE 'Payout/%' THEN REPLACE(l.tipo, 'Payout/', '')
+        ELSE l.tipo 
+    END as tipo,
     (NULLIF(l.raw_data->>'Data de início', ''))::DATE as data_inicio,
     (NULLIF(l.raw_data->>'Data de término', ''))::DATE as data_termino,
     l.noites,
     l.hospede,
     l.anuncio,
-    (l.valor + COALESCE(c.total_cohost_negativo, 0)) as valor,
-    (l.valor + COALESCE(c.total_cohost_negativo, 0)) as pago,
+    l.valor as valor,
+    COALESCE(l.pago, 0) as pago,
     l.taxa_limpeza,
     'Airbnb' as fonte,
     l.house_code,
     l.codigo_confirmacao
 FROM airbnb_logs l
-LEFT JOIN cohost_sums c ON l.codigo_confirmacao = c.codigo_confirmacao AND l.house_code = c.house_code
-WHERE l.tipo = 'Reserva'
+WHERE l.tipo NOT IN ('Recebimento do coanfitrião', 'Payout')
 
 UNION ALL
 
 -- 2. Parte do Co-anfitrião (Derivada da linha de 'Recebimento do coanfitrião')
--- Transformamos o valor negativo em positivo para visualização simples
+-- O valor pago ao co-anfitrião já foi processado como positivo no frontend
 SELECT
     l.id,
     l.data::DATE as data,
@@ -78,7 +76,7 @@ SELECT
     l.hospede,
     l.anuncio,
     ABS(l.valor) as valor,
-    ABS(l.valor) as pago,
+    COALESCE(l.pago, ABS(l.valor)) as pago,
     0 as taxa_limpeza,
     'Airbnb' as fonte,
     l.house_code,

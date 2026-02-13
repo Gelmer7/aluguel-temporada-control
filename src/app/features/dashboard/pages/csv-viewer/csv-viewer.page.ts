@@ -363,6 +363,7 @@ export class CsvViewerPage {
     // 'Taxa de serviço',
     'Taxa de limpeza',
     'Valor',
+    'Pago',
   ];
 
   protected async syncDatabase() {
@@ -377,10 +378,13 @@ export class CsvViewerPage {
           ? DateUtils.toLocalISOString(parsedDate)
           : row.__norm.data;
 
+        // A unique_key ignora o prefixo 'Payout/' para que possamos sobrescrever registros antigos
+        // que eram apenas 'Reserva', 'Créditos Diversos', etc.
+        const cleanTipo = (row.__norm.tipo || '').replace('Payout/', '');
+        const uniqueKey = `${row.__norm.codigoConfirmacao || 'N/A'}_${row.__norm.data}_${cleanTipo}_${row.__norm.valor}`;
+
         return {
-          unique_key: `${row.__norm.codigoConfirmacao || 'N/A'}_${row.__norm.data}_${row.__norm.tipo}_${
-            row.__norm.valor
-          }`,
+          unique_key: uniqueKey,
           data: normalizedDate,
           tipo: row.__norm.tipo,
           codigo_confirmacao: row.__norm.codigoConfirmacao,
@@ -388,6 +392,7 @@ export class CsvViewerPage {
           hospede: row.__norm.hospede,
           anuncio: row.__norm.anuncio,
           valor: AirbnbUtils.parseCurrency(row.__norm.valor),
+          pago: AirbnbUtils.parseCurrency(row.__norm.pago), // Nova coluna
           taxa_limpeza: AirbnbUtils.parseCurrency(row.__norm.taxaLimpeza),
           raw_data: row.__raw,
         };
@@ -756,8 +761,12 @@ export class CsvViewerPage {
 
   private applyCsvText(text: string): void {
     const result = Papa.parse(text, { header: true, skipEmptyLines: true });
+    let data = Array.isArray(result.data) ? (result.data as any[]) : [];
+    
+    // Refatorar os dados do Airbnb (Mesclar Payouts, etc.)
+    data = AirbnbUtils.processAirbnbReport(data);
+
     const fields = (result.meta as any).fields || [];
-    const data = Array.isArray(result.data) ? (result.data as any[]) : [];
     const enriched: ViewerRow[] = [];
     for (let i = 0; i < data.length; i++) {
       const __raw = data[i] as Record<string, string>;

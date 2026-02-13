@@ -66,7 +66,7 @@ export class SupabaseService {
     return await this.supabase
       .from('airbnb_logs')
       .upsert(recordsWithMetadata, {
-        onConflict: 'uniqueKey',
+        onConflict: 'unique_key',
         ignoreDuplicates: false
       })
       .select();

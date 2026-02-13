@@ -67,4 +67,66 @@ export class AirbnbUtils {
     if (!val) return 0;
     return parseInt(val.replace(/[^\d]/g, ''), 10) || 0;
   }
+
+  /**
+   * Refatora o relatório do Airbnb mesclando linhas de "Payout" com as linhas seguintes.
+   * 
+   * @param data Array de objetos (linhas do CSV)
+   * @returns Array de objetos refatorado
+   */
+  static processAirbnbReport(data: any[]): any[] {
+    const refactoredData: any[] = [];
+    const pendingPayouts: any[] = [];
+
+    // Iterar pelas linhas do CSV
+    for (const row of data) {
+      const rowCopy = { ...row };
+      const tipo = (rowCopy['Tipo'] || '').trim();
+
+      if (tipo === 'Payout') {
+        pendingPayouts.push(rowCopy);
+        continue;
+      }
+
+      if (tipo === 'Recebimento do coanfitrião') {
+        // Para co-anfitrião: Pago = ABS(Valor)
+        const valor = this.parseCurrency(rowCopy['Valor']);
+        rowCopy['Pago'] = String(Math.abs(valor));
+        refactoredData.push(rowCopy);
+        continue;
+      }
+
+      // Reserva, Créditos Diversos, Pagamento da Resolução, etc.
+      if (pendingPayouts.length > 0) {
+        // Pegar o primeiro payout pendente (geralmente o pagamento está ligado à fila seguinte)
+        const payout = pendingPayouts.shift();
+        
+        // Mesclar Tipo
+        rowCopy['Tipo'] = `Payout/${tipo}`;
+        
+        // Mesclar Pago
+        rowCopy['Pago'] = payout['Pago'];
+
+        // Mesclar outras colunas se preenchidas no Payout
+        Object.keys(payout).forEach(key => {
+          if (key === 'Tipo' || key === 'Pago' || key === 'Data' || key === 'Valor') return;
+          
+          const payoutVal = String(payout[key] || '').trim();
+          const rowVal = String(rowCopy[key] || '').trim();
+          
+          if (payoutVal && payoutVal !== rowVal) {
+            if (rowVal) {
+              rowCopy[key] = `${payoutVal}/${rowVal}`;
+            } else {
+              rowCopy[key] = payoutVal;
+            }
+          }
+        });
+      }
+      
+      refactoredData.push(rowCopy);
+    }
+    
+    return refactoredData;
+  }
 }

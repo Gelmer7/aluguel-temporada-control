@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS airbnb_logs (
     hospede TEXT,
     anuncio TEXT,
     valor NUMERIC,
+    pago NUMERIC, -- Adicionado para armazenar o valor efetivamente pago
     taxa_limpeza NUMERIC,
     raw_data JSONB, -- Armazena a linha original completa por segurança
     created_at TIMESTAMPTZ DEFAULT NOW()
