@@ -129,7 +129,7 @@
             }
           </div>
           <div class="flex flex-col gap-1">
-            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">Intervalo de Datas</label>
+            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">{{ 'TERMS.DATE_RANGE' | translate }}</label>
             <p-datepicker
               inputId="popover_range_date"
               [ngModel]="filterDateRange()"
@@ -140,13 +140,13 @@
               [readonlyInput]="false"
               class="w-full"
               appendTo="body"
-              dateFormat="dd/mm/yy"
-              placeholder="00/00/0000 - 00/00/0000"
+              [dateFormat]="'PRIMENG.dateFormat' | translate"
+              [placeholder]="'PRIMENG.dateFormat' | translate"
               styleClass="w-full"
             ></p-datepicker>
           </div>
           <div class="text-[10px] text-surface-400 italic">
-            Dica: Você pode digitar as datas ou usar o calendário.
+            {{ 'TERMS.DATE_PICKER_HINT' | translate }}
           </div>
         </div>
       </p-popover>

@@ -11,7 +11,7 @@
     <p-button
       icon="pi pi-plus"
       (onClick)="onAddExpense()"
-      pTooltip="Novo Gasto"
+      [pTooltip]="'EXPENSES_FORM.NEW' | translate"
       tooltipPosition="left"
       [size]="'small'"
     />
@@ -25,7 +25,7 @@
     <ng-template #filterSummary>
       @if (filterDateRange()) {
         <span
-          >Período:
+          >{{ 'TERMS.PERIOD' | translate }}:
           <span class="text-primary">{{ getFormattedDateRange() }}</span></span
         >
       }
@@ -121,7 +121,7 @@
         [rounded]="true"
         [text]="true"
         (click)="op_date_filter.toggle($event)"
-        [pTooltip]="'Filtrar por período'"
+        [pTooltip]="'TERMS.FILTER_BY_PERIOD' | translate"
         tooltipPosition="top"
         [severity]="filterDateRange() ? 'primary' : 'secondary'"
         [styleClass]="filterDateRange() ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10' : ''"
@@ -138,7 +138,7 @@
       <p-popover #op_date_filter>
         <div class="p-3 flex flex-col gap-3 min-w-[280px]">
           <div class="flex items-center justify-between border-b border-surface-200 dark:border-surface-700 pb-2">
-            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">Selecionar Período</span>
+            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">{{ 'TERMS.SELECT_PERIOD' | translate }}</span>
             @if (filterDateRange()) {
               <p-button
                 icon="pi pi-trash"
@@ -146,12 +146,12 @@
                 severity="danger"
                 size="small"
                 (click)="onDateRangeChange(null); op_date_filter.hide()"
-                pTooltip="Limpar Filtro"
+                [pTooltip]="'ACTIONS.CLEAR_FILTER' | translate"
               />
             }
           </div>
           <div class="flex flex-col gap-1">
-            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">Intervalo de Datas</label>
+            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">{{ 'TERMS.DATE_RANGE' | translate }}</label>
             <p-datepicker
               inputId="popover_range_date"
               [ngModel]="filterDateRange()"
@@ -162,13 +162,13 @@
               [readonlyInput]="false"
               class="w-full"
               appendTo="body"
-              dateFormat="dd/mm/yy"
-              placeholder="00/00/0000 - 00/00/0000"
+              [dateFormat]="'PRIMENG.dateFormat' | translate"
+              [placeholder]="'PRIMENG.dateFormat' | translate"
               styleClass="w-full"
             ></p-datepicker>
           </div>
           <div class="text-[10px] text-surface-400 italic">
-            Dica: Você pode digitar as datas ou usar o calendário.
+            {{ 'TERMS.DATE_PICKER_HINT' | translate }}
           </div>
         </div>
       </p-popover>

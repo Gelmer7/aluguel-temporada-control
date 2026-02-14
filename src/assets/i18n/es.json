@@ -28,7 +28,8 @@
     "DELETE": "Eliminar",
     "CONFIRM": "Confirmar",
     "SUCCESS": "Éxito",
-    "CREATED_AT": "Creado el"
+    "CREATED_AT": "Creado el",
+    "CLEAR_FILTER": "Limpiar Filtro"
   },
   "COMMON": {
     "QUANTITY": "Cantidad"
@@ -66,7 +67,12 @@
     "FILTER_BY_STATUS": "Filtrar por Estado",
     "CONFIRMATION_CODE": "Cód. Confirmación",
     "HOUSE_CODE": "Cód. Casa",
-    "HOUSE": "Casa"
+    "HOUSE": "Casa",
+    "DATE_RANGE": "Rango de Fechas",
+    "DATE_PICKER_HINT": "Consejo: Puedes escribir las fechas o usar el calendario.",
+    "SELECT_PERIOD": "Seleccionar Período",
+    "PERIOD": "Período",
+    "FILTER_BY_PERIOD": "Filtrar por período"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "Nueva Sugerencia",
@@ -196,5 +202,16 @@
     "DELETE_SUCCESS": "Eliminado con éxito",
     "INCLUDED": "Incluido",
     "EXCLUDED": "Excluido"
+  },
+  "PRIMENG": {
+    "dayNames": ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+    "dayNamesShort": ["Dom", "Lun", "Mar", "Mié", "Jue", "Vie", "Sáb"],
+    "dayNamesMin": ["D", "L", "M", "X", "J", "V", "S"],
+    "monthNames": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+    "monthNamesShort": ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+    "today": "Hoy",
+    "clear": "Limpiar",
+    "dateFormat": "dd/mm/yy",
+    "weekHeader": "Sm"
   }
 }

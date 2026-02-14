@@ -1,11 +1,13 @@
 import { Injectable, signal, inject } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { PrimeNG } from 'primeng/config';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LanguageService {
   private translate = inject(TranslateService);
+  private primeng = inject(PrimeNG);
 
   // Signal to expose current language code
   currentLang = signal<string>('pt');
@@ -35,7 +37,11 @@ export class LanguageService {
 
   setLanguage(lang: string) {
     this.translate.setDefaultLang(lang);
-    this.translate.use(lang);
+    this.translate.use(lang).subscribe(() => {
+      this.translate.get('PRIMENG').subscribe((res: any) => {
+        this.primeng.setTranslation(res);
+      });
+    });
     this.currentLang.set(lang);
     localStorage.setItem('app-lang', lang);
   }

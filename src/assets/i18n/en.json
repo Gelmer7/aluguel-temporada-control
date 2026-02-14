@@ -28,7 +28,8 @@
     "DELETE": "Delete",
     "CONFIRM": "Confirm",
     "SUCCESS": "Success",
-    "CREATED_AT": "Created at"
+    "CREATED_AT": "Created at",
+    "CLEAR_FILTER": "Clear Filter"
   },
   "COMMON": {
     "QUANTITY": "Quantity"
@@ -67,7 +68,12 @@
     "FILTER_BY_STATUS": "Filter by Status",
     "CONFIRMATION_CODE": "Conf. Code",
     "HOUSE_CODE": "House Code",
-    "HOUSE": "House"
+    "HOUSE": "House",
+    "DATE_RANGE": "Date Range",
+    "DATE_PICKER_HINT": "Tip: You can type the dates or use the calendar.",
+    "SELECT_PERIOD": "Select Period",
+    "PERIOD": "Period",
+    "FILTER_BY_PERIOD": "Filter by period"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "New Suggestion",
@@ -197,5 +203,16 @@
     "DELETE_SUCCESS": "Deleted successfully",
     "INCLUDED": "Included",
     "EXCLUDED": "Excluded"
+  },
+  "PRIMENG": {
+    "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+    "dayNamesShort": ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+    "dayNamesMin": ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+    "monthNames": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+    "monthNamesShort": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "today": "Today",
+    "clear": "Clear",
+    "dateFormat": "mm/dd/yy",
+    "weekHeader": "Wk"
   }
 }

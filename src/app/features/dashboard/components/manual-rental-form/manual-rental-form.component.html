@@ -17,7 +17,9 @@
           id="data_pagamento"
           [showIcon]="true"
           appendTo="body"
-          class="w-full">
+          class="w-full"
+          [dateFormat]="'PRIMENG.dateFormat' | translate"
+          [placeholder]="'PRIMENG.dateFormat' | translate">
         </p-datepicker>
         <label for="data_pagamento">{{ 'MANUAL_RENTALS_FORM.PAYMENT_DATE' | translate }}</label>
       </p-iftalabel>
@@ -42,7 +44,9 @@
           id="data_reserva"
           [showIcon]="true"
           appendTo="body"
-          class="w-full">
+          class="w-full"
+          [dateFormat]="'PRIMENG.dateFormat' | translate"
+          [placeholder]="'PRIMENG.dateFormat' | translate">
         </p-datepicker>
         <label for="data_reserva">{{ 'MANUAL_RENTALS_FORM.RESERVATION_DATE' | translate }}</label>
       </p-iftalabel>
@@ -66,7 +70,9 @@
           id="data_inicio"
           [showIcon]="true"
           appendTo="body"
-          class="w-full">
+          class="w-full"
+          [dateFormat]="'PRIMENG.dateFormat' | translate"
+          [placeholder]="'PRIMENG.dateFormat' | translate">
         </p-datepicker>
         <label for="data_inicio">{{ 'MANUAL_RENTALS_FORM.START_DATE' | translate }}</label>
       </p-iftalabel>
@@ -78,7 +84,9 @@
           id="data_termino"
           [showIcon]="true"
           appendTo="body"
-          class="w-full">
+          class="w-full"
+          [dateFormat]="'PRIMENG.dateFormat' | translate"
+          [placeholder]="'PRIMENG.dateFormat' | translate">
         </p-datepicker>
         <label for="data_termino">{{ 'MANUAL_RENTALS_FORM.END_DATE' | translate }}</label>
       </p-iftalabel>

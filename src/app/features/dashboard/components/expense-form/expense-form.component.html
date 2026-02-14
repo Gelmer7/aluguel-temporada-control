@@ -107,7 +107,8 @@
         <p-datepicker
           id="purchaseDate"
           formControlName="purchaseDate"
-          dateFormat="dd/mm/yy"
+          [dateFormat]="'PRIMENG.dateFormat' | translate"
+          [placeholder]="'PRIMENG.dateFormat' | translate"
           [showIcon]="true"
           styleClass="w-full"
           inputStyleClass="w-full !h-10 sm:!h-11"
