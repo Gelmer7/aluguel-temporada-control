@@ -11,5 +11,7 @@ export interface Suggestion {
 export type SuggestionStatus = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'REJECTED';
 
 export interface SuggestionFilters {
-  status: SuggestionStatus | 'all';
+  status: SuggestionStatus[];
+  years: (number | string)[];
+  months: number[];
 }

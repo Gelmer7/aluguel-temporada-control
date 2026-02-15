@@ -58,6 +58,8 @@
     "REMINDERS": "Lembretes",
     "YEAR": "Ano",
     "MONTH": "Mês",
+    "MONTHS": "Meses",
+    "NONE": "Nenhum",
     "TYPE": "Tipo",
     "START_DATE": "Data de Início",
     "END_DATE": "Data de Término",

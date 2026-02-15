@@ -14,12 +14,29 @@ export class SuggestionService {
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (filters.status !== 'all') {
-      query = query.eq('status', filters.status);
+    if (filters.status && filters.status.length > 0) {
+      query = query.in('status', filters.status);
     }
 
     const { data, error } = await query;
-    return { data: data as Suggestion[], error };
+    let filteredData = (data as Suggestion[]) || [];
+
+    // Filtro de Ano e Mês no Frontend (created_at é ISO string)
+    if (filters.years && filters.years.length > 0 && !filters.years.includes('ALL')) {
+      filteredData = filteredData.filter((s) => {
+        const year = new Date(s.created_at).getFullYear();
+        return filters.years.includes(year);
+      });
+    }
+
+    if (filters.months && filters.months.length > 0 && filters.months.length < 12) {
+      filteredData = filteredData.filter((s) => {
+        const month = new Date(s.created_at).getMonth();
+        return filters.months.includes(month);
+      });
+    }
+
+    return { data: filteredData, error };
   }
 
   async addSuggestion(suggestion: Omit<Suggestion, 'id' | 'created_at'>) {
