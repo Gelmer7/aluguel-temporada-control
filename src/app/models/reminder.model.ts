@@ -10,5 +10,7 @@ export interface Reminder {
 }
 
 export interface ReminderFilters {
-  status: ReminderStatus | 'all';
+  status: ReminderStatus[];
+  years: (number | string)[];
+  months: number[];
 }

@@ -194,7 +194,8 @@
 </div>
 
 <app-suggestion-form
-  [(visible)]="isFormVisible"
+  [visible]="isFormVisible()"
+  (visibleChange)="isFormVisible.set($event)"
   [suggestion]="selectedSuggestion()"
   (saved)="onSave($event)"
 />

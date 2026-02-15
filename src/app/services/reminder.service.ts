@@ -14,12 +14,29 @@ export class ReminderService {
       .select('*')
       .order('remind_at', { ascending: true });
 
-    if (filters.status !== 'all') {
-      query = query.eq('status', filters.status);
+    if (filters.status && filters.status.length > 0) {
+      query = query.in('status', filters.status);
     }
 
     const { data, error } = await query;
-    return { data: data as Reminder[], error };
+    let filteredData = (data as Reminder[]) || [];
+
+    // Filtro de Ano e Mês no Frontend (remind_at é ISO string)
+    if (filters.years && filters.years.length > 0 && !filters.years.includes('ALL')) {
+      filteredData = filteredData.filter((r) => {
+        const year = new Date(r.remind_at).getFullYear();
+        return filters.years.includes(year);
+      });
+    }
+
+    if (filters.months && filters.months.length > 0 && filters.months.length < 12) {
+      filteredData = filteredData.filter((r) => {
+        const month = new Date(r.remind_at).getMonth();
+        return filters.months.includes(month);
+      });
+    }
+
+    return { data: filteredData, error };
   }
 
   async addReminder(reminder: Omit<Reminder, 'id' | 'created_at'>) {

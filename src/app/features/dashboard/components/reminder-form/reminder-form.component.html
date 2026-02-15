@@ -1,8 +1,10 @@
 <app-dialog
-  [visible]="visible"
-  (visibleChange)="onHide()"
+  [(visible)]="visible"
+  (onSave)="save()"
+  (onCancel)="onHide()"
   [header]="reminder ? ('REMINDERS_FORM.EDIT' | translate) : ('REMINDERS_FORM.NEW' | translate)"
   modal="true"
+  [saveDisabled]="form.invalid"
 >
   <form [formGroup]="form" (ngSubmit)="save()" class="flex flex-col gap-4">
     <div class="flex flex-col gap-2">
@@ -52,6 +54,7 @@
         optionLabel="label"
         optionValue="value"
         class="w-full"
+        appendTo="body"
       >
         <ng-template pTemplate="selectedItem">
           @if (form.get('status')?.value) {
@@ -62,20 +65,6 @@
           {{ option.label | translate }}
         </ng-template>
       </p-select>
-    </div>
-
-    <div class="flex justify-end gap-2 mt-4">
-      <p-button
-        type="button"
-        [label]="'ACTIONS.CANCEL' | translate"
-        severity="secondary"
-        (click)="onHide()"
-      ></p-button>
-      <p-button
-        type="submit"
-        [label]="'ACTIONS.SAVE' | translate"
-        [disabled]="form.invalid"
-      ></p-button>
     </div>
   </form>
 </app-dialog>

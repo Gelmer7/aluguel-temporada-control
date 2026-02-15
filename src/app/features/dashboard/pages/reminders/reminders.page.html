@@ -1,54 +1,114 @@
-<div class="container mx-auto p-4">
-  <div class="flex flex-col gap-6">
-    <!-- Filtros e Ações (Opcional, mas mantendo padrão) -->
-    <div class="flex justify-between items-center gap-4">
-      <div class="flex items-center gap-2">
-        <p-select
-          [options]="statusOptions"
-          [(ngModel)]="filters().status"
-          (ngModelChange)="onFilterChange($event)"
+<!-- Header Actions Template -->
+<ng-template #headerActions>
+  <p-button icon="pi pi-plus" (click)="openNew()"></p-button>
+</ng-template>
+
+<div class="container mx-auto p-2">
+  <p-toast />
+  <p-confirm-dialog />
+
+  <app-filter-container>
+    <ng-template #filterSummary>
+      <span>{{ 'TERMS.YEAR' | translate }}: {{ getYearLabel() }}</span>
+      <span>{{ 'TERMS.MONTH' | translate }}: {{ getMonthLabel() }}</span>
+      <span>{{ 'TERMS.STATUS' | translate }}: {{ getStatusLabel() }}</span>
+    </ng-template>
+
+    <div class="flex flex-wrap items-center gap-2 w-full p-1">
+      <p-floatLabel class="flex-1 min-w-[120px]" variant="in">
+        <p-multiSelect
+          [options]="yearOptions()"
+          [(ngModel)]="selectedYear"
           optionLabel="label"
           optionValue="value"
-          [placeholder]="'TERMS.FILTER_BY_STATUS' | translate"
-          class="w-48"
+          class="w-full"
+          appendTo="body"
+          [maxSelectedLabels]="1"
         >
-          <ng-template pTemplate="selectedItem">
-            @if (filters().status === 'all') {
-              {{ 'TERMS.ALL' | translate }}
-            } @else {
-              {{ 'REMINDERS_FORM.STATUS.' + filters().status | translate }}
-            }
-          </ng-template>
-          <ng-template let-option pTemplate="item">
+          <ng-template pTemplate="item" let-option>
             {{ option.label | translate }}
           </ng-template>
-        </p-select>
-      </div>
-    </div>
+        </p-multiSelect>
+        <label>{{ 'TERMS.YEAR' | translate }}</label>
+      </p-floatLabel>
 
+      <p-floatLabel class="flex-1 min-w-[120px]" variant="in">
+        <p-multiSelect
+          [options]="monthOptions"
+          [(ngModel)]="selectedMonth"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full"
+          appendTo="body"
+          [maxSelectedLabels]="2"
+          [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
+        >
+          <ng-template pTemplate="item" let-option>
+            {{ option.label | translate }}
+          </ng-template>
+        </p-multiSelect>
+        <label>{{ 'TERMS.MONTH' | translate }}</label>
+      </p-floatLabel>
+
+      <p-floatLabel class="flex-1 min-w-[150px]" variant="in">
+        <p-multiSelect
+          [options]="statusOptions"
+          [(ngModel)]="selectedStatus"
+          optionLabel="label"
+          optionValue="value"
+          class="w-full"
+          appendTo="body"
+          [maxSelectedLabels]="2"
+          [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
+        >
+          <ng-template pTemplate="item" let-option>
+            {{ option.label | translate }}
+          </ng-template>
+        </p-multiSelect>
+        <label>{{ 'TERMS.STATUS' | translate }}</label>
+      </p-floatLabel>
+
+      <p-button
+        icon="pi pi-filter-slash"
+        severity="secondary"
+        [text]="true"
+        (click)="clearFilters()"
+        class="flex-shrink-0 !p-0"
+      />
+    </div>
+  </app-filter-container>
+
+  <div class="flex flex-col gap-6 py-4">
     <!-- Lista de Lembretes -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       @for (reminder of reminders(); track reminder.id) {
         <p-card styleClass="h-full shadow-md hover:shadow-lg transition-shadow duration-300">
           <ng-template pTemplate="header">
-            <div class="flex justify-between items-start p-4 border-b border-gray-100 dark:border-gray-700">
+            <div
+              class="flex justify-between items-start p-4 border-b border-gray-100 dark:border-gray-700"
+            >
               <div class="flex flex-col gap-1">
-                <span class="text-xs text-gray-500 dark:text-gray-400">
+                <span>
                   <i class="pi pi-calendar mr-1"></i>
                   {{ formatDate(reminder.remind_at) }}
                 </span>
-                <h3 class="m-0 text-lg font-semibold">{{ reminder.title }}</h3>
+                <h3>{{ reminder.title }}</h3>
               </div>
-              <p-tag [value]="'REMINDERS_FORM.STATUS.' + reminder.status | translate" [severity]="getStatusSeverity(reminder.status)"></p-tag>
+              <p-tag
+                [value]="'REMINDERS_FORM.STATUS.' + reminder.status | translate"
+                [severity]="getStatusSeverity(reminder.status)"
+              ></p-tag>
             </div>
           </ng-template>
 
           <div class="py-2">
-            <p class="m-0 text-gray-600 dark:text-gray-300 whitespace-pre-wrap">{{ reminder.description }}</p>
+            <p>{{ reminder.description }}</p>
           </div>
 
           <ng-template pTemplate="footer">
-            <div class="flex justify-end gap-2 border-t border-gray-100 dark:border-gray-700 pt-3">
+            <div
+              class="flex justify-end gap-2 border-t border-surface-100 dark:border-surface-700 pt-3"
+            >
               <p-button
                 icon="pi pi-pencil"
                 [rounded]="true"
@@ -69,9 +129,11 @@
           </ng-template>
         </p-card>
       } @empty {
-        <div class="col-span-full flex flex-col items-center justify-center p-12 bg-gray-50 dark:bg-gray-800/50 rounded-xl border-2 border-dashed border-gray-200 dark:border-gray-700">
-          <i class="pi pi-bell-slash text-5xl text-gray-300 mb-4"></i>
-          <p class="text-xl text-gray-500">{{ 'REMINDERS_FORM.NO_DATA' | translate }}</p>
+        <div
+          class="col-span-full flex flex-col items-center justify-center p-12 bg-surface-50 dark:bg-surface-800/50 rounded-xl border-2 border-dashed border-surface-200 dark:border-surface-700"
+        >
+          <i class="pi pi-bell-slash text-5xl opacity-20 mb-4"></i>
+          <p>{{ 'REMINDERS_FORM.NO_DATA' | translate }}</p>
           <p-button
             [label]="'REMINDERS_FORM.NEW' | translate"
             icon="pi pi-plus"
@@ -84,21 +146,10 @@
   </div>
 </div>
 
-<!-- Header Actions Template -->
-<ng-template #headerActions>
-  <p-button
-    [label]="'REMINDERS_FORM.NEW' | translate"
-    icon="pi pi-plus"
-    (click)="openNew()"
-  ></p-button>
-</ng-template>
-
 <!-- Form Dialog -->
 <app-reminder-form
-  [(visible)]="isFormVisible"
+  [visible]="isFormVisible()"
+  (visibleChange)="isFormVisible.set($event)"
   [reminder]="selectedReminder()"
   (saved)="onSave($event)"
 ></app-reminder-form>
-
-<p-toast></p-toast>
-<p-confirm-dialog></p-confirm-dialog>
