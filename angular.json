@@ -61,8 +61,15 @@
               "outputHashing": "all",
               "allowedCommonJsDependencies": [
                 "papaparse",
-                "@supabase/postgrest-js"
-              ]
+                "@supabase/postgrest-js",
+                "jspdf",
+                "canvg",
+                "html2canvas",
+                "core-js",
+                "raf",
+                "rgbcolor"
+              ],
+              "serviceWorker": "ngsw-config.json"
             },
             "development": {
               "optimization": false,

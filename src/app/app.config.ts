@@ -8,7 +8,7 @@ import { provideHttpClient, HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 // DropdownModule removed line was not here, it was http-loader
 
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { routes } from './app.routes';
@@ -20,6 +20,7 @@ import * as echarts from 'echarts';
 import { registerLocaleData } from '@angular/common';
 import localePt from '@angular/common/locales/pt';
 import localeEs from '@angular/common/locales/es';
+import { provideServiceWorker } from '@angular/service-worker';
 
 registerLocaleData(localePt);
 registerLocaleData(localeEs);
@@ -48,7 +49,10 @@ export const appConfig: ApplicationConfig = {
           darkModeSelector: '.dark',
         },
       },
-    }),
+    }), provideServiceWorker('ngsw-worker.js', {
+            enabled: !isDevMode(),
+            registrationStrategy: 'registerWhenStable:30000'
+          }),
   ],
 };
 
