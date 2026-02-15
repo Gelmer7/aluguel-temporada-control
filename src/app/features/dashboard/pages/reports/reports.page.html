@@ -1,37 +1,8 @@
 <ng-template #headerActions>
-  <div class="flex items-center gap-3">
-    <div class="flex items-center gap-1.5">
-      <p-checkbox
-        [binary]="true"
-        [(ngModel)]="showGross"
-        inputId="gross"
-        size="small"
-      />
-      <label for="gross" class="text-xs font-medium cursor-pointer">{{ 'TERMS.GROSS' | translate }}</label>
-    </div>
-    <div class="flex items-center gap-1.5">
-      <p-checkbox
-        [binary]="true"
-        [(ngModel)]="showExpenses"
-        inputId="expenses"
-        size="small"
-      />
-      <label for="expenses" class="text-xs font-medium cursor-pointer">{{ 'TERMS.EXPENSES' | translate }}</label>
-    </div>
-    <div class="flex items-center gap-1.5">
-      <p-checkbox
-        [binary]="true"
-        [(ngModel)]="showNet"
-        inputId="net"
-        size="small"
-      />
-      <label for="net" class="text-xs font-medium cursor-pointer">{{ 'TERMS.NET' | translate }}</label>
-    </div>
-  </div>
+  <!-- Actions removed -->
 </ng-template>
 
-<div class="flex flex-col gap-2 p-2 overflow-auto max-h-[calc(100vh)]">
-
+<div class="flex flex-col gap-2 p-2 overflow-auto">
   <!-- 1. Gráfico -->
   <p-accordion [value]="[]" class="w-full [&_.p-accordioncontent-content]:!p-0">
     <p-accordion-panel value="0">
@@ -69,7 +40,9 @@
         </div>
       </p-accordion-header>
       <p-accordion-content>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 border rounded-lg p-2 text-xs sm:text-base">
+        <div
+          class="grid grid-cols-1 md:grid-cols-3 gap-3 border rounded-lg p-2 text-xs sm:text-base"
+        >
           <div class="grid grid-cols-2 gap-2">
             <div class="flex items-center gap-2">
               <i class="pi pi-arrow-up-right"></i>
@@ -121,21 +94,15 @@
             <ng-template #header>
               <tr class="text-xs sm:text-base">
                 <th>{{ 'TERMS.MONTH' | translate }}</th>
-                @if (showGross()) {
-                  <th>{{ 'TERMS.GROSS' | translate }}</th>
-                }
-                @if (showExpenses()) {
-                  <th>{{ 'TERMS.EXPENSES' | translate }}</th>
-                }
-                @if (showNet()) {
-                  <th>{{ 'TERMS.NET' | translate }}</th>
-                }
+                <th>{{ 'TERMS.GROSS' | translate }}</th>
+                <th>{{ 'TERMS.EXPENSES' | translate }}</th>
+                <th>{{ 'TERMS.NET' | translate }}</th>
               </tr>
             </ng-template>
 
             <ng-template #groupheader let-item let-rowIndex="rowIndex" let-expanded="expanded">
               <tr class="bg-surface-50 dark:bg-surface-900 text-xs sm:text-base">
-                <td [attr.colspan]="colSpan()">
+                <td colspan="4">
                   <div class="flex items-center gap-2">
                     <button
                       type="button"
@@ -156,40 +123,26 @@
             <ng-template #groupfooter let-item>
               <tr class="bg-surface-100/50 dark:bg-surface-800/50 text-xs sm:text-base font-bold">
                 <td>{{ 'TERMS.TOTAL' | translate }} {{ item.year }}</td>
-                @if (showGross()) {
-                  <td>
-                    {{ item.yearTotalGross === 0 ? '-' : (item.yearTotalGross | currency: 'BRL') }}
-                  </td>
-                }
-                @if (showExpenses()) {
-                  <td>
-                    {{
-                      item.yearTotalExpenses === 0
-                        ? '-'
-                        : (item.yearTotalExpenses | currency: 'BRL')
-                    }}
-                  </td>
-                }
-                @if (showNet()) {
-                  <td>
-                    {{ item.yearTotalNet === 0 ? '-' : (item.yearTotalNet | currency: 'BRL') }}
-                  </td>
-                }
+                <td>
+                  {{ item.yearTotalGross === 0 ? '-' : (item.yearTotalGross | currency: 'BRL') }}
+                </td>
+                <td>
+                  {{
+                    item.yearTotalExpenses === 0 ? '-' : (item.yearTotalExpenses | currency: 'BRL')
+                  }}
+                </td>
+                <td>
+                  {{ item.yearTotalNet === 0 ? '-' : (item.yearTotalNet | currency: 'BRL') }}
+                </td>
               </tr>
             </ng-template>
 
             <ng-template #expandedrow let-month let-i="rowIndex">
               <tr class="text-xs sm:text-base">
                 <td>{{ 'MONTHS.' + month.monthIndex | translate }}</td>
-                @if (showGross()) {
-                  <td>{{ month.gross === 0 ? '-' : (month.gross | currency: 'BRL') }}</td>
-                }
-                @if (showExpenses()) {
-                  <td>{{ month.expenses === 0 ? '-' : (month.expenses | currency: 'BRL') }}</td>
-                }
-                @if (showNet()) {
-                  <td>{{ month.net === 0 ? '-' : (month.net | currency: 'BRL') }}</td>
-                }
+                <td>{{ month.gross === 0 ? '-' : (month.gross | currency: 'BRL') }}</td>
+                <td>{{ month.expenses === 0 ? '-' : (month.expenses | currency: 'BRL') }}</td>
+                <td>{{ month.net === 0 ? '-' : (month.net | currency: 'BRL') }}</td>
               </tr>
             </ng-template>
           </p-table>

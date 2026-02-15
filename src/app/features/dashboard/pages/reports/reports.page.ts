@@ -1,18 +1,13 @@
 import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect, viewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
 // PrimeNG
 import { AccordionModule } from 'primeng/accordion';
-import { CardModule } from 'primeng/card';
 import { TableModule } from 'primeng/table';
-import { CheckboxModule } from 'primeng/checkbox';
-import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 import { ButtonModule } from 'primeng/button';
 import { RippleModule } from 'primeng/ripple';
-import { TooltipModule } from 'primeng/tooltip';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
 
@@ -30,16 +25,11 @@ import { DateUtils } from '../../../../shared/utils/date.utils';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CommonModule,
-    FormsModule,
     AccordionModule,
-    CardModule,
     TableModule,
-    CheckboxModule,
-    TagModule,
     SkeletonModule,
     ButtonModule,
     RippleModule,
-    TooltipModule,
     TranslateModule,
     NgxEchartsDirective,
   ],
@@ -73,10 +63,7 @@ export class ReportsPage implements OnInit {
   protected readonly payments = signal<any[]>([]);
   protected readonly expenses = signal<Expense[]>([]);
 
-  // Filtros de Visibilidade
-  protected readonly showGross = signal<boolean>(true);
-  protected readonly showExpenses = signal<boolean>(true);
-  protected readonly showNet = signal<boolean>(true);
+  // Filtros de Visibilidade removidos
 
   private readonly translate = inject(TranslateService);
 
@@ -96,10 +83,6 @@ export class ReportsPage implements OnInit {
       });
     });
     return result;
-  });
-
-  protected readonly colSpan = computed(() => {
-    return 1 + (this.showGross() ? 1 : 0) + (this.showExpenses() ? 1 : 0) + (this.showNet() ? 1 : 0);
   });
 
   protected readonly yearlyData = computed<FinancialYear[]>(() => {
@@ -162,37 +145,29 @@ export class ReportsPage implements OnInit {
 
   protected readonly chartOptions = computed(() => {
     const data = [...this.yearlyData()].sort((a, b) => a.year - b.year);
-    const series = [];
-
-    if (this.showGross()) {
-      series.push({
+    const series = [
+      {
         name: this.translate.instant('REPORTS.GROSS'),
         type: 'bar',
         stack: 'total',
         data: data.map(y => y.totalGross),
         itemStyle: { color: '#22c55e' }
-      });
-    }
-
-    if (this.showExpenses()) {
-      series.push({
+      },
+      {
         name: this.translate.instant('REPORTS.EXPENSES'),
         type: 'bar',
         stack: 'total',
         data: data.map(y => y.totalExpenses),
         itemStyle: { color: '#ef4444' }
-      });
-    }
-
-    if (this.showNet()) {
-      series.push({
+      },
+      {
         name: this.translate.instant('REPORTS.NET'),
         type: 'bar',
         stack: 'total',
         data: data.map(y => y.totalNet),
         itemStyle: { color: '#3b82f6' }
-      });
-    }
+      }
+    ];
 
     return {
       tooltip: {
