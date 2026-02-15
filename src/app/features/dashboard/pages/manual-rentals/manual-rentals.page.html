@@ -188,14 +188,13 @@
     </div>
 
     <!-- Scrollable Table Content -->
-    <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
+    <div class="flex-1 w-full overflow-auto flex flex-col">
       <p-table
-        #dt
         [value]="pagedRentals()"
         [loading]="loading()"
         [scrollable]="true"
-        scrollHeight="flex"
-        class="p-datatable-sm h-full flex flex-col text-xs sm:text-base"
+        class="p-datatable-sm"
+        [tableStyle]="{ 'min-width': '800px' }"
       >
         <ng-template pTemplate="header">
           <tr class="text-xs sm:text-base">
@@ -324,6 +323,6 @@
   }
 
   <!-- Confirmations and Toasts -->
-  <p-confirmdialog />
+  <p-confirmdialog [draggable]="false" />
   <p-toast position="bottom-right" />
 </div>

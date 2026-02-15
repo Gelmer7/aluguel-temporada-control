@@ -34,7 +34,9 @@
           <span
             >{{ 'TERMS.MONTH' | translate }}:
             @for (month of selectedMonths(); track month) {
-              <span class="text-primary">{{ 'MONTHS.' + month | translate }}{{ !$last ? ', ' : '' }}</span>
+              <span class="text-primary"
+                >{{ 'MONTHS.' + month | translate }}{{ !$last ? ', ' : '' }}</span
+              >
             }
           </span>
           <span
@@ -162,9 +164,7 @@
       </div>
       <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
-          [value]="filteredPayments()"
-          [rows]="10"
-          [paginator]="true"
+          [value]="pagedPayments()"
           [loading]="loading()"
           [scrollable]="true"
           scrollHeight="flex"
@@ -206,7 +206,7 @@
           </ng-template>
           <ng-template pTemplate="footer">
             <tr>
-              <td colspan="7" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
+              <td colspan="5" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
                 Total:
               </td>
               <td class="font-bold text-primary bg-surface-50/50 dark:bg-surface-800/50">
@@ -216,9 +216,18 @@
           </ng-template>
         </p-table>
       </div>
+
+      <!-- Paginador Reutilizável -->
+      <app-table-paginator
+        [first]="firstPayment()"
+        [rows]="rowsPayment()"
+        [totalRecords]="filteredPayments().length"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        (onPageChange)="onPaymentPageChange($event)"
+      />
     </div>
 
-    <!-- Tabela de Despesas -->
+    <!-- Expenses Table -->
     <div class="flex-1 rounded-xl shadow-sm border flex flex-col p-1">
       <div
         class="flex items-center justify-between p-1 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
@@ -227,9 +236,7 @@
       </div>
       <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
         <p-table
-          [value]="filteredExpenses()"
-          [rows]="10"
-          [paginator]="true"
+          [value]="pagedExpenses()"
           [loading]="loading()"
           [scrollable]="true"
           scrollHeight="flex"
@@ -260,7 +267,10 @@
               <td class="truncate">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
               <td class="truncate">{{ expense.description }}</td>
               <td class="truncate">{{ expense.type }}</td>
-              <td class="truncate font-medium" [class.line-through]="!includeCarneLeao() && expense.type === 'CARNE_LEAO'">
+              <td
+                class="truncate font-medium"
+                [class.line-through]="!includeCarneLeao() && expense.type === 'CARNE_LEAO'"
+              >
                 {{ expense.price | currency: 'BRL' }}
               </td>
             </tr>
@@ -277,6 +287,15 @@
           </ng-template>
         </p-table>
       </div>
+
+      <!-- Paginador Reutilizável -->
+      <app-table-paginator
+        [first]="firstExpense()"
+        [rows]="rowsExpense()"
+        [totalRecords]="filteredExpenses().length"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        (onPageChange)="onExpensePageChange($event)"
+      />
     </div>
 
     <!-- Tabela Histórico de Dízimos -->
@@ -288,9 +307,7 @@
       </div>
       <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
         <p-table
-          [value]="titheHistory()"
-          [rows]="10"
-          [paginator]="true"
+          [value]="pagedHistory()"
           [loading]="loading()"
           [scrollable]="true"
           scrollHeight="flex"
@@ -346,6 +363,15 @@
           </ng-template>
         </p-table>
       </div>
+
+      <!-- Paginador Reutilizável -->
+      <app-table-paginator
+        [first]="firstHistory()"
+        [rows]="rowsHistory()"
+        [totalRecords]="titheHistory().length"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        (onPageChange)="onHistoryPageChange($event)"
+      />
     </div>
   }
 </div>

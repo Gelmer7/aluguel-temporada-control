@@ -21,6 +21,7 @@ import { CheckboxModule } from 'primeng/checkbox';
 
 // Components
 import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 
 // Services & Models
@@ -51,6 +52,7 @@ import { DateUtils } from '../../../../shared/utils/date.utils';
     ToastModule,
     DialogComponent,
     FilterContainerComponent,
+    TablePaginatorComponent,
     IftaLabelModule,
     TextareaModule,
     CheckboxModule
@@ -99,6 +101,50 @@ export class TithePage implements OnInit {
   protected readonly payments = signal<any[]>([]);
   protected readonly expenses = signal<Expense[]>([]);
   protected readonly titheHistory = signal<Tithe[]>([]);
+
+  // Pagination
+  protected readonly firstPayment = signal(0);
+  protected readonly rowsPayment = signal(10);
+  protected readonly firstExpense = signal(0);
+  protected readonly rowsExpense = signal(10);
+  protected readonly firstHistory = signal(0);
+  protected readonly rowsHistory = signal(10);
+
+  protected onPaymentPageChange(event: any) {
+    this.firstPayment.set(event.first);
+    this.rowsPayment.set(event.rows);
+  }
+
+  protected onExpensePageChange(event: any) {
+    this.firstExpense.set(event.first);
+    this.rowsExpense.set(event.rows);
+  }
+
+  protected onHistoryPageChange(event: any) {
+    this.firstHistory.set(event.first);
+    this.rowsHistory.set(event.rows);
+  }
+
+  protected readonly pagedPayments = computed(() => {
+    const data = this.filteredPayments();
+    const start = this.firstPayment();
+    const end = start + this.rowsPayment();
+    return data.slice(start, end);
+  });
+
+  protected readonly pagedExpenses = computed(() => {
+    const data = this.filteredExpenses();
+    const start = this.firstExpense();
+    const end = start + this.rowsExpense();
+    return data.slice(start, end);
+  });
+
+  protected readonly pagedHistory = computed(() => {
+    const data = this.titheHistory();
+    const start = this.firstHistory();
+    const end = start + this.rowsHistory();
+    return data.slice(start, end);
+  });
 
   // Modal
   protected readonly showAddDialog = signal<boolean>(false);

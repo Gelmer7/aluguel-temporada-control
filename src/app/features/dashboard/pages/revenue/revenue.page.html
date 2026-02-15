@@ -58,6 +58,7 @@
           <p-select
             [options]="yearOptions()"
             [(ngModel)]="selectedYear"
+            (onChange)="first.set(0)"
             optionLabel="label"
             optionValue="value"
             [fluid]="true"
@@ -78,6 +79,7 @@
           <p-multiselect
             [options]="monthOptions()"
             [(ngModel)]="selectedMonths"
+            (onChange)="first.set(0)"
             optionLabel="label"
             optionValue="value"
             [fluid]="true"
@@ -214,9 +216,7 @@
       </div>
       <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
-          [value]="filteredPayments()"
-          [rows]="10"
-          [paginator]="true"
+          [value]="pagedPayments()"
           [loading]="loading()"
           [scrollable]="true"
           class="p-datatable-sm"
@@ -266,6 +266,15 @@
           </ng-template>
         </p-table>
       </div>
+
+      <!-- Paginador Reutilizável -->
+      <app-table-paginator
+        [first]="first()"
+        [rows]="rows()"
+        [totalRecords]="filteredPayments().length"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        (onPageChange)="onPageChange($event)"
+      />
     </div>
   </div>
 </div>

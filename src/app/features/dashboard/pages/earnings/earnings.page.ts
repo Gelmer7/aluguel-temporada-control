@@ -19,6 +19,7 @@ import { PopoverModule } from 'primeng/popover';
 
 // Components
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { EarningsPaymentsChartsComponent } from '../../components/charts/earnings-payments-charts/earnings-payments-charts.component';
 import { EarningsExpenseChartsComponent } from '../../components/charts/earnings-expense-charts/earnings-expense-charts.component';
 import { EarningsSummaryChartsComponent } from '../../components/charts/earnings-summary-charts/earnings-summary-charts.component';
@@ -52,6 +53,7 @@ import { DateUtils } from '../../../../shared/utils/date.utils';
     DatePickerModule,
     PopoverModule,
     FilterContainerComponent,
+    TablePaginatorComponent,
     EarningsPaymentsChartsComponent,
     EarningsExpenseChartsComponent,
     EarningsSummaryChartsComponent,
@@ -75,6 +77,36 @@ export class EarningsPage implements OnInit {
   protected readonly showChart = signal<boolean>(false);
   protected readonly showExpenseChart = signal<boolean>(false);
   protected readonly showSummaryChart = signal<boolean>(false);
+
+  // Pagination
+  protected readonly firstPayment = signal(0);
+  protected readonly rowsPayment = signal(10);
+  protected readonly firstExpense = signal(0);
+  protected readonly rowsExpense = signal(10);
+
+  protected onPaymentPageChange(event: any) {
+    this.firstPayment.set(event.first);
+    this.rowsPayment.set(event.rows);
+  }
+
+  protected onExpensePageChange(event: any) {
+    this.firstExpense.set(event.first);
+    this.rowsExpense.set(event.rows);
+  }
+
+  protected readonly pagedPayments = computed(() => {
+    const data = this.filteredPayments();
+    const start = this.firstPayment();
+    const end = start + this.rowsPayment();
+    return data.slice(start, end);
+  });
+
+  protected readonly pagedExpenses = computed(() => {
+    const data = this.filteredExpenses();
+    const start = this.firstExpense();
+    const end = start + this.rowsExpense();
+    return data.slice(start, end);
+  });
 
   // Dados
   protected readonly loading = signal<boolean>(true);
@@ -170,6 +202,8 @@ export class EarningsPage implements OnInit {
 
   protected onDateRangeChange(range: Date[] | null) {
     this.filterDateRange.set(range);
+    this.firstPayment.set(0);
+    this.firstExpense.set(0);
   }
 
   protected clearFilters() {
@@ -178,6 +212,8 @@ export class EarningsPage implements OnInit {
     const allTypes = Array.from(new Set(this.payments().map((p) => p.tipo).filter(Boolean)));
     this.selectedTypes.set(allTypes);
     this.filterDateRange.set(null);
+    this.firstPayment.set(0);
+    this.firstExpense.set(0);
   }
 
   protected readonly totalReceived = computed(() => {

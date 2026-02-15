@@ -240,9 +240,7 @@
       </div>
       <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
-          [value]="filteredPayments()"
-          [rows]="10"
-          [paginator]="true"
+          [value]="pagedPayments()"
           [loading]="loading()"
           [scrollable]="true"
           class="p-datatable-sm"
@@ -295,6 +293,15 @@
           </ng-template>
         </p-table>
       </div>
+
+      <!-- Paginador Reutilizável -->
+      <app-table-paginator
+        [first]="firstPayment()"
+        [rows]="rowsPayment()"
+        [totalRecords]="filteredPayments().length"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        (onPageChange)="onPaymentPageChange($event)"
+      />
     </div>
 
     <!-- Tabela de Despesas -->
@@ -312,9 +319,7 @@
       </div>
       <div class="flex-1 w-full overflow-auto flex flex-col">
         <p-table
-          [value]="filteredExpenses()"
-          [rows]="10"
-          [paginator]="true"
+          [value]="pagedExpenses()"
           [loading]="loading()"
           [scrollable]="true"
           class="p-datatable-sm"
@@ -353,11 +358,19 @@
               <td class="font-bold text-red-500 bg-surface-50/50 dark:bg-surface-800/50">
                 {{ totalExpenses() | currency: 'BRL' }}
               </td>
-              <td class="bg-surface-50/50 dark:bg-surface-800/50"></td>
             </tr>
           </ng-template>
         </p-table>
       </div>
+
+      <!-- Paginador Reutilizável -->
+      <app-table-paginator
+        [first]="firstExpense()"
+        [rows]="rowsExpense()"
+        [totalRecords]="filteredExpenses().length"
+        [rowsPerPageOptions]="[10, 20, 50, 100]"
+        (onPageChange)="onExpensePageChange($event)"
+      />
     </div>
   </div>
 </div>

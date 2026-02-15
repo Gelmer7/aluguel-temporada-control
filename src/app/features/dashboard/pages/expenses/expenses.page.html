@@ -280,7 +280,7 @@
                   expense.description
                 }}</span>
                 <span class="sm:hidden text-[9px] text-surface-500 uppercase">{{
-                  expense.type
+                  getTypeLabel(expense.type) | translate
                 }}</span>
                 @if (expense.observation) {
                   <span
@@ -294,7 +294,7 @@
             </td>
             <td class="!p-1.5 sm:!p-2 hidden sm:table-cell">
               <p-tag
-                [value]="expense.type"
+                [value]="getTypeLabel(expense.type) | translate"
                 [severity]="getSeverity(expense.type)"
                 styleClass="text-[10px]"
               />
@@ -389,6 +389,6 @@
   />
 
   <!-- Confirmations and Toasts -->
-  <p-confirmdialog />
+  <p-confirmdialog [draggable]="false" />
   <p-toast position="bottom-right" />
 </div>

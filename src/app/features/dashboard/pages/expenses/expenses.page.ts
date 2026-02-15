@@ -22,7 +22,7 @@ import { TablePaginatorComponent } from '../../../../components/ui/table-paginat
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
 import { ExpenseFormComponent } from '../../components/expense-form/expense-form.component';
 import { ExpenseChartsComponent } from '../../components/charts/expense-charts/expense-charts.component';
-import { Expense, EXPENSE_TYPES, ExpenseTypeValue } from '../../../../models/expense.model';
+import { Expense, EXPENSE_TYPES, ExpenseTypeValue, getExpenseTypeConfig } from '../../../../models/expense.model';
 import { SupabaseService } from '../../../../services/supabase.service';
 import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
@@ -428,18 +428,11 @@ export class ExpensesPage implements OnInit {
     });
   }
 
-  getSeverity(type: string): "success" | "secondary" | "info" | "warn" | "danger" | undefined {
-    const typeValue = type as ExpenseTypeValue;
-    switch (typeValue) {
-      case 'ELECTRICITY': return 'warn';
-      case 'WATER': return 'info';
-      case 'CONDOMINIUM': return 'success';
-      case 'INTERNET': return 'secondary';
-      case 'GAS': return 'warn';
-      case 'MAINTENANCE': return 'danger';
-      case 'CLEANING': return 'info';
-      case 'CARNE_LEAO': return 'danger';
-      default: return 'secondary';
-    }
+  getSeverity(type: string): "success" | "secondary" | "info" | "warn" | "danger" | "contrast" | undefined {
+    return getExpenseTypeConfig(type)?.severity;
+  }
+
+  getTypeLabel(type: string): string {
+    return getExpenseTypeConfig(type)?.label || type;
   }
 }

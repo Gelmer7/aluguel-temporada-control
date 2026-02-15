@@ -26,6 +26,7 @@ import { Popover } from 'primeng/popover';
 
 // Components
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
 import { EarningsPaymentsChartsComponent } from '../../components/charts/earnings-payments-charts/earnings-payments-charts.component';
 
 // Services & Models
@@ -57,6 +58,7 @@ import { TemplateRef, viewChild } from '@angular/core';
     DatePickerModule,
     Popover,
     FilterContainerComponent,
+    TablePaginatorComponent,
     EarningsPaymentsChartsComponent,
   ],
   templateUrl: './revenue.page.html',
@@ -75,6 +77,22 @@ export class RevenuePage implements OnInit {
   protected readonly selectedMonths = signal<(number | string)[]>([]);
   protected readonly selectedTypes = signal<string[]>([]);
   protected readonly filterDateRange = signal<Date[] | null>(null);
+
+  // Pagination
+  protected readonly first = signal<number>(0);
+  protected readonly rows = signal<number>(10);
+
+  protected onPageChange(event: any) {
+    this.first.set(event.first);
+    this.rows.set(event.rows);
+  }
+
+  protected readonly pagedPayments = computed(() => {
+    const data = this.filteredPayments();
+    const start = this.first();
+    const end = start + this.rows();
+    return data.slice(start, end);
+  });
 
   // Gráfico
   protected readonly showChart = signal<boolean>(false);
@@ -183,6 +201,7 @@ export class RevenuePage implements OnInit {
 
   protected onDateRangeChange(range: Date[] | null) {
     this.filterDateRange.set(range);
+    this.first.set(0);
   }
 
   protected clearFilters() {
@@ -190,6 +209,7 @@ export class RevenuePage implements OnInit {
     this.selectedMonths.set([]);
     this.selectedTypes.set([]);
     this.filterDateRange.set(null);
+    this.first.set(0);
   }
 
   protected readonly totalReceived = computed(() => {
