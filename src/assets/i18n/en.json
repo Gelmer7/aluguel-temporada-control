@@ -31,13 +31,11 @@
     "CREATED_AT": "Created at",
     "CLEAR_FILTER": "Clear Filter"
   },
-  "COMMON": {
-    "QUANTITY": "Quantity"
-  },
   "TERMS": {
     "HOME": "Home",
     "ENTRIES": "Entries",
     "EXPENSES": "Expenses",
+    "REVENUE": "Revenue",
     "EARNINGS": "Earnings",
     "CARNE_LEAO": "Carnê-Leão",
     "TITHE": "Tithe",
@@ -204,7 +202,10 @@
     "ERROR": "Error",
     "DELETE_SUCCESS": "Deleted successfully",
     "INCLUDED": "Included",
-    "EXCLUDED": "Excluded"
+    "EXCLUDED": "Excluded",
+    "QUANTITY": "Quantity",
+    "YES": "Yes",
+    "NO": "No"
   },
   "PRIMENG": {
     "dayNames": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],

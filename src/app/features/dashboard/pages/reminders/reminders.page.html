@@ -1,6 +1,12 @@
 <!-- Header Actions Template -->
 <ng-template #headerActions>
-  <p-button icon="pi pi-plus" (click)="openNew()"></p-button>
+  <p-button
+    icon="pi pi-plus"
+    (click)="openNew()"
+    [pTooltip]="'REMINDERS_FORM.NEW' | translate"
+    tooltipPosition="left"
+    [size]="'small'"
+  ></p-button>
 </ng-template>
 
 <div class="container mx-auto p-2">
@@ -25,6 +31,17 @@
           appendTo="body"
           [maxSelectedLabels]="1"
         >
+          <ng-template pTemplate="selectedItems" let-selectedOptions>
+            @if (selectedOptions && selectedOptions.length > 0) {
+              @if (selectedOptions.length === yearOptions().length) {
+                {{ 'TERMS.ALL' | translate }}
+              } @else {
+                {{ selectedOptions.length }} {{ 'TERMS.SELECTED' | translate }}
+              }
+            } @else {
+              {{ 'TERMS.ALL' | translate }}
+            }
+          </ng-template>
           <ng-template pTemplate="item" let-option>
             {{ option.label | translate }}
           </ng-template>
@@ -41,8 +58,18 @@
           class="w-full"
           appendTo="body"
           [maxSelectedLabels]="2"
-          [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
         >
+          <ng-template pTemplate="selectedItems" let-selectedOptions>
+            @if (selectedOptions && selectedOptions.length > 0) {
+              @if (selectedOptions.length === monthOptions.length) {
+                {{ 'TERMS.ALL' | translate }}
+              } @else {
+                {{ selectedOptions.length }} {{ 'TERMS.SELECTED' | translate }}
+              }
+            } @else {
+              {{ 'TERMS.ALL' | translate }}
+            }
+          </ng-template>
           <ng-template pTemplate="item" let-option>
             {{ option.label | translate }}
           </ng-template>
@@ -59,8 +86,18 @@
           class="w-full"
           appendTo="body"
           [maxSelectedLabels]="2"
-          [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
         >
+          <ng-template pTemplate="selectedItems" let-selectedOptions>
+            @if (selectedOptions && selectedOptions.length > 0) {
+              @if (selectedOptions.length === statusOptions.length) {
+                {{ 'TERMS.ALL' | translate }}
+              } @else {
+                {{ selectedOptions.length }} {{ 'TERMS.SELECTED' | translate }}
+              }
+            } @else {
+              {{ 'TERMS.ALL' | translate }}
+            }
+          </ng-template>
           <ng-template pTemplate="item" let-option>
             {{ option.label | translate }}
           </ng-template>

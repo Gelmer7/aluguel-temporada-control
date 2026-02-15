@@ -26,7 +26,7 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     route: '/dashboard/manual-rentals',
   },
   {
-    id:'revenue ',
+    id: 'revenue',
     label: 'TERMS.REVENUE',
     icon: 'pi-arrow-down',
     route: '/dashboard/revenue',

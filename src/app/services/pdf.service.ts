@@ -424,4 +424,110 @@ export class PdfService {
     const d = DateUtils.parseLocal(date);
     return formatDate(d, 'MM/yyyy', 'en-US');
   }
+
+  /**
+   * Generates a PDF from the revenue data
+   */
+  generateRevenuePdf(data: {
+    year: number | string;
+    months: (number | string)[];
+    types: string[];
+    houseCode?: string;
+    payments: any[];
+    total: number;
+  }) {
+    const doc = new jsPDF();
+    const revenueLabel = this.translate.instant('TERMS.REVENUE');
+    const yearLabel = data.year === 'ALL' ? this.translate.instant('TERMS.ALL') : data.year;
+
+    // Traduzir nomes dos meses
+    const monthsNames =
+      data.months.length === 0 || data.months.length === 12
+        ? this.translate.instant('TERMS.ALL')
+        : data.months.map((m) => this.translate.instant(`MONTHS.${m}`)).join(', ');
+
+    // Header
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text(revenueLabel, 14, 15);
+
+    // Generation Date and Time (Top Right)
+    const now = new Date();
+    const generationDate = formatDate(now, 'dd/MM/yyyy HH:mm', 'en-US');
+    doc.setFontSize(7);
+    doc.setTextColor(150);
+    doc.text(generationDate, 196, 10, { align: 'right' });
+
+    // House, Months and Year
+    doc.setFontSize(9);
+    doc.setTextColor(80);
+    let subHeaderText = `${monthsNames} / ${yearLabel}`;
+    if (data.houseCode) {
+      subHeaderText = `${this.translate.instant('TERMS.HOUSE')}: ${data.houseCode} | ${subHeaderText}`;
+    }
+    doc.text(subHeaderText, 14, 21);
+
+    // Types filter info
+    if (data.types.length > 0) {
+      const typesLabel = data.types.join(', ');
+      doc.text(`${this.translate.instant('TERMS.TYPE')}: ${typesLabel}`, 14, 26);
+    }
+
+    // Summary Table
+    autoTable(doc, {
+      startY: 30,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 9, cellPadding: 2 },
+      head: [
+        [
+          this.translate.instant('COMMON.QUANTITY'),
+          this.translate.instant('TERMS.TOTAL'),
+        ],
+      ],
+      body: [
+        [
+          data.payments.length.toString(),
+          { content: this.formatBRL(data.total), styles: { fontStyle: 'bold' } },
+        ],
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [67, 56, 202] },
+    });
+
+    // Payments List Table
+    const lastY = (doc as any).lastAutoTable.finalY;
+    autoTable(doc, {
+      startY: lastY + 10,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 8, cellPadding: 1.5 },
+      head: [
+        [
+          this.translate.instant('EXPENSES_FORM.DATE'),
+          this.translate.instant('TERMS.GUEST'),
+          this.translate.instant('TERMS.HOUSE'),
+          this.translate.instant('TERMS.TYPE'),
+          this.translate.instant('TERMS.PERIOD'),
+          this.translate.instant('TERMS.PAID'),
+        ],
+      ],
+      body: data.payments.map((p) => [
+        this.formatDate(p.data),
+        p.hospede,
+        p.house_code,
+        p.tipo,
+        `${this.formatDate(p.data_inicio)} - ${this.formatDate(p.data_termino)}`,
+        this.formatBRL(p.pago),
+      ]),
+      foot: [['', '', '', '', 'Total:', this.formatBRL(data.total)]],
+      footStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        fontSize: 8,
+      },
+    });
+
+    // Save
+    doc.save(`Receitas_${data.houseCode || ''}_${yearLabel}.pdf`);
+  }
 }

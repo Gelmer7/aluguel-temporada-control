@@ -33,21 +33,12 @@
     "CLEAR_FILTER": "Limpar Filtro",
     "LABEL": "Ações"
   },
-  "COMMON": {
-    "QUANTITY": "Quantidade",
-    "SUCCESS": "Sucesso",
-    "ERROR": "Erro",
-    "DELETE_SUCCESS": "Excluído com sucesso",
-    "INCLUDED": "Incluído",
-    "EXCLUDED": "Excluído",
-    "YES": "Sim",
-    "NO": "Não"
-  },
   "TERMS": {
     "HOME": "Início",
     "ENTRIES": "Entradas",
     "MANUAL_RENTALS": "Aluguel Temporada",
     "EXPENSES": "Gastos",
+    "REVENUE": "Receitas",
     "EARNINGS": "Ganhos",
     "CARNE_LEAO": "Carnê-Leão",
     "TITHE": "Dízimo",
@@ -271,7 +262,10 @@
     "ERROR": "Erro",
     "DELETE_SUCCESS": "Excluído com sucesso",
     "INCLUDED": "Incluído",
-    "EXCLUDED": "Excluído"
+    "EXCLUDED": "Excluído",
+    "QUANTITY": "Quantidade",
+    "YES": "Sim",
+    "NO": "Não"
   },
   "PRIMENG": {
     "dayNames": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],

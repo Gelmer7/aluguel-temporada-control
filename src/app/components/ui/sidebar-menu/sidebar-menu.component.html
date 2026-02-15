@@ -1,40 +1,54 @@
-<!-- Sidebar Mini (Desktop/Tablet) -->
+<!-- Sidebar (Desktop/Tablet) -->
 <aside
-  class="hidden sm:flex flex-col w-20 h-screen border-r border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 sticky top-0 left-0 z-40 transition-all duration-300"
+  class="hidden sm:flex flex-col w-20 lg:w-64 h-screen border-r border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 sticky top-0 left-0 z-40 transition-all duration-300"
 >
-  <!-- Mini Header -->
-  <div class="flex flex-col items-center py-2">
+  <!-- Header -->
+  <div class="flex flex-col items-center lg:items-start py-4 lg:px-6">
     <button
       pRipple
-      class="flex items-center justify-center w-12 h-12 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 text-primary"
+      class="flex lg:hidden items-center justify-center w-12 h-12 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 text-primary"
       (click)="onVisibleChange.emit(true)"
       pTooltip="Expandir Menu"
       tooltipPosition="right"
     >
       <i class="pi pi-bars text-xl"></i>
     </button>
+
+    <!-- Desktop Logo/House Name -->
+    <div class="hidden lg:flex items-center gap-3 px-2">
+      <img src="airbnb_black.svg" alt="Logo" class="w-8 h-8 object-contain dark:invert" />
+      <span class="font-bold text-lg text-primary truncate max-w-[140px]">
+        {{ activeHouseName() }}
+      </span>
+    </div>
   </div>
 
-  <!-- Mini Menu Items -->
+  <!-- Menu Items -->
   <div class="flex-1 overflow-y-auto py-2 no-scrollbar">
-    <div class="flex flex-col items-center gap-4 px-2">
+    <div class="flex flex-col items-center lg:items-start gap-2 px-2 lg:px-4">
       @for (item of items(); track trackById($index, item)) {
         <a
           pRipple
           [routerLink]="item.route"
-          [routerLinkActive]="['!text-primary', 'shadow-xl', 'active']"
-          class="flex items-center justify-center w-12 h-12 rounded-xl transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-600 dark:text-surface-400 group relative active:scale-95"
+          [routerLinkActive]="['!text-primary', 'shadow-xl', 'active', 'bg-primary-50', 'dark:bg-primary/10']"
+          class="flex items-center justify-center lg:justify-start w-12 h-12 lg:w-full lg:h-auto lg:p-3 rounded-xl transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-600 dark:text-surface-400 group relative active:scale-95"
           [pTooltip]="item.label | translate"
+          [tooltipDisabled]="isDesktop()"
           tooltipPosition="right"
         >
           @if (item.image) {
-            <img [src]="item.image" class="w-6 h-6 object-contain dark:invert" />
+            <img [src]="item.image" class="w-6 h-6 object-contain flex-shrink-0 dark:invert" />
           } @else {
-            <span [class]="'pi ' + item.icon" class="text-xl"></span>
+            <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0"></span>
           }
+
+          <span class="hidden lg:block ml-3 truncate font-medium text-sm">
+            {{ item.label | translate }}
+          </span>
+
           @if (item.badge) {
             <p-badge
-              class="absolute -top-1 -right-1"
+              class="absolute -top-1 -right-1 lg:static lg:ml-auto"
               [value]="item.badge"
               severity="danger"
               size="small"
@@ -45,26 +59,34 @@
     </div>
   </div>
 
-  <!-- Mini Footer -->
+  <!-- Footer -->
   <div
-    class="mt-auto border-t border-surface-200 dark:border-surface-700 p-4 flex flex-col items-center gap-4"
+    class="mt-auto border-t border-surface-200 dark:border-surface-700 p-4 flex flex-col items-center lg:items-start gap-4"
   >
     <button
-      class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200"
+      class="flex items-center justify-center lg:justify-start w-10 h-10 lg:w-full lg:h-auto lg:px-3 lg:py-2 rounded-full lg:rounded-xl hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 group"
       (click)="toggleTheme()"
       [pTooltip]="'THEME.SELECT_THEME' | translate"
+      [tooltipDisabled]="isDesktop()"
       tooltipPosition="right"
     >
-      <i [class]="'pi ' + currentTheme.icon" class="text-lg"></i>
+      <i [class]="'pi ' + currentTheme.icon" class="text-lg lg:text-xl"></i>
+      <span class="hidden lg:block ml-3 text-sm font-medium">{{ currentTheme.name | translate }}</span>
     </button>
 
     <div
-      class="cursor-pointer hover:scale-105 transition-transform duration-200"
+      class="cursor-pointer hover:scale-105 lg:hover:scale-[1.02] transition-transform duration-200 flex items-center lg:w-full lg:p-2 lg:rounded-xl lg:hover:bg-surface-100 lg:dark:hover:bg-surface-800"
       (click)="userMenu.toggle($event)"
       [pTooltip]="'Gelmer Apaza'"
+      [tooltipDisabled]="isDesktop()"
       tooltipPosition="right"
     >
-      <p-avatar label="G" shape="circle" size="normal" styleClass="bg-primary text-white" />
+      <p-avatar label="G" shape="circle" size="normal" styleClass="bg-primary text-white flex-shrink-0" />
+      <div class="hidden lg:flex flex-col ml-3 overflow-hidden text-left">
+        <span class="font-semibold text-sm truncate">Gelmer Apaza</span>
+        <span class="text-xs text-surface-500 truncate">Administrador</span>
+      </div>
+      <i class="hidden lg:block pi pi-ellipsis-v ml-auto text-surface-400 text-xs"></i>
     </div>
   </div>
 </aside>

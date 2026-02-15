@@ -1,39 +1,59 @@
 <div class="flex flex-col h-full overflow-hidden p-2 gap-2">
   <p-toast />
 
-  <!-- Filtros e Resumo -->
+  <ng-template #headerActions>
+    <div class="flex items-center gap-2">
+      <p-button
+        icon="pi pi-file-pdf"
+        severity="secondary"
+        (click)="onDownloadPDF()"
+        [pTooltip]="'TITHE_MANAGEMENT.DOWNLOAD_PDF' | translate"
+        tooltipPosition="left"
+        [size]="'small'"
+      />
+    </div>
+  </ng-template>
+
+  <!-- Filtros -->
   <div class="flex flex-col gap-2">
     <app-filter-container>
       <ng-template #filterSummary class="flex flex-wrap items-center gap-2">
-        <span>{{ 'TERMS.YEAR' | translate }}:
-          <span class="text-primary">
+        <span
+          >{{ 'TERMS.YEAR' | translate }}:
+          <span>
             @if (selectedYear() === 'ALL') {
               {{ 'TERMS.ALL' | translate }}
             } @else {
               {{ selectedYear() }}
             }
-          </span></span>
-        <span>{{ 'TERMS.MONTH' | translate }}:
-          <span class="text-primary">
-            @if (selectedMonth() === 'ALL') {
+          </span></span
+        >
+        <span
+          >{{ 'TERMS.MONTH' | translate }}:
+          <span>
+            @if (selectedMonths().length === 0) {
               {{ 'TERMS.ALL' | translate }}
             } @else {
-              {{ 'MONTHS.' + selectedMonth() | translate }}
+              {{ selectedMonths().length }} {{ 'TERMS.SELECTED' | translate }}
             }
-          </span></span>
+          </span></span
+        >
         @if (selectedTypes().length > 0) {
           <span
             >{{ 'TERMS.TYPE' | translate }}:
-            <span class="text-primary">{{
-              selectedTypes().length === availableTypes().length
-                ? ('TERMS.ALL' | translate)
-                : selectedTypes().join(', ')
-            }}</span></span
+            <span>
+              @if (selectedTypes().length === availableTypes().length) {
+                {{ 'TERMS.ALL' | translate }}
+              } @else {
+                {{ selectedTypes().join(', ') }}
+              }
+            </span></span
           >
         }
       </ng-template>
 
       <div class="flex flex-wrap items-center gap-2 w-full p-1">
+        <!-- ano -->
         <p-floatLabel class="flex-1 min-w-[120px]" variant="in">
           <p-select
             [options]="yearOptions()"
@@ -41,9 +61,7 @@
             optionLabel="label"
             optionValue="value"
             [fluid]="true"
-            id="year-select"
-            variant="filled"
-            showClear="true"
+            appendTo="body"
           >
             <ng-template pTemplate="selectedItem" let-selectedOption>
               {{ selectedOption.label | translate }}
@@ -52,44 +70,19 @@
               {{ option.label | translate }}
             </ng-template>
           </p-select>
-          <label for="year-select">{{ 'TERMS.YEAR' | translate }}</label>
+          <label>{{ 'TERMS.YEAR' | translate }}</label>
         </p-floatLabel>
 
         <!-- mes -->
-        <p-floatLabel class="flex-1 min-w-[120px]" variant="in">
-          <p-select
-            inputId="month-select"
+        <p-floatLabel class="flex-1 min-w-[150px]" variant="in">
+          <p-multiselect
             [options]="monthOptions()"
-            [(ngModel)]="selectedMonth"
+            [(ngModel)]="selectedMonths"
             optionLabel="label"
             optionValue="value"
             [fluid]="true"
-            variant="filled"
-            showClear="true"
-          >
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-              {{ selectedOption.label | translate }}
-            </ng-template>
-            <ng-template pTemplate="item" let-option>
-              {{ option.label | translate }}
-            </ng-template>
-          </p-select>
-          <label for="month-select">{{ 'TERMS.MONTH' | translate }}</label>
-        </p-floatLabel>
-
-        <!-- tipo -->
-        <p-floatLabel class="flex-1 min-w-[200px]" variant="in">
-          <p-multiSelect
-            inputId="type-select"
-            [options]="availableTypes()"
-            [(ngModel)]="selectedTypes"
-            optionLabel="label"
-            optionValue="value"
-            [fluid]="true"
-            variant="filled"
-            [showClear]="true"
-            display="chip"
             [maxSelectedLabels]="2"
+            appendTo="body"
           >
             <ng-template pTemplate="selectedItems" let-selectedOptions>
               @if (selectedOptions && selectedOptions.length > 0) {
@@ -101,11 +94,29 @@
             <ng-template pTemplate="item" let-option>
               {{ option.label | translate }}
             </ng-template>
-          </p-multiSelect>
-          <label for="type-select">{{ 'TERMS.TYPE' | translate }}</label>
+          </p-multiselect>
+          <label>{{ 'TERMS.MONTH' | translate }}</label>
         </p-floatLabel>
 
-        <!-- Filtro de Período via Popover -->
+        <!-- tipo -->
+        <p-floatLabel class="flex-1 min-w-[150px]" variant="in">
+          <p-multiselect
+            [options]="availableTypes()"
+            [(ngModel)]="selectedTypes"
+            optionLabel="label"
+            optionValue="value"
+            [fluid]="true"
+            [maxSelectedLabels]="2"
+            appendTo="body"
+          >
+            <ng-template pTemplate="item" let-option>
+              {{ option.label | translate }}
+            </ng-template>
+          </p-multiselect>
+          <label>{{ 'TERMS.TYPE' | translate }}</label>
+        </p-floatLabel>
+
+        <!-- periodo -->
         <div class="flex items-center self-center h-full">
           <p-button
             icon="pi pi-calendar"
@@ -115,7 +126,6 @@
             [pTooltip]="'TERMS.FILTER_BY_PERIOD' | translate"
             tooltipPosition="top"
             [severity]="filterDateRange() ? 'primary' : 'secondary'"
-            class="!p-0"
             [styleClass]="
               filterDateRange()
                 ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10'
@@ -176,61 +186,25 @@
           </p-popover>
         </div>
 
-        <!-- Limpar Filtros -->
-        <div class="flex items-center">
-          <p-button
-            icon="pi pi-filter-slash"
-            [text]="true"
-            severity="secondary"
-            size="small"
-            class="p-button-sm !p-0"
-            (click)="clearFilters()"
-            [pTooltip]="'ACTIONS.CLEAR_FILTERS' | translate"
-            tooltipPosition="left"
-          />
-        </div>
-      </div>
-    </app-filter-container>
-
-    <!-- Resumo -->
-    <div class="shadow-sm border rounded-lg p-1 text-xs relative group">
-      <div class="absolute right-2 top-2 z-10">
+        <!-- ações -->
         <p-button
-          icon="pi pi-chart-line"
-          [rounded]="true"
-          [text]="true"
-          severity="secondary"
-          (click)="showSummaryChart.set(true)"
-          [pTooltip]="'REPORTS.SUMMARY' | translate"
-          tooltipPosition="left"
+          icon="pi pi-filter-slash"
+          [outlined]="true"
+          (click)="clearFilters()"
+          [pTooltip]="'ACTIONS.CLEAR_FILTERS' | translate"
+          tooltipPosition="bottom"
         />
       </div>
-      <p-table [value]="[{}]" [responsiveLayout]="'scroll'" size="small">
-        <ng-template pTemplate="header">
-          <tr>
-            <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}</th>
-            <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.TOTAL_EXPENSES' | translate }}</th>
-            <th class="!bg-transparent">{{ 'TERMS.TOTAL_EARNINGS' | translate }}</th>
-          </tr>
-        </ng-template>
-        <ng-template pTemplate="body">
-          <tr>
-            <td class="font-semibold">{{ totalReceived() | currency: 'BRL' }}</td>
-            <td class="font-semibold text-red-500">{{ totalExpenses() | currency: 'BRL' }}</td>
-            <td class="font-semibold bg-primary/10">{{ totalEarnings() | currency: 'BRL' }}</td>
-          </tr>
-        </ng-template>
-      </p-table>
-    </div>
+    </app-filter-container>
   </div>
 
   <div class="flex-1 flex flex-col gap-4 overflow-y-auto">
-    <!-- Tabela de Pagamentos -->
+    <!-- Tabela de Receitas -->
     <div class="rounded-xl shadow-sm border flex flex-col p-1">
       <div
         class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
       >
-        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate }}</span>
+        <span>{{ 'TITHE_MANAGEMENT.PAYMENTS_LIST' | translate }}</span>
         <i
           class="pi pi-chart-line cursor-pointer hover:text-primary transition-colors"
           (click)="showChart.set(true)"
@@ -279,81 +253,15 @@
               <td class="truncate">{{ payment.tipo }}</td>
               <td class="truncate">{{ payment.data_inicio | date: 'dd/MM/yy' }}</td>
               <td class="truncate">{{ payment.data_termino | date: 'dd/MM/yy' }}</td>
-              <td class="truncate font-medium">{{ payment.pago | currency: 'BRL' }}</td>
+              <td class="truncate">{{ payment.pago | currency: 'BRL' }}</td>
             </tr>
           </ng-template>
           <ng-template pTemplate="footer">
             <tr>
-              <td colspan="7" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
-                Total:
-              </td>
-              <td class="font-bold text-primary bg-surface-50/50 dark:bg-surface-800/50">
+              <td colspan="7" class="text-right bg-surface-50/50 dark:bg-surface-800/50">Total:</td>
+              <td class="bg-surface-50/50 dark:bg-surface-800/50">
                 {{ totalReceived() | currency: 'BRL' }}
               </td>
-              <td colspan="2" class="bg-surface-50/50 dark:bg-surface-800/50"></td>
-            </tr>
-          </ng-template>
-        </p-table>
-      </div>
-    </div>
-
-    <!-- Tabela de Despesas -->
-    <div class="rounded-xl shadow-sm border flex flex-col p-1">
-      <div
-        class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
-      >
-        <span class="font-bold text-sm">{{ 'TITHE_MANAGEMENT.EXPENSES_LIST' | translate }}</span
-        ><i
-          class="pi pi-chart-line cursor-pointer hover:text-primary transition-colors"
-          [pTooltip]="'TERMS.CHARTS' | translate"
-          tooltipPosition="left"
-          (click)="showExpenseChart.set(true)"
-        ></i>
-      </div>
-      <div class="flex-1 w-full overflow-auto flex flex-col">
-        <p-table
-          [value]="filteredExpenses()"
-          [rows]="10"
-          [paginator]="true"
-          [loading]="loading()"
-          [scrollable]="true"
-          class="p-datatable-sm"
-        >
-          <ng-template pTemplate="header">
-            <tr>
-              <th class="bg-surface-50 dark:bg-surface-800">
-                {{ 'EXPENSES_FORM.DATE' | translate }}
-              </th>
-              <th class="bg-surface-50 dark:bg-surface-800">
-                {{ 'EXPENSES_FORM.DESCRIPTION' | translate }}
-              </th>
-              <th class="bg-surface-50 dark:bg-surface-800">
-                {{ 'EXPENSES_FORM.TYPE' | translate }}
-              </th>
-              <th class="bg-surface-50 dark:bg-surface-800">
-                {{ 'EXPENSES_FORM.PRICE' | translate }}
-              </th>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="body" let-expense>
-            <tr
-              class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200"
-            >
-              <td class="truncate">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
-              <td class="truncate">{{ expense.description }}</td>
-              <td class="truncate">{{ expense.type }}</td>
-              <td class="truncate font-medium">{{ expense.price | currency: 'BRL' }}</td>
-            </tr>
-          </ng-template>
-          <ng-template pTemplate="footer">
-            <tr>
-              <td colspan="3" class="text-right font-bold bg-surface-50/50 dark:bg-surface-800/50">
-                Total:
-              </td>
-              <td class="font-bold text-red-500 bg-surface-50/50 dark:bg-surface-800/50">
-                {{ totalExpenses() | currency: 'BRL' }}
-              </td>
-              <td class="bg-surface-50/50 dark:bg-surface-800/50"></td>
             </tr>
           </ng-template>
         </p-table>
@@ -363,9 +271,3 @@
 </div>
 
 <app-earnings-payments-charts [(visible)]="showChart" [payments]="filteredPayments()" />
-<app-earnings-expense-charts [(visible)]="showExpenseChart" [expenses]="filteredExpenses()" />
-<app-earnings-summary-charts
-  [(visible)]="showSummaryChart"
-  [payments]="filteredPayments()"
-  [expenses]="filteredExpenses()"
-/>

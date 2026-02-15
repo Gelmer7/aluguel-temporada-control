@@ -31,6 +31,10 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () => import('./pages/manual-rentals/manual-rentals.page').then((m) => m.ManualRentalsPage),
       },
       {
+        path: 'revenue',
+        loadComponent: () => import('./pages/revenue/revenue.page').then((m) => m.RevenuePage),
+      },
+      {
         path: 'earnings',
         loadComponent: () => import('./pages/earnings/earnings.page').then((m) => m.EarningsPage),
       },

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, output, computed, inject, signal, effect } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, output, computed, inject, signal, effect, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NavItem } from '../types';
@@ -49,6 +49,13 @@ export class SidebarMenuComponent {
   themeOptions = this.themeService.themes;
   languages = this.languageService.languages;
   userMenuItems = signal<MenuItem[]>([]);
+
+  isDesktop = signal(window.innerWidth >= 1024);
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isDesktop.set(window.innerWidth >= 1024);
+  }
 
   constructor() {
     effect(() => {
