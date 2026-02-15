@@ -533,6 +533,15 @@ export class CsvViewerPage {
     this.first.set(0);
   }
 
+  protected clearFilters() {
+    this.selectedYear.set('Todos');
+    this.selectedMonth.set(this.months.map((m) => m.value));
+    this.selectedType.set('Todos');
+    this.filterDateRange.set(null);
+    this.filterQuery.set('');
+    this.first.set(0);
+  }
+
   protected onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (file) {

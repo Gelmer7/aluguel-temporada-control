@@ -1,123 +1,329 @@
-<div class="flex-1 flex flex-col min-h-0 bg-transparent p-2">
-  <!-- Filtros -->
+<ng-template #headerActions>
+  <div class="flex items-center gap-2">
+    <p-button
+      icon="pi pi-file-pdf"
+      severity="secondary"
+      (onClick)="onDownloadPDF()"
+      [pTooltip]="'TITHE_MANAGEMENT.DOWNLOAD_PDF' | translate"
+      tooltipPosition="left"
+      [size]="'small'"
+    />
+    <p-button
+      icon="pi pi-plus"
+      (onClick)="openNew()"
+      [pTooltip]="'MANUAL_RENTALS_FORM.NEW' | translate"
+      tooltipPosition="left"
+      [size]="'small'"
+    />
+  </div>
+</ng-template>
+
+<div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
+  <!-- Filtros Reutilizáveis -->
   <app-filter-container>
-    <div class="flex flex-wrap items-center gap-4">
-      <p-iconfield iconPosition="left" class="flex-1 min-w-[200px] md:max-w-md">
-        <p-inputicon styleClass="pi pi-search" />
+    <!-- Resumo dos filtros (aparece quando colapsado) -->
+    <ng-template #filterSummary>
+      @if (filterDateRange()) {
+        <span>
+          {{ 'TERMS.PERIOD' | translate }}:
+          <span class="text-primary">{{ getFormattedDateRange() }}</span>
+        </span>
+      }
+      <span>
+        {{ 'TERMS.YEAR' | translate }}:
+        <span class="text-primary">{{ getSelectedYearLabel() | translate }}</span>
+      </span>
+      <span>
+        {{ 'TERMS.MONTH' | translate }}:
+        <span class="text-primary">{{ getSelectedMonthLabel() | translate }}</span>
+      </span>
+    </ng-template>
+
+    <!-- Ano -->
+    <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
+      <p-select
+        inputId="year_select"
+        [options]="yearOptions()"
+        [ngModel]="selectedYear()"
+        (ngModelChange)="selectedYear.set($event || 'ALL'); onFilterChange()"
+        [showClear]="true"
+        class="w-full"
+        appendTo="body"
+        optionLabel="label"
+        optionValue="value"
+      >
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          {{ selectedOption.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-option>
+          {{ option.label | translate }}
+        </ng-template>
+      </p-select>
+      <label for="year_select">{{ 'TERMS.YEAR' | translate }}</label>
+    </p-floatlabel>
+
+    <!-- Mês -->
+    <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
+      <p-multiselect
+        inputId="month_select"
+        [options]="monthOptions"
+        [ngModel]="selectedMonth()"
+        (ngModelChange)="selectedMonth.set($event || []); onFilterChange()"
+        class="w-full"
+        appendTo="body"
+        optionLabel="label"
+        optionValue="value"
+        [maxSelectedLabels]="2"
+        [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
+      >
+        <ng-template pTemplate="selectedItem" let-selectedOption>
+          {{ selectedOption.label | translate }}
+        </ng-template>
+        <ng-template pTemplate="item" let-option>
+          {{ option.label | translate }}
+        </ng-template>
+      </p-multiselect>
+      <label for="month_select">{{ 'TERMS.MONTH' | translate }}</label>
+    </p-floatlabel>
+
+    <!-- Filtro de Período via Popover -->
+    <div class="flex items-center self-center h-full">
+      <p-button
+        icon="pi pi-calendar"
+        [rounded]="true"
+        [text]="true"
+        (click)="op_date_filter.toggle($event)"
+        [pTooltip]="'TERMS.FILTER_BY_PERIOD' | translate"
+        tooltipPosition="top"
+        [severity]="filterDateRange() ? 'primary' : 'secondary'"
+        [styleClass]="filterDateRange() ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10' : ''"
+      >
+        @if (filterDateRange()) {
+          <span
+            class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white animate-pulse"
+          >
+            !
+          </span>
+        }
+      </p-button>
+
+      <p-popover #op_date_filter>
+        <div class="p-3 flex flex-col gap-3 min-w-[280px]">
+          <div class="flex items-center justify-between border-b border-surface-200 dark:border-surface-700 pb-2">
+            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">{{ 'TERMS.SELECT_PERIOD' | translate }}</span>
+            @if (filterDateRange()) {
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                size="small"
+                (click)="onDateRangeChange(null); op_date_filter.hide()"
+                [pTooltip]="'ACTIONS.CLEAR_FILTER' | translate"
+              />
+            }
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">{{ 'TERMS.DATE_RANGE' | translate }}</label>
+            <p-datepicker
+              inputId="popover_range_date"
+              [ngModel]="filterDateRange()"
+              (ngModelChange)="onDateRangeChange($event)"
+              selectionMode="range"
+              [showIcon]="true"
+              [showClear]="false"
+              [readonlyInput]="false"
+              class="w-full"
+              appendTo="body"
+              [dateFormat]="'PRIMENG.dateFormat' | translate"
+              [placeholder]="'PRIMENG.dateFormat' | translate"
+              styleClass="w-full"
+            ></p-datepicker>
+          </div>
+          <div class="text-[10px] text-surface-400 italic">
+            {{ 'TERMS.DATE_PICKER_HINT' | translate }}
+          </div>
+        </div>
+      </p-popover>
+    </div>
+
+    <!-- Limpar Filtros -->
+    <div class="flex items-center">
+      <p-button
+        icon="pi pi-filter-slash"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        class="p-button-sm"
+        (click)="clearFilters()"
+      />
+    </div>
+  </app-filter-container>
+
+  <!-- Data Table Section -->
+  <div
+    class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden"
+  >
+    <!-- Table Header Toolbar -->
+    <div class="flex items-center justify-start p-1 border-b border-surface-200 dark:border-surface-700">
+      <p-iconfield iconPosition="left" class="w-full sm:max-w-xs">
+        <p-inputicon>
+          <i class="pi pi-search text-xs sm:text-base"></i>
+        </p-inputicon>
         <input
           pInputText
           type="text"
           [ngModel]="globalFilter()"
           (ngModelChange)="onFilterGlobal($event)"
           [placeholder]="'TERMS.SEARCH' | translate"
-          class="w-full"
+          class="w-full !py-1 sm:!py-2 text-xs sm:text-sm"
         />
       </p-iconfield>
+      <p-button
+        icon="pi pi-chart-line"
+        variant="text"
+        [pTooltip]="'TERMS.CHARTS' | translate"
+        (click)="showCharts.set(true)"
+        class="ml-auto"
+      />
     </div>
-  </app-filter-container>
 
-  <!-- Tabela -->
-  <div class="flex-1 min-h-0 px-4 pb-4">
-    <p-table
-      [value]="pagedRentals()"
-      [loading]="loading()"
-      styleClass="p-datatable-sm shadow-sm rounded-xl overflow-hidden"
-      [responsiveLayout]="'scroll'"
-      [scrollable]="true"
-      scrollHeight="flex"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th class="bg-surface-0 dark:bg-surface-900">
-            {{ 'MANUAL_RENTALS_FORM.PAYMENT_DATE' | translate }}
-          </th>
-          <th class="bg-surface-0 dark:bg-surface-900">
-            {{ 'MANUAL_RENTALS_FORM.GUEST' | translate }}
-          </th>
-          <th class="bg-surface-0 dark:bg-surface-900">
-            {{ 'MANUAL_RENTALS_FORM.AD' | translate }}
-          </th>
-          <th class="bg-surface-0 dark:bg-surface-900 text-right">
-            {{ 'MANUAL_RENTALS_FORM.PAID_AMOUNT' | translate }}
-          </th>
-          <th class="bg-surface-0 dark:bg-surface-900 text-right">
-            {{ 'MANUAL_RENTALS_FORM.CLEANING_FEE' | translate }}
-          </th>
-          <th class="bg-surface-0 dark:bg-surface-900 w-24"></th>
-        </tr>
-      </ng-template>
+    <!-- Scrollable Table Content -->
+    <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
+      <p-table
+        #dt
+        [value]="pagedRentals()"
+        [loading]="loading()"
+        [scrollable]="true"
+        scrollHeight="flex"
+        class="p-datatable-sm h-full flex flex-col text-xs sm:text-base"
+      >
+        <ng-template pTemplate="header">
+          <tr class="text-xs sm:text-base">
+            <th pSortableColumn="data_pagamento" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3">
+              {{ 'MANUAL_RENTALS_FORM.PAYMENT_DATE' | translate }}
+            </th>
+            <th pSortableColumn="hospede" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3">
+              {{ 'MANUAL_RENTALS_FORM.GUEST' | translate }}
+            </th>
+            <th pSortableColumn="anuncio" class="bg-surface-50 dark:bg-surface-800 !py-1.5 sm:!py-3 hidden sm:table-cell">
+              {{ 'MANUAL_RENTALS_FORM.AD' | translate }}
+            </th>
+            <th pSortableColumn="valor_pago" class="bg-surface-50 dark:bg-surface-800 text-right !py-1.5 sm:!py-3">
+              {{ 'MANUAL_RENTALS_FORM.PAID_AMOUNT' | translate }}
+            </th>
+            <th class="bg-surface-50 dark:bg-surface-800 text-center w-24 sm:w-32 !py-1.5 sm:!py-3">
+              {{ 'ACTIONS.LABEL' | translate }}
+            </th>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="body" let-rental>
-        <tr>
-          <td>{{ rental.data_pagamento | date: 'dd/MM/yyyy' }}</td>
-          <td>{{ rental.hospede }}</td>
-          <td>{{ rental.anuncio }}</td>
-          <td class="text-right">
-            {{ rental.valor_pago | currency: rental.moeda : 'symbol' : '1.2-2' : 'pt-BR' }}
-          </td>
-          <td class="text-right">
-            {{ rental.taxa_limpeza | currency: rental.moeda : 'symbol' : '1.2-2' : 'pt-BR' }}
-          </td>
-          <td>
-            <div class="flex justify-end gap-2">
-              <p-button
-                icon="pi pi-pencil"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                (onClick)="editRental(rental)"
-                [pTooltip]="'ACTIONS.EDIT' | translate"
-              >
-              </p-button>
-              <p-button
-                icon="pi pi-trash"
-                [rounded]="true"
-                [text]="true"
-                severity="danger"
-                (onClick)="confirmDelete(rental)"
-                [pTooltip]="'ACTIONS.DELETE' | translate"
-              >
-              </p-button>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
+        <ng-template pTemplate="body" let-rental>
+          <tr class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs sm:text-base">
+            <td class="!p-1.5 sm:!p-2">
+              {{ rental.data_pagamento | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="!p-1.5 sm:!p-2">
+              <div class="flex flex-col">
+                <span class="font-medium text-surface-900 dark:text-surface-0">{{ rental.hospede }}</span>
+                <span class="sm:hidden text-[9px] text-surface-500 uppercase">{{ rental.anuncio }}</span>
+                @if (rental.informacoes) {
+                  <span
+                    class="hidden sm:block text-[10px] text-surface-500 truncate max-w-[100px] md:max-w-xs"
+                    [pTooltip]="rental.informacoes"
+                  >
+                    {{ rental.informacoes }}
+                  </span>
+                }
+              </div>
+            </td>
+            <td class="!p-1.5 sm:!p-2 hidden sm:table-cell">
+              {{ rental.anuncio }}
+            </td>
+            <td class="!p-1.5 sm:!p-2 text-right font-bold text-surface-900 dark:text-surface-0">
+              {{ rental.valor_pago | currency: rental.moeda : 'symbol' : '1.2-2' : 'pt-BR' }}
+            </td>
+            <td class="!p-1.5 sm:!p-2">
+              <div class="flex justify-center gap-1 sm:gap-2">
+                <p-button
+                  icon="pi pi-pencil"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="secondary"
+                  (click)="editRental(rental)"
+                  [pTooltip]="'ACTIONS.EDIT' | translate"
+                  styleClass="!w-7 !h-7 sm:!w-8 sm:!h-8"
+                />
+                <p-button
+                  icon="pi pi-trash"
+                  [rounded]="true"
+                  [text]="true"
+                  severity="danger"
+                  (click)="confirmDelete(rental)"
+                  [pTooltip]="'ACTIONS.DELETE' | translate"
+                  styleClass="!w-7 !h-7 sm:!w-8 sm:!h-8"
+                />
+              </div>
+            </td>
+          </tr>
+        </ng-template>
 
-      <ng-template pTemplate="emptymessage">
-        <tr>
-          <td colspan="6" class="text-center p-8">
-            <div class="flex flex-col items-center gap-3">
-              <i class="pi pi-inbox text-4xl text-surface-400"></i>
-              <span>{{ 'SUGGESTIONS_FORM.NO_DATA' | translate }}</span>
-            </div>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+        <ng-template pTemplate="footer">
+          <tr>
+            <td colspan="3" class="text-right font-bold bg-surface-50 dark:bg-surface-800 !py-2 hidden sm:table-cell">
+              TOTAL:
+            </td>
+            <td colspan="2" class="text-right font-bold bg-surface-50 dark:bg-surface-800 !py-2 sm:hidden">
+              TOTAL:
+            </td>
+            <td class="text-right font-bold text-primary bg-surface-50 dark:bg-surface-800 !py-2">
+              {{ totalRentals() | currency: 'BRL' }}
+            </td>
+            <td class="bg-surface-50 dark:bg-surface-800 !py-2 hidden sm:table-cell"></td>
+          </tr>
+        </ng-template>
+
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="5" class="text-center p-8">
+              <div class="flex flex-col items-center gap-3">
+                <i class="pi pi-inbox text-4xl text-surface-300"></i>
+                <span class="text-surface-500">{{ 'SUGGESTIONS_FORM.NO_DATA' | translate }}</span>
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Paginator Footer -->
+    <app-table-paginator
+      [first]="first()"
+      [rows]="rows()"
+      [totalRecords]="filteredRentals().length"
+      [rowsPerPageOptions]="[10, 20, 50, 100]"
+      (onPageChange)="onPageChange($event)"
+    />
   </div>
 
-  <!-- Paginação -->
-  <app-table-paginator
-    [first]="first()"
-    [rows]="rows()"
-    [totalRecords]="filteredRentals().length"
-    (onPageChange)="onPageChange($event)"
-  >
-  </app-table-paginator>
+  <!-- Form Dialog -->
+  <app-manual-rental-form
+    [visible]="showForm()"
+    (visibleChange)="showForm.set($event)"
+    [editData]="currentRental()"
+    (save)="saveRental($event)"
+  />
+
+  <!-- Charts Dialog (Placeholder if exists) -->
+  @if (showCharts()) {
+    <app-manual-rental-charts
+      [visible]="showCharts()"
+      (visibleChange)="showCharts.set($event)"
+      [rentals]="rentals()"
+      [selectedYear]="selectedYear()"
+    />
+  }
+
+  <!-- Confirmations and Toasts -->
+  <p-confirmdialog />
+  <p-toast position="bottom-right" />
 </div>
-
-<!-- Template para o Header -->
-<ng-template #headerActions>
-  <p-button icon="pi pi-plus" (onClick)="openNew()" severity="primary"> </p-button>
-</ng-template>
-
-<!-- Diálogos e Toasts -->
-<app-manual-rental-form
-  [(visible)]="showForm"
-  [editData]="currentRental()"
-  (save)="saveRental($event)"
->
-</app-manual-rental-form>
-
-<p-confirmdialog></p-confirmdialog>
-<p-toast></p-toast>

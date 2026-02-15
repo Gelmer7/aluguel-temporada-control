@@ -315,6 +315,101 @@ export class PdfService {
     doc.save(`Gastos_${data.houseCode || ''}_${yearLabel}.pdf`);
   }
 
+  /**
+   * Generates a PDF from the manual rentals data
+   */
+  generateManualRentalsPdf(data: {
+    year: number | string;
+    months: number[];
+    houseCode?: string;
+    rentals: any[];
+    total: number;
+  }) {
+    const doc = new jsPDF();
+    const title = this.translate.instant('MANUAL_RENTALS_FORM.TITLE');
+    const yearLabel = data.year === 'ALL' ? this.translate.instant('TERMS.ALL') : data.year;
+
+    // Traduzir nomes dos meses
+    const monthsNames = data.months.length === 12
+      ? this.translate.instant('TERMS.ALL')
+      : data.months.map((m) => this.translate.instant(`MONTHS.${m - 1}`)).join(', ');
+
+    // Header
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text(title, 14, 15);
+
+    // Generation Date and Time (Top Right)
+    const now = new Date();
+    const generationDate = formatDate(now, 'dd/MM/yyyy HH:mm', 'en-US');
+    doc.setFontSize(7);
+    doc.setTextColor(150);
+    doc.text(generationDate, 196, 10, { align: 'right' });
+
+    // House, Months and Year
+    doc.setFontSize(9);
+    doc.setTextColor(80);
+    let subHeaderText = `${monthsNames} / ${yearLabel}`;
+    if (data.houseCode) {
+      subHeaderText = `${this.translate.instant('TERMS.HOUSE')}: ${data.houseCode} | ${subHeaderText}`;
+    }
+    doc.text(subHeaderText, 14, 21);
+
+    // Summary Table
+    autoTable(doc, {
+      startY: 25,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 9, cellPadding: 2 },
+      head: [
+        [
+          this.translate.instant('COMMON.QUANTITY'),
+          this.translate.instant('TERMS.TOTAL')
+        ]
+      ],
+      body: [
+        [
+          data.rentals.length.toString(),
+          { content: this.formatBRL(data.total), styles: { fontStyle: 'bold' } }
+        ]
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [67, 56, 202] },
+    });
+
+    // Rentals List Table
+    const lastY = (doc as any).lastAutoTable.finalY;
+    autoTable(doc, {
+      startY: lastY + 10,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 8, cellPadding: 1.5 },
+      head: [
+        [
+          this.translate.instant('MANUAL_RENTALS_FORM.GUEST'),
+          this.translate.instant('MANUAL_RENTALS_FORM.HOUSE'),
+          this.translate.instant('MANUAL_RENTALS_FORM.CHECKIN'),
+          this.translate.instant('MANUAL_RENTALS_FORM.CHECKOUT'),
+          this.translate.instant('MANUAL_RENTALS_FORM.VALUE'),
+        ],
+      ],
+      body: data.rentals.map((r) => [
+        r.guestName,
+        r.houseName,
+        this.formatDate(r.checkIn),
+        this.formatDate(r.checkOut),
+        this.formatBRL(r.totalValue),
+      ]),
+      foot: [['', '', '', 'Total:', this.formatBRL(data.total)]],
+      footStyles: {
+        fillColor: [240, 240, 240],
+        textColor: [0, 0, 0],
+        fontStyle: 'bold',
+        fontSize: 8,
+      },
+    });
+
+    // Save
+    doc.save(`Alugueis_${data.houseCode || ''}_${yearLabel}.pdf`);
+  }
 
   private formatBRL(value: number): string {
     return formatCurrency(value, 'pt-BR', 'R$');

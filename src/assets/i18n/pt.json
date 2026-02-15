@@ -30,10 +30,18 @@
     "CONFIRM": "Confirmar",
     "SUCCESS": "Sucesso",
     "CREATED_AT": "Criado em",
-    "CLEAR_FILTER": "Limpar Filtro"
+    "CLEAR_FILTER": "Limpar Filtro",
+    "LABEL": "Ações"
   },
   "COMMON": {
-    "QUANTITY": "Quantidade"
+    "QUANTITY": "Quantidade",
+    "SUCCESS": "Sucesso",
+    "ERROR": "Erro",
+    "DELETE_SUCCESS": "Excluído com sucesso",
+    "INCLUDED": "Incluído",
+    "EXCLUDED": "Excluído",
+    "YES": "Sim",
+    "NO": "Não"
   },
   "TERMS": {
     "HOME": "Início",
@@ -200,7 +208,21 @@
     "PLACEHOLDER_INFO": "Observações adicionais...",
     "SUCCESS_CREATE": "Aluguel cadastrado com sucesso!",
     "SUCCESS_UPDATE": "Aluguel atualizado com sucesso!",
-    "CONFIRM_DELETE": "Tem certeza que deseja excluir este aluguel?"
+    "CONFIRM_DELETE": "Tem certeza que deseja excluir este aluguel?",
+    "GUEST": "Hóspede",
+    "HOUSE": "Anúncio",
+    "CHECKIN": "Check-in",
+    "CHECKOUT": "Check-out",
+    "VALUE": "Valor",
+    "TITLE": "Aluguéis Temporada",
+    "CHARTS": {
+      "TITLE": "Gráficos de Aluguéis",
+      "MONTHLY": "Aluguéis Mensais de {{year}}",
+      "MONTHLY_ALL": "Soma Mensal Histórica (Todos os Anos)",
+      "EVOLUTION": "Evolução dos Aluguéis",
+      "DISTRIBUTION_AD": "Distribuição por Anúncio",
+      "NO_DATA": "Sem dados para exibir gráficos."
+    }
   },
   "TITHE_MANAGEMENT": {
     "ADD_TITHE": "Adicionar Dízimo",

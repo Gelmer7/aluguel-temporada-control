@@ -151,6 +151,20 @@
         </div>
       </p-popover>
     </div>
+
+    <!-- Limpar Filtros -->
+    <div class="flex items-center">
+      <p-button
+        icon="pi pi-filter-slash"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        class="p-button-sm"
+        (click)="clearFilters()"
+        pTooltip="Limpar Filtros"
+        tooltipPosition="top"
+      />
+    </div>
   </app-filter-container>
 
   <!-- Resumo alinhado à direita em linha única -->

@@ -45,7 +45,6 @@
 
     <!-- Conteúdo dos filtros -->
 
-
     <!-- Ano -->
     <p-floatlabel class="flex-1 min-w-[100px]" variant="in">
       <p-select
@@ -114,7 +113,7 @@
       </p-multiselect>
       <label for="type_select">{{ 'TERMS.TYPE' | translate }}</label>
     </p-floatlabel>
-        <!-- Filtro de Período via Popover -->
+    <!-- Filtro de Período via Popover -->
     <div class="flex items-center self-center h-full">
       <p-button
         icon="pi pi-calendar"
@@ -124,7 +123,11 @@
         [pTooltip]="'TERMS.FILTER_BY_PERIOD' | translate"
         tooltipPosition="top"
         [severity]="filterDateRange() ? 'primary' : 'secondary'"
-        [styleClass]="filterDateRange() ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10' : ''"
+        [styleClass]="
+          filterDateRange()
+            ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10'
+            : ''
+        "
       >
         @if (filterDateRange()) {
           <span
@@ -137,8 +140,12 @@
 
       <p-popover #op_date_filter>
         <div class="p-3 flex flex-col gap-3 min-w-[280px]">
-          <div class="flex items-center justify-between border-b border-surface-200 dark:border-surface-700 pb-2">
-            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">{{ 'TERMS.SELECT_PERIOD' | translate }}</span>
+          <div
+            class="flex items-center justify-between border-b border-surface-200 dark:border-surface-700 pb-2"
+          >
+            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">{{
+              'TERMS.SELECT_PERIOD' | translate
+            }}</span>
             @if (filterDateRange()) {
               <p-button
                 icon="pi pi-trash"
@@ -151,7 +158,9 @@
             }
           </div>
           <div class="flex flex-col gap-1">
-            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">{{ 'TERMS.DATE_RANGE' | translate }}</label>
+            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">{{
+              'TERMS.DATE_RANGE' | translate
+            }}</label>
             <p-datepicker
               inputId="popover_range_date"
               [ngModel]="filterDateRange()"
@@ -180,7 +189,7 @@
         [text]="true"
         severity="secondary"
         size="small"
-        class="p-button-sm"
+        class="p-button-sm !p-0"
         (click)="clearFilters()"
       />
     </div>
@@ -320,10 +329,16 @@
 
         <ng-template pTemplate="footer">
           <tr>
-            <td colspan="3" class="text-right font-bold bg-surface-50 dark:bg-surface-800 !py-2 hidden sm:table-cell">
+            <td
+              colspan="3"
+              class="text-right font-bold bg-surface-50 dark:bg-surface-800 !py-2 hidden sm:table-cell"
+            >
               TOTAL:
             </td>
-            <td colspan="2" class="text-right font-bold bg-surface-50 dark:bg-surface-800 !py-2 sm:hidden">
+            <td
+              colspan="2"
+              class="text-right font-bold bg-surface-50 dark:bg-surface-800 !py-2 sm:hidden"
+            >
               TOTAL:
             </td>
             <td class="text-right font-bold text-primary bg-surface-50 dark:bg-surface-800 !py-2">
