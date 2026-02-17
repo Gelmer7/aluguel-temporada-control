@@ -49,6 +49,7 @@
   },
   "ACTIONS": {
     "VIEW_CSV": "Visor CSV",
+    "LOGIN": "Iniciar Sesión",
     "CANCEL": "Cancelar",
     "SAVE": "Guardar",
     "SAVE_EXPENSE": "Guardar Gasto",
@@ -58,11 +59,13 @@
     "CONFIRM": "Confirmar",
     "SUCCESS": "Éxito",
     "CREATED_AT": "Creado el",
-    "CLEAR_FILTER": "Limpiar Filtro"
+    "CLEAR_FILTER": "Limpiar Filtro",
+    "LABEL": "Acciones"
   },
   "TERMS": {
     "HOME": "Inicio",
     "ENTRIES": "Entradas",
+    "MANUAL_RENTALS": "Alquileres Manuales",
     "EXPENSES": "Gastos",
     "REVENUE": "Ingresos",
     "EARNINGS": "Ganancias",
@@ -90,6 +93,9 @@
     "TOTAL": "Total",
     "GROSS": "Bruto",
     "NET": "Neto",
+    "SETTINGS": "Configuraciones",
+    "DATA_MANAGEMENT": "Gestión de Datos",
+    "CUSTOM_COLORS": "Colores Personalizados",
     "STATUS": "Estado",
     "SELECT": "Seleccionar",
     "SELECTED": "seleccionado(s)",
@@ -158,6 +164,27 @@
     "10": "Noviembre",
     "11": "Diciembre"
   },
+  "SETTINGS": {
+    "COLORS": {
+      "TITLE": "Configuración de Colores",
+      "SUBTITLE": "Personalice las clases Tailwind para los diferentes tipos de registros",
+      "TAILWIND_CLASSES": "Clases Tailwind",
+      "PREVIEW": "Vista Previa",
+      "LIGHT_MODE": "Modo Claro",
+      "DARK_MODE": "Modo Oscuro",
+      "RESET_DEFAULTS": "Restablecer Predeterminados",
+      "SAVE_CHANGES": "Guardar Cambios",
+      "LABELS": {
+        "HOST": "Anfitrión (Reserva)",
+        "COHOST": "Coanfitrión (Recepción)",
+        "PAGAMENTOS": "Pagos",
+        "DAMAGE": "Daños / Resoluciones",
+        "SIMULATION": "Simulación"
+      },
+      "SUCCESS_SAVE": "¡Configuración de colores guardada con éxito!",
+      "SUCCESS_RESET": "Colores restaurados a los valores predeterminados."
+    }
+  },
   "EXPENSES_FORM": {
     "NEW": "Nuevo Gasto",
     "EDIT": "Editar Gasto",
@@ -183,6 +210,38 @@
       "CLEANING": "Limpieza",
       "OTHER": "Otros",
       "CARNE_LEAO": "Carnê-Leão"
+    }
+  },
+  "MANUAL_RENTALS_FORM": {
+    "NEW": "Nuevo Alquiler",
+    "EDIT": "Editar Alquiler",
+    "PAYMENT_DATE": "Fecha de Pago",
+    "RESERVATION_DATE": "Fecha de Reserva",
+    "START_DATE": "Fecha de Inicio",
+    "END_DATE": "Fecha de Término",
+    "NIGHTS": "Noches",
+    "AD": "Anuncio",
+    "CLEANING_FEE": "Tasa de Limpieza",
+    "PAID_AMOUNT": "Monto Pagado",
+    "INFO": "Información",
+    "PLACEHOLDER_GUEST": "Nombre del huésped",
+    "PLACEHOLDER_INFO": "Observaciones adicionales...",
+    "SUCCESS_CREATE": "¡Alquiler registrado con éxito!",
+    "SUCCESS_UPDATE": "¡Alquiler actualizado con éxito!",
+    "CONFIRM_DELETE": "¿Estás seguro de que deseas eliminar este alquiler?",
+    "GUEST": "Huésped",
+    "HOUSE": "Anuncio",
+    "CHECKIN": "Check-in",
+    "CHECKOUT": "Check-out",
+    "VALUE": "Valor",
+    "TITLE": "Alquileres Manuales",
+    "CHARTS": {
+      "TITLE": "Gráficos de Alquileres",
+      "MONTHLY": "Alquileres Mensuales de {{year}}",
+      "MONTHLY_ALL": "Suma Mensual Histórica (Todos los Años)",
+      "EVOLUTION": "Evolución de Alquileres",
+      "DISTRIBUTION_AD": "Distribución por Anuncio",
+      "NO_DATA": "Sin datos para mostrar gráficos."
     }
   },
   "TITHE_MANAGEMENT": {

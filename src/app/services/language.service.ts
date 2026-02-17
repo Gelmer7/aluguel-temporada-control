@@ -14,9 +14,9 @@ export class LanguageService {
 
   // Available languages
   languages = [
-    { name: 'Español', code: 'es', flag: '/flags/es.png' },
-    { name: 'English', code: 'en', flag: '/flags/us.png' },
-    { name: 'Português', code: 'pt', flag: '/flags/br.png' },
+    { name: 'Español', code: 'es', flag: '/assets/flags/es.png' },
+    { name: 'English', code: 'en', flag: '/assets/flags/us.png' },
+    { name: 'Português', code: 'pt', flag: '/assets/flags/br.png' },
   ];
 
   constructor() {
