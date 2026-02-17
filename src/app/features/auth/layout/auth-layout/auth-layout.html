@@ -1,0 +1,19 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+  <div class="w-full max-w-md">
+    <!-- Logo ou Branding -->
+    <div class="flex justify-center mb-8">
+      <img src="/assets/airbnb.svg" alt="Logo" class="h-12 w-auto dark:hidden">
+      <img src="/assets/airbnb_lite.svg" alt="Logo" class="h-12 w-auto hidden dark:block">
+    </div>
+
+    <!-- Conteúdo Principal (Card) -->
+    <p-card styleClass="shadow-xl border-0 dark:bg-gray-800">
+      <router-outlet></router-outlet>
+    </p-card>
+
+    <!-- Rodapé -->
+    <div class="mt-6 text-center text-sm text-gray-500 dark:text-gray-400">
+      <p>&copy; {{ currentYear }} Sistema Airbnb. All rights reserved.</p>
+    </div>
+  </div>
+</div>

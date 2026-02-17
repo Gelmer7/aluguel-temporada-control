@@ -1,4 +1,33 @@
 {
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Welcome Back",
+      "SUBTITLE": "Sign in to continue",
+      "EMAIL_LABEL": "Email",
+      "PASSWORD_LABEL": "Password",
+      "BUTTON": "Sign In",
+      "GOOGLE_BUTTON": "Sign in with Google",
+      "FORGOT_PASSWORD": "Forgot password?",
+      "NO_ACCOUNT": "Don't have an account?",
+      "REGISTER_LINK": "Sign Up",
+      "ERROR_TITLE": "Login Error",
+      "ERROR_MESSAGE": "Invalid credentials or server error.",
+      "EMAIL_NOT_CONFIRMED": "Email not confirmed. Please check your inbox."
+    },
+    "REGISTER": {
+      "TITLE": "Create Account",
+      "SUBTITLE": "Fill in your details to start",
+      "FULL_NAME_LABEL": "Full Name",
+      "EMAIL_LABEL": "Email",
+      "PASSWORD_LABEL": "Password",
+      "CONFIRM_PASSWORD_LABEL": "Confirm Password",
+      "BUTTON": "Sign Up",
+      "HAVE_ACCOUNT": "Already have an account?",
+      "LOGIN_LINK": "Sign In",
+      "SUCCESS_TITLE": "Account Created!",
+      "SUCCESS_MESSAGE": "Check your email to confirm registration."
+    }
+  },
   "TOOLBAR": {
     "LOGIN": "Login",
     "LANGUAGE": "Language",

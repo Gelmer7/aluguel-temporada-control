@@ -1,0 +1,91 @@
+<div class="flex flex-col gap-6 w-full">
+  <!-- Cabeçalho -->
+  <div class="text-center">
+    <h2 class="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+      {{ 'AUTH.REGISTER.TITLE' | translate }}
+    </h2>
+    <p class="text-gray-500 dark:text-gray-400">
+      {{ 'AUTH.REGISTER.SUBTITLE' | translate }}
+    </p>
+  </div>
+
+  <!-- Mensagem de Sucesso -->
+  @if (successMessage) {
+    <p-message severity="success" [text]="successMessage" styleClass="w-full"></p-message>
+  }
+
+  <!-- Mensagem de Erro -->
+  @if (errorMessage) {
+    <p-message severity="error" [text]="errorMessage" styleClass="w-full"></p-message>
+  }
+
+  <!-- Formulário (escondido se sucesso) -->
+  @if (!successMessage) {
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      
+      <!-- Nome Completo -->
+      <div class="flex flex-col gap-2">
+        <label for="fullName" class="font-medium text-gray-700 dark:text-gray-300">
+          {{ 'AUTH.REGISTER.FULL_NAME_LABEL' | translate }}
+        </label>
+        <input 
+          pInputText 
+          id="fullName" 
+          formControlName="fullName" 
+          class="w-full" 
+        />
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col gap-2">
+        <label for="email" class="font-medium text-gray-700 dark:text-gray-300">
+          {{ 'AUTH.REGISTER.EMAIL_LABEL' | translate }}
+        </label>
+        <input 
+          pInputText 
+          id="email" 
+          formControlName="email" 
+          class="w-full" 
+        />
+      </div>
+
+      <!-- Senha -->
+      <div class="flex flex-col gap-2">
+        <label for="password" class="font-medium text-gray-700 dark:text-gray-300">
+          {{ 'AUTH.REGISTER.PASSWORD_LABEL' | translate }}
+        </label>
+        <p-password 
+          id="password" 
+          formControlName="password" 
+          [toggleMask]="true" 
+          styleClass="w-full" 
+          inputStyleClass="w-full"
+          autocomplete="new-password"
+        ></p-password>
+      </div>
+
+      <!-- Botão de Cadastro -->
+      <p-button 
+        [label]="'AUTH.REGISTER.BUTTON' | translate" 
+        type="submit" 
+        [loading]="loading" 
+        styleClass="w-full mt-2"
+      ></p-button>
+    </form>
+
+    <!-- Link para Login -->
+    <div class="text-center mt-2 text-sm text-gray-600 dark:text-gray-400">
+      {{ 'AUTH.REGISTER.HAVE_ACCOUNT' | translate }}
+      <a routerLink="/auth/login" class="font-semibold text-primary-600 hover:text-primary-700 dark:text-primary-400 ml-1 no-underline hover:underline cursor-pointer">
+        {{ 'AUTH.REGISTER.LOGIN_LINK' | translate }}
+      </a>
+    </div>
+  } @else {
+    <!-- Botão para ir ao Login após sucesso -->
+    <p-button 
+      [label]="'AUTH.REGISTER.LOGIN_LINK' | translate" 
+      routerLink="/auth/login"
+      styleClass="w-full mt-4"
+    ></p-button>
+  }
+</div>

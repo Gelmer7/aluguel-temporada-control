@@ -5,7 +5,8 @@ import {
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, HttpClient } from '@angular/common/http';
-import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 // DropdownModule removed line was not here, it was http-loader
 
 import { importProvidersFrom, isDevMode } from '@angular/core';
@@ -34,14 +35,12 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideEchartsCore({ echarts }),
     importProvidersFrom(
-      TranslateModule.forRoot({
-        loader: {
-          provide: TranslateLoader,
-          useFactory: HttpLoaderFactory,
-          deps: [HttpClient],
-        },
-      })
+      TranslateModule.forRoot()
     ),
+    provideTranslateHttpLoader({
+      prefix: '/assets/i18n/',
+      suffix: '.json'
+    }),
     providePrimeNG({
       theme: {
         preset: Aura,
@@ -55,20 +54,3 @@ export const appConfig: ApplicationConfig = {
           }),
   ],
 };
-
-// Custom Loader para evitar problemas de compatibilidad com versões recentes e assinaturas de construtor
-export class CustomTranslateLoader implements TranslateLoader {
-  constructor(
-    private http: HttpClient,
-    private prefix: string = './i18n/',
-    private suffix: string = '.json'
-  ) {}
-
-  getTranslation(lang: string): Observable<any> {
-    return this.http.get(`${this.prefix}${lang}${this.suffix}`);
-  }
-}
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new CustomTranslateLoader(http);
-}

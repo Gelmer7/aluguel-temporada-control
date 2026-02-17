@@ -2,6 +2,7 @@ import { Component, signal, ChangeDetectionStrategy, OnInit, inject } from '@ang
 import { RouterOutlet } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { SupabaseService } from './services/supabase.service';
+import { LanguageService } from './services/language.service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +13,12 @@ import { SupabaseService } from './services/supabase.service';
 export class App implements OnInit {
   protected readonly title = signal('airbnb-web-angular');
   private supabaseService = inject(SupabaseService);
+  private languageService = inject(LanguageService);
 
   async ngOnInit() {
+    console.log('Initializing App...');
+    // Language Service is automatically initialized by injection
+    
     console.log('Testing Supabase connection...');
     const { data, error } = await this.supabaseService.checkConnection();
     if (error) {

@@ -51,3 +51,7 @@ Quero que me ajude a pensar e a planejar Não quero que e implementes nada mas q
 
 esta faltando no meu sistema um sistema de gestão de usuários, eu quero que me ajude a pensar e a planejar como poderia implementar um sistema de gestão de usuários.
 
+atualmenete qualquer usuario, poder visualizar e salvar no banco do meu sistema, eu quero restringir isso para que somente usuario registrados possam visualizar e salvar valores
+
+como posso implemnetar um sistema de login que seja robusto seguindo boas praticas e que seja seguro ?
+

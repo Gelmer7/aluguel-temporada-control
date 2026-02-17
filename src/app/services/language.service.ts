@@ -37,10 +37,13 @@ export class LanguageService {
 
   setLanguage(lang: string) {
     this.translate.setDefaultLang(lang);
-    this.translate.use(lang).subscribe(() => {
-      this.translate.get('PRIMENG').subscribe((res: any) => {
-        this.primeng.setTranslation(res);
-      });
+    this.translate.use(lang).subscribe({
+      next: () => {
+        this.translate.get('PRIMENG').subscribe((res: any) => {
+          this.primeng.setTranslation(res);
+        });
+      },
+      error: (err) => console.error('Error loading language:', err)
     });
     this.currentLang.set(lang);
     localStorage.setItem('app-lang', lang);

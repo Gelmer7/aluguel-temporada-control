@@ -1,4 +1,33 @@
 {
+  "AUTH": {
+    "LOGIN": {
+      "TITLE": "Bienvenido de nuevo",
+      "SUBTITLE": "Inicia sesión para continuar",
+      "EMAIL_LABEL": "Correo electrónico",
+      "PASSWORD_LABEL": "Contraseña",
+      "BUTTON": "Entrar",
+      "GOOGLE_BUTTON": "Entrar con Google",
+      "FORGOT_PASSWORD": "¿Olvidaste tu contraseña?",
+      "NO_ACCOUNT": "¿No tienes una cuenta?",
+      "REGISTER_LINK": "Regístrate",
+      "ERROR_TITLE": "Error de inicio de sesión",
+      "ERROR_MESSAGE": "Credenciales inválidas o error del servidor.",
+      "EMAIL_NOT_CONFIRMED": "Correo no confirmado. Por favor, verifica tu bandeja de entrada."
+    },
+    "REGISTER": {
+      "TITLE": "Crear Cuenta",
+      "SUBTITLE": "Completa tus datos para comenzar",
+      "FULL_NAME_LABEL": "Nombre Completo",
+      "EMAIL_LABEL": "Correo electrónico",
+      "PASSWORD_LABEL": "Contraseña",
+      "CONFIRM_PASSWORD_LABEL": "Confirmar Contraseña",
+      "BUTTON": "Registrarse",
+      "HAVE_ACCOUNT": "¿Ya tienes una cuenta?",
+      "LOGIN_LINK": "Inicia sesión",
+      "SUCCESS_TITLE": "¡Cuenta creada!",
+      "SUCCESS_MESSAGE": "Verifica tu correo para confirmar el registro."
+    }
+  },
   "TOOLBAR": {
     "LOGIN": "Iniciar Sesión",
     "LANGUAGE": "Idioma",

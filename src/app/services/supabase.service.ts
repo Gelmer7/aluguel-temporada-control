@@ -15,13 +15,23 @@ export class SupabaseService {
   constructor() {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey, {
       auth: {
-        persistSession: false,
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
       },
     });
   }
 
   get client() {
     return this.supabase;
+  }
+
+  /**
+   * Obtém o ID do usuário autenticado atual
+   */
+  async getCurrentUserId(): Promise<string | null> {
+    const { data } = await this.supabase.auth.getSession();
+    return data.session?.user?.id || null;
   }
 
   /**
@@ -56,11 +66,13 @@ export class SupabaseService {
    * Usa a coluna 'unique_key' para identificar duplicatas.
    */
   async upsertAirbnbRecords(records: any[]) {
+    const userId = await this.getCurrentUserId();
+
     // Adicionar metadados a cada registro
     const recordsWithMetadata = records.map(record => ({
       ...record,
       house_code: this.houseService.currentHouseCode(),
-      createUser: 'gelmer7@gmail.com' // Temporário até ter login
+      user_id: userId // Vincula ao usuário logado
     }));
 
     return await this.supabase
@@ -91,10 +103,12 @@ export class SupabaseService {
    * Salva ou atualiza um aluguel manual
    */
   async upsertManualRental(rental: ManualRental) {
+    const userId = await this.getCurrentUserId();
+
     const rentalWithMetadata = {
       ...rental,
       house_code: this.houseService.currentHouseCode(),
-      create_user: 'gelmer7@gmail.com'
+      user_id: userId
     };
 
     return await this.supabase
@@ -141,10 +155,12 @@ export class SupabaseService {
   }
 
   async addExpense(expense: Omit<Expense, 'id' | 'createDate'>) {
+    const userId = await this.getCurrentUserId();
+
     const payload = {
       ...expense,
       house_code: this.houseService.currentHouseCode(),
-      createUser: 'gelmer7@gmail.com' // Temporário até ter login
+      user_id: userId
     };
     return await this.supabase.from('expenses').insert(payload).select();
   }
@@ -158,10 +174,12 @@ export class SupabaseService {
   }
 
   async bulkUploadExpenses(expenses: Omit<Expense, 'id' | 'createDate'>[]) {
+    const userId = await this.getCurrentUserId();
+
     const payloads = expenses.map(e => ({
       ...e,
       house_code: this.houseService.currentHouseCode(),
-      createUser: 'gelmer7@gmail.com' // Temporário até ter login
+      user_id: userId
     }));
     return await this.supabase.from('expenses').insert(payloads).select();
   }
@@ -179,10 +197,12 @@ export class SupabaseService {
   }
 
   async addTithe(tithe: Omit<Tithe, 'id' | 'createDate'>) {
+    const userId = await this.getCurrentUserId();
+
     const payload = {
       ...tithe,
       house_code: this.houseService.currentHouseCode(),
-      createUser: 'gelmer7@gmail.com' // Temporário até ter login
+      user_id: userId
     };
     return await this.supabase.from('tithes').insert(payload).select();
   }
@@ -198,13 +218,21 @@ export class SupabaseService {
 
 export interface Tithe {
   id: string;
-  monthYear: string; // ISO format YYYY-MM-01
-  airbnbGross: number;
-  titheValue: number;
-  offerValue: number;
-  totalPaid: number;
+  monthYear: string; // YYYY-MM-DD
+
+  // Fields from database/tithe.page.ts
+  airbnbGross?: number;
+  titheValue?: number;
+  offerValue?: number;
+  totalPaid?: number;
   observation?: string;
-  createDate?: string;
+
+  // Legacy/Optional fields
+  amount?: number;
+  description?: string;
+  isPaid?: boolean;
+
+  createDate?: Date;
   house_code?: string;
-  createUser?: string;
+  user_id?: string;
 }
