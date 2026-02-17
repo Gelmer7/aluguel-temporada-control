@@ -1,4 +1,6 @@
 
+export const TAX_PAYMENT_MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
 /**
  * Utilitário global para manipulação de datas.
  */

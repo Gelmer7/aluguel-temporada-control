@@ -43,24 +43,24 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     icon: 'pi-dollar',
     route: '/dashboard/earnings',
   },
-  // {
-  //   id: 'carne',
-  //   label: 'TERMS.CARNE_LEAO',
-  //   icon: 'pi-wallet',
-  //   route: '/dashboard/carne-leao',
-  // },
+  {
+    id: 'carne',
+    label: 'TERMS.CARNE_LEAO',
+    icon: 'pi-wallet',
+    route: '/dashboard/carne-leao',
+  },
   {
     id: 'tithe',
     label: 'TERMS.TITHE',
     icon: 'pi-heart',
     route: '/dashboard/tithe',
   },
-  // {
-  //   id: 'contracts',
-  //   label: 'TERMS.CONTRACTS',
-  //   icon: 'pi-file-edit',
-  //   route: '/dashboard/contracts',
-  // },
+  {
+    id: 'contracts',
+    label: 'TERMS.CONTRACTS',
+    icon: 'pi-file-edit',
+    route: '/dashboard/contracts',
+  },
 
   {
     id: 'reports',

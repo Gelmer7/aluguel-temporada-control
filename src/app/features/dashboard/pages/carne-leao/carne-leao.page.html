@@ -1,11 +1,542 @@
-<div class="p-4">
-  <p-card>
-    <ng-template pTemplate="header">
-      <div class="flex items-center gap-2">
-        <i class="pi pi-wallet"></i>
-        <span>{{ 'TERMS.CARNE_LEAO' | translate }}</span>
-      </div>
+<ng-template #headerActions>
+  <!-- Add any header actions here if needed -->
+</ng-template>
+
+<div class="p-1.5 sm:p-2 flex flex-col gap-2 min-h-0 bg-surface-50 dark:bg-surface-950">
+  <!-- Filtros Reutilizáveis -->
+  <app-filter-container>
+    <!-- Resumo dos filtros (aparece quando colapsado) -->
+    <ng-template #filterSummary>
+      <span
+        >{{ 'TERMS.YEAR' | translate }}:
+        <span class="text-primary">{{ getSelectedYearLabel() }}</span></span
+      >
+      <span
+        >{{ 'TERMS.MONTH' | translate }}:
+        <span class="text-primary">{{ getSelectedMonthLabel() | translate }}</span></span
+      >
+      @if (simulationValue()) {
+        <span
+          >{{ 'CARNE_LEAO_PAGE.SIMULATION' | translate }}:
+          <span class="text-primary">{{ getSimulationLabel() }}</span></span
+        >
+      }
+      @if (iptuValue()) {
+        <span
+          >{{ 'CARNE_LEAO_PAGE.IPTU' | translate }}:
+          <span class="text-primary">{{ getIptuLabel() }}</span></span
+        >
+      }
     </ng-template>
-    <div class="p-2"><!-- Visualização --></div>
-  </p-card>
+
+    <!-- Conteúdo dos filtros -->
+
+    <!-- Ano -->
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
+      <p-select
+        inputId="year"
+        [options]="years()"
+        [ngModel]="selectedYear()"
+        (ngModelChange)="selectedYear.set($event); loadIrBrackets()"
+        class="w-full"
+        appendTo="body"
+        [style]="{ width: '100%' }"
+      ></p-select>
+      <label for="year">{{ 'TERMS.YEAR' | translate }}</label>
+    </p-floatlabel>
+
+    <!-- Mês -->
+    <p-floatlabel class="flex-1 min-w-[150px]" variant="in">
+      <p-select
+        inputId="month"
+        [options]="months()"
+        [ngModel]="selectedMonth()"
+        (ngModelChange)="selectedMonth.set($event)"
+        class="w-full"
+        appendTo="body"
+        optionLabel="label"
+        optionValue="value"
+        [style]="{ width: '100%' }"
+      >
+        <ng-template let-item pTemplate="selectedItem">
+          {{ item.label | translate }}
+        </ng-template>
+        <ng-template let-item pTemplate="item">
+          {{ item.label | translate }}
+        </ng-template>
+      </p-select>
+      <label for="month">{{ 'TERMS.MONTH' | translate }}</label>
+    </p-floatlabel>
+
+    <!-- Simulação -->
+    <p-floatlabel class="flex-1 min-w-[150px]" variant="in">
+      <p-inputNumber
+        inputId="simulation"
+        [ngModel]="simulationValue()"
+        (ngModelChange)="simulationValue.set($event)"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        [minFractionDigits]="2"
+        class="w-full"
+        styleClass="w-full"
+      ></p-inputNumber>
+      <label for="simulation">{{ 'CARNE_LEAO_PAGE.SIMULATION' | translate }}</label>
+    </p-floatlabel>
+
+    <!-- IPTU -->
+    <p-floatlabel class="flex-1 min-w-[150px]" variant="in">
+      <p-inputNumber
+        inputId="iptu"
+        [ngModel]="iptuValue()"
+        (ngModelChange)="iptuValue.set($event)"
+        mode="currency"
+        currency="BRL"
+        locale="pt-BR"
+        [minFractionDigits]="2"
+        class="w-full"
+        styleClass="w-full"
+      ></p-inputNumber>
+      <label for="iptu">{{ 'CARNE_LEAO_PAGE.IPTU' | translate }}</label>
+    </p-floatlabel>
+
+    <!-- Limpar Filtros -->
+    <div class="flex items-center">
+      <p-button
+        icon="pi pi-filter-slash"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        class="p-button-sm !p-0"
+        (click)="clearFilters()"
+        [pTooltip]="'ACTIONS.CLEAR_FILTER' | translate"
+      />
+    </div>
+  </app-filter-container>
+
+  <!-- Content Area -->
+  <div class="flex-1 min-h-0 overflow-auto flex flex-col gap-2">
+    <!-- Hosts Table Section -->
+    <div
+      class="bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col p-1"
+    >
+      <!-- Header -->
+      <div class="p-3 border-b border-surface-200 dark:border-surface-700 flex items-center gap-2">
+        <i class="pi pi-users"></i>
+        <span>Resumo por Anfitrião</span>
+      </div>
+
+      <div class="overflow-auto">
+        <p-table [value]="hosts()" styleClass="p-datatable-sm" [rowHover]="true">
+          <ng-template pTemplate="header">
+            <tr class="bg-surface-50 dark:bg-surface-800">
+              <th class="!py-2"></th>
+              <!-- Name Column -->
+              <th class="!py-2">{{ 'CARNE_LEAO_PAGE.AIRBNB_PAID' | translate }}</th>
+              <th class="!py-2">{{ 'CARNE_LEAO_PAGE.CONDOMINIUM' | translate }}</th>
+              <th class="!py-2">
+                <div class="flex items-center gap-1">
+                  {{ 'CARNE_LEAO_PAGE.DEDUCTION' | translate }}
+                  <i class="pi pi-info-circle" pTooltip="Dedução padrão" tooltipPosition="top"></i>
+                </div>
+              </th>
+              <th class="!py-2">{{ 'CARNE_LEAO_PAGE.CALCULATION_BASE' | translate }}</th>
+              <th class="!py-2">{{ 'CARNE_LEAO_PAGE.CARNE_LEAO' | translate }}</th>
+              <th class="!py-2"></th>
+              <!-- Action Column -->
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-host>
+            <tr
+              class="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors"
+            >
+              <td class="!py-2">{{ host.name }}</td>
+
+              <td class="!py-2">
+                {{ host.airbnbPaid | currency: 'BRL' }}
+              </td>
+
+              <td class="!py-2">
+                <div class="flex items-center gap-2">
+                  <p-checkbox [(ngModel)]="host.condominium.selected" [binary]="true"></p-checkbox>
+                  <div class="flex flex-col">
+                    <span
+                      >{{ host.condominium.value | currency: 'BRL' }} +
+                      {{ host.condominium.extra | currency: 'BRL' }}</span
+                    >
+                    <span
+                      >=
+                      {{ host.condominium.value + host.condominium.extra | currency: 'BRL' }}</span
+                    >
+                  </div>
+                </div>
+              </td>
+
+              <td class="!py-2">
+                {{ host.deduction | currency: 'BRL' }}
+              </td>
+
+              <td class="!py-2">
+                <div class="flex items-center gap-2">
+                  {{ host.calculationBase | currency: 'BRL' }}
+                  <i
+                    class="pi pi-info-circle"
+                    pTooltip="Detalhes do cálculo"
+                    tooltipPosition="top"
+                  ></i>
+                </div>
+              </td>
+
+              <td class="!py-2">
+                <div class="flex items-center gap-2">
+                  {{ host.carneLeao | currency: 'BRL' }}
+                  <i class="pi pi-info-circle" pTooltip="Imposto a pagar" tooltipPosition="top"></i>
+                </div>
+              </td>
+
+              <td class="!py-2 text-right">
+                <p-button
+                  [label]="'CARNE_LEAO_PAGE.PAY' | translate"
+                  severity="danger"
+                  size="small"
+                  [outlined]="true"
+                  class="p-button-sm"
+                  (onClick)="onPay(host)"
+                ></p-button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Earnings Table Section -->
+    <div
+      class="bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col p-1"
+    >
+      <div
+        class="p-3 border-b border-surface-200 dark:border-surface-700 flex items-center justify-between"
+      >
+        <div class="flex items-center gap-2">
+          <i class="pi pi-list text-primary"></i>
+          <span class="font-medium text-surface-900 dark:text-surface-0">{{
+            'CARNE_LEAO_PAGE.EARNINGS_TITLE' | translate
+          }}</span>
+        </div>
+        <p-tag [value]="(totalEarnings() | currency: 'BRL') ?? ''" severity="success"></p-tag>
+      </div>
+
+      <div class="overflow-auto max-h-[400px]">
+        <p-table [value]="earnings()" styleClass="p-datatable-sm" [rowHover]="true">
+          <ng-template pTemplate="header">
+            <tr class="bg-surface-50 dark:bg-surface-800">
+              <th class="!py-2 w-12 text-center">
+                <p-checkbox
+                  [binary]="true"
+                  [ngModel]="true"
+                  [disabled]="true"
+                  pTooltip="Incluir todos"
+                  tooltipPosition="top"
+                ></p-checkbox>
+              </th>
+              <th class="!py-2">{{ 'TERMS.DATE' | translate }}</th>
+              <th class="!py-2">{{ 'TERMS.SOURCE' | translate }}</th>
+              <th class="!py-2">{{ 'TERMS.DESCRIPTION' | translate }}</th>
+              <th class="!py-2 text-right">{{ 'TERMS.VALUE' | translate }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-earning>
+            <tr [class.opacity-50]="!earning.selected">
+              <td class="!py-2 text-center">
+                <p-checkbox
+                  [(ngModel)]="earning.selected"
+                  [binary]="true"
+                  (onChange)="updateEarnings()"
+                ></p-checkbox>
+              </td>
+              <td class="!py-2">{{ earning.data | date: 'dd/MM/yyyy' }}</td>
+              <td class="!py-2">
+                <p-tag
+                  [value]="earning.fonte"
+                  [severity]="earning.fonte === 'Airbnb' ? 'danger' : 'info'"
+                  styleClass="text-xs"
+                ></p-tag>
+              </td>
+              <td class="!py-2">
+                <div class="flex flex-col">
+                  <span class="font-medium">{{ earning.hospede }}</span>
+                  @if (earning.anuncio) {
+                    <span class="text-xs text-surface-500 dark:text-surface-400">{{
+                      earning.anuncio
+                    }}</span>
+                  }
+                </div>
+              </td>
+              <td class="!py-2 text-right font-medium">
+                {{ earning.valor | currency: 'BRL' }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="footer">
+            <tr class="bg-surface-50 dark:bg-surface-800 font-medium">
+              <td colspan="4" class="text-right !py-2">{{ 'TERMS.TOTAL' | translate }}</td>
+              <td class="text-right !py-2">{{ totalEarnings() | currency: 'BRL' }}</td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="5" class="text-center p-4 text-surface-500">
+                {{ 'TERMS.NO_DATA' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Condominium Expenses Section -->
+    <div
+      class="bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col p-1"
+    >
+      <div class="p-3 border-b border-surface-200 dark:border-surface-700 flex items-center gap-2">
+        <i class="pi pi-building text-primary"></i>
+        <span class="font-medium text-surface-900 dark:text-surface-0">{{
+          'CARNE_LEAO_PAGE.CONDOMINIUM_PAID' | translate
+        }}</span>
+      </div>
+
+      <div class="overflow-auto">
+        <p-table [value]="condominiumExpenses()" styleClass="p-datatable-sm" [rowHover]="true">
+          <ng-template pTemplate="header">
+            <tr class="bg-surface-50 dark:bg-surface-800">
+              <th class="!py-2">{{ 'TERMS.DATE' | translate }}</th>
+              <th class="!py-2">{{ 'TERMS.DESCRIPTION' | translate }}</th>
+              <th class="!py-2">{{ 'TERMS.TYPE' | translate }}</th>
+              <th class="!py-2 text-right">{{ 'TERMS.VALUE' | translate }}</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-expense>
+            <tr>
+              <td class="!py-2">{{ expense.purchaseDate | date: 'dd/MM/yyyy' }}</td>
+              <td class="!py-2">{{ expense.description }}</td>
+              <td class="!py-2">
+                <p-tag
+                  [value]="'EXPENSES_FORM.TYPES.' + expense.type | translate"
+                  severity="success"
+                  styleClass="text-xs"
+                ></p-tag>
+              </td>
+              <td class="!py-2 text-right font-medium">
+                {{ expense.price | currency: 'BRL' }}
+              </td>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="4" class="text-center p-4 text-surface-500">
+                {{ 'TERMS.NO_DATA' | translate }}
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- Tax Payments Table Section -->
+    <div class="bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col p-1">
+      <div class="p-3 border-b border-surface-200 dark:border-surface-700 flex items-center gap-2">
+        <i class="pi pi-wallet text-primary"></i>
+        <span class="font-medium text-surface-900 dark:text-surface-0">{{ 'CARNE_LEAO_PAGE.PAID_TAXES_TITLE' | translate }}</span>
+      </div>
+      <div class="overflow-auto">
+        <p-table [value]="taxPaymentYears()" styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true">
+          <ng-template pTemplate="header">
+            <tr class="bg-surface-50 dark:bg-surface-800">
+              <th class="!py-2 font-medium w-20 text-center">{{ 'TERMS.YEAR' | translate }}</th>
+              @for (month of taxPaymentMonths; track month) {
+                <th class="!py-2 font-medium text-center">{{ month }}</th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-year>
+            <tr>
+              <td class="!py-2 font-bold text-center bg-surface-50 dark:bg-surface-800">{{ year }}</td>
+              @for (month of taxPaymentMonths; track month) {
+                <td class="!py-2 text-center min-w-24 h-16 relative p-1">
+                  <!-- Empty for now -->
+                </td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+
+    <!-- IR Table Section -->
+    <div
+      class="bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col p-1"
+    >
+      <!-- Header -->
+      <div class="p-3 border-b border-surface-200 dark:border-surface-700 flex items-center gap-2">
+        <i class="pi pi-table"></i>
+        <span>{{ 'CARNE_LEAO_PAGE.IR_TABLE_TITLE' | translate: { year: selectedYear() } }}</span>
+      </div>
+
+      <div class="overflow-auto">
+        <p-table
+          [value]="irBrackets()"
+          dataKey="id"
+          editMode="row"
+          styleClass="p-datatable-sm"
+          [rowHover]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr class="bg-surface-50 dark:bg-surface-800">
+              <th style="width: 40%" class="!py-2">
+                {{ 'CARNE_LEAO_PAGE.BASE_CALCULATION_MONTHLY' | translate }}
+              </th>
+              <th style="width: 20%" class="!py-2">{{ 'CARNE_LEAO_PAGE.RATE' | translate }}</th>
+              <th style="width: 20%" class="!py-2">
+                {{ 'CARNE_LEAO_PAGE.DEDUCTION' | translate }}
+              </th>
+              <th style="width: 20%" class="!py-2"></th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-bracket let-editing="editing" let-ri="rowIndex">
+            <tr
+              [pEditableRow]="bracket"
+              class="border-b border-surface-100 dark:border-surface-800 hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors"
+            >
+              <td class="!py-2">
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <div
+                      class="flex flex-col gap-2 p-2 bg-surface-50 rounded border border-surface-200"
+                    >
+                      <div class="flex items-center gap-2">
+                        <label class="w-8">Min:</label>
+                        <p-inputNumber
+                          [(ngModel)]="bracket.min_value"
+                          mode="currency"
+                          currency="BRL"
+                          locale="pt-BR"
+                          [style]="{ width: '100%' }"
+                          class="p-inputtext-sm"
+                        ></p-inputNumber>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <label class="w-8">Max:</label>
+                        <p-inputNumber
+                          [(ngModel)]="bracket.max_value"
+                          mode="currency"
+                          currency="BRL"
+                          locale="pt-BR"
+                          placeholder="Infinito"
+                          [style]="{ width: '100%' }"
+                          class="p-inputtext-sm"
+                        ></p-inputNumber>
+                      </div>
+                    </div>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <span *ngIf="bracket.rate === 0">
+                      {{ 'CARNE_LEAO_PAGE.UP_TO' | translate }}
+                      {{ bracket.max_value | currency: 'BRL' }}
+                    </span>
+                    <span *ngIf="bracket.rate > 0 && bracket.max_value">
+                      {{
+                        'CARNE_LEAO_PAGE.FROM_TO'
+                          | translate
+                            : {
+                                min: (bracket.min_value | currency: 'BRL'),
+                                max: (bracket.max_value | currency: 'BRL'),
+                              }
+                      }}
+                    </span>
+                    <span *ngIf="!bracket.max_value">
+                      {{ 'CARNE_LEAO_PAGE.ABOVE' | translate }}
+                      {{ bracket.min_value | currency: 'BRL' }}
+                    </span>
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="!py-2">
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-inputNumber
+                      [(ngModel)]="bracket.rate"
+                      suffix="%"
+                      [min]="0"
+                      [max]="100"
+                      [step]="0.5"
+                      class="p-inputtext-sm"
+                    ></p-inputNumber>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <p-tag *ngIf="bracket.rate === 0" severity="success" value="Isento"></p-tag>
+                    <span *ngIf="bracket.rate > 0">{{ bracket.rate }}%</span>
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="!py-2">
+                <p-cellEditor>
+                  <ng-template pTemplate="input">
+                    <p-inputNumber
+                      [(ngModel)]="bracket.deduction"
+                      mode="currency"
+                      currency="BRL"
+                      locale="pt-BR"
+                      class="p-inputtext-sm"
+                    ></p-inputNumber>
+                  </ng-template>
+                  <ng-template pTemplate="output">
+                    <span *ngIf="bracket.deduction === 0">-</span>
+                    <span *ngIf="bracket.deduction > 0">{{
+                      bracket.deduction | currency: 'BRL'
+                    }}</span>
+                  </ng-template>
+                </p-cellEditor>
+              </td>
+              <td class="!py-2">
+                <div class="flex items-center justify-center gap-2">
+                  <button
+                    *ngIf="!editing"
+                    pButton
+                    pRipple
+                    type="button"
+                    pInitEditableRow
+                    icon="pi pi-pencil"
+                    (click)="onRowEditInit(bracket)"
+                    class="p-button-rounded p-button-text p-button-sm"
+                  ></button>
+                  <button
+                    *ngIf="editing"
+                    pButton
+                    pRipple
+                    type="button"
+                    pSaveEditableRow
+                    icon="pi pi-check"
+                    (click)="onRowEditSave(bracket)"
+                    class="p-button-rounded p-button-text p-button-success p-button-sm mr-2"
+                  ></button>
+                  <button
+                    *ngIf="editing"
+                    pButton
+                    pRipple
+                    type="button"
+                    pCancelEditableRow
+                    icon="pi pi-times"
+                    (click)="onRowEditCancel(bracket, ri)"
+                    class="p-button-rounded p-button-text p-button-danger p-button-sm"
+                  ></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <p-toast></p-toast>
 </div>
