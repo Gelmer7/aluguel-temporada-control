@@ -13,7 +13,7 @@ import { importProvidersFrom, isDevMode } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { routes } from './app.routes';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { provideEchartsCore } from 'ngx-echarts';
@@ -31,7 +31,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideAnimationsAsync(),
+    provideAnimations(),
     provideHttpClient(),
     provideEchartsCore({ echarts }),
     importProvidersFrom(

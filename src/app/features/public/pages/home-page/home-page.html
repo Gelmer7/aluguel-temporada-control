@@ -1,0 +1,155 @@
+<!-- Hero Section -->
+<section
+  class="min-h-[85vh] flex items-center justify-center text-center bg-gradient-to-br from-surface-100 to-surface-0 p-8"
+>
+  <div class="max-w-4xl">
+    <h1 class="text-5xl font-bold mb-6 text-surface-900 dark:text-surface-0">
+      Alugue direto com o proprietário
+    </h1>
+    <p class="text-xl text-surface-600 dark:text-surface-400 mb-8">
+      Mais personalizado. Melhor preço. Sem taxas de plataforma.
+    </p>
+    <p-button
+      label="Ver Casas"
+      (onClick)="scrollToSection('propriedades')"
+      styleClass="p-button-rounded p-button-lg bg-surface-900 dark:bg-surface-0 text-white dark:text-surface-900 border-none"
+    ></p-button>
+  </div>
+</section>
+
+<!-- Properties Section -->
+<section id="propriedades" class="max-w-7xl mx-auto py-20 px-8">
+  <h2 class="text-3xl font-bold mb-8 text-surface-900 dark:text-surface-0">Casa</h2>
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+    @for (property of properties; track property.name) {
+      <div
+        class="bg-surface-card rounded-2xl p-6 shadow-lg hover:-translate-y-1 transition-transform duration-300"
+      >
+        <div class="h-48 rounded-xl mb-4 overflow-hidden relative">
+          <img
+            [src]="property.image"
+            [alt]="property.name"
+            class="w-full h-full object-cover transform hover:scale-110 transition-transform duration-500"
+          />
+        </div>
+        <h3 class="text-xl font-bold mb-2 text-surface-900 dark:text-surface-0">
+          {{ property.name }}
+        </h3>
+        <p class="text-surface-600 dark:text-surface-400">{{ property.description }}</p>
+        prazer poder atendê-lo(a) e que você goste da estadia!',
+      </div>
+    }
+  </div>
+</section>
+
+<!-- Gallery Section -->
+<section id="galeria" class="max-w-7xl mx-auto py-20 px-8 bg-surface-50 dark:bg-surface-900">
+  <h2 class="text-3xl font-bold mb-8 text-surface-900 dark:text-surface-0 text-center">
+    Galeria de Fotos
+  </h2>
+
+  <div class="card flex justify-center">
+    <p-galleria
+      [value]="images"
+      [responsiveOptions]="responsiveOptions"
+      [containerStyle]="{ 'max-width': '800px' }"
+      [numVisible]="3"
+      [circular]="true"
+      [showItemNavigators]="true"
+      [showThumbnails]="true"
+      [showIndicators]="true"
+      [autoPlay]="true"
+      [transitionInterval]="4000">
+        <ng-template pTemplate="item" let-item>
+            <div class="w-full h-[500px] bg-black flex items-center justify-center overflow-hidden rounded-lg">
+                <img [src]="item.itemImageSrc" [alt]="item.alt" class="w-full h-full object-contain" />
+            </div>
+        </ng-template>
+        <ng-template pTemplate="thumbnail" let-item>
+            <div class="grid place-items-center h-full w-full">
+                <img [src]="item.thumbnailImageSrc" [alt]="item.alt" class="block h-20 w-auto object-cover rounded" />
+            </div>
+        </ng-template>
+    </p-galleria>
+  </div>
+</section>
+
+<!-- Availability Section -->
+<section id="disponibilidade" class="max-w-7xl mx-auto py-20 px-8">
+  <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+    <div>
+      <h2 class="text-3xl font-bold text-surface-900 dark:text-surface-0">
+        @if (numberOfNights > 0) {
+          {{ numberOfNights }} noites
+        } @else {
+          Selecione as datas
+        }
+      </h2>
+      <p class="text-surface-600 dark:text-surface-400 text-lg mt-1">
+        @if (numberOfNights > 0) {
+          {{ formattedDateRange }}
+        } @else {
+          Insira suas datas de viagem para ver o preço exato
+        }
+      </p>
+    </div>
+
+    <div class="flex bg-surface-0 dark:bg-surface-800 border border-surface-300 dark:border-surface-700 rounded-lg overflow-hidden shadow-sm">
+      <div class="px-4 py-3 border-r border-surface-300 dark:border-surface-700 hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors cursor-pointer relative group">
+        <label class="text-[10px] font-bold tracking-wider text-surface-900 dark:text-surface-0 uppercase block mb-1">Check-in</label>
+        <div class="text-sm text-surface-600 dark:text-surface-400 font-medium min-w-[80px]">
+          @if (dateRange && dateRange[0]) {
+            {{ dateRange[0] | date:'dd/MM/yyyy' }}
+          } @else {
+            Insira a data
+          }
+        </div>
+        @if (dateRange && dateRange[0]) {
+          <button (click)="clearDates(); $event.stopPropagation()" class="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-full hover:bg-surface-200 dark:hover:bg-surface-600 text-surface-500">
+            <i class="pi pi-times text-xs"></i>
+          </button>
+        }
+      </div>
+      <div class="px-4 py-3 hover:bg-surface-50 dark:hover:bg-surface-700 transition-colors cursor-pointer relative group">
+        <label class="text-[10px] font-bold tracking-wider text-surface-900 dark:text-surface-0 uppercase block mb-1">Checkout</label>
+        <div class="text-sm text-surface-600 dark:text-surface-400 font-medium min-w-[80px]">
+          @if (dateRange && dateRange[1]) {
+            {{ dateRange[1] | date:'dd/MM/yyyy' }}
+          } @else {
+            Insira a data
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center bg-surface-50 dark:bg-surface-800 rounded-2xl overflow-x-auto">
+    <p-datepicker
+      [(ngModel)]="dateRange"
+      [inline]="true"
+      selectionMode="range"
+      [numberOfMonths]="2"
+      [minDate]="today"
+      [readonlyInput]="true"
+      styleClass="w-full max-w-4xl border-0 shadow-none bg-transparent"
+      [showOtherMonths]="false">
+    </p-datepicker>
+  </div>
+</section>
+
+<!-- Contact Section -->
+<section id="contato" class="max-w-4xl mx-auto my-20 px-8">
+  <div class="bg-surface-900 dark:bg-surface-800 text-white rounded-3xl p-12 text-center shadow-xl">
+    <h2 class="text-3xl font-bold mb-4 text-white">Pronto para reservar?</h2>
+    <p class="text-surface-300 text-lg mb-8">
+      Fale diretamente conosco pelo WhatsApp e garanta sua estadia.
+    </p>
+    <button
+      (click)="openWhatsApp()"
+      class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-10 rounded-full transition-transform hover:scale-105 flex items-center gap-2 mx-auto border-none cursor-pointer"
+    >
+      <i class="pi pi-whatsapp text-xl"></i>
+      Reservar via WhatsApp
+    </button>
+  </div>
+</section>

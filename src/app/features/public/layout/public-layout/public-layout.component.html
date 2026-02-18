@@ -1,0 +1,30 @@
+<div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+  <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm flex justify-between items-center p-4 md:px-8">
+    <div>
+      <h3>🏡 Aluguel temporada Villa Flora</h3>
+    </div>
+    <nav class="hidden md:flex gap-4">
+      <p-button label="Casa" [link]="true" (onClick)="scrollToSection('propriedades')" styleClass="p-0"></p-button>
+      <p-button label="Fotos" [link]="true" (onClick)="scrollToSection('galeria')" styleClass="p-0"></p-button>
+      <p-button label="Disponibilidade" [link]="true" (onClick)="scrollToSection('disponibilidade')" styleClass="p-0"></p-button>
+      <p-button label="Contato" [link]="true" (onClick)="scrollToSection('contato')" styleClass="p-0"></p-button>
+
+      @if (user$ | async) {
+        <p-button label="Dashboard" icon="pi pi-th-large" [link]="true" routerLink="/dashboard" styleClass="p-0 ml-4 font-bold"></p-button>
+      } @else {
+        <p-button label="Login" icon="pi pi-user" [link]="true" routerLink="/auth/login" styleClass="p-0 ml-4"></p-button>
+      }
+    </nav>
+    <div class="md:hidden">
+      <p-button icon="pi pi-bars" [text]="true"></p-button>
+    </div>
+  </header>
+
+  <main class="flex-grow">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="mt-auto py-8 text-center bg-gray-100 dark:bg-gray-800">
+    <p>&copy; {{ currentYear }} Sistema Aluguel temporada Villa Flora. All rights reserved.</p>
+  </footer>
+</div>
