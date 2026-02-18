@@ -3,22 +3,52 @@
     <div>
       <h3>🏡 Aluguel temporada Villa Flora</h3>
     </div>
-    <nav class="hidden md:flex gap-4">
-      <p-button label="Casa" [link]="true" (onClick)="scrollToSection('propriedades')" styleClass="p-0"></p-button>
-      <p-button label="Fotos" [link]="true" (onClick)="scrollToSection('galeria')" styleClass="p-0"></p-button>
-      <p-button label="Disponibilidade" [link]="true" (onClick)="scrollToSection('disponibilidade')" styleClass="p-0"></p-button>
-      <p-button label="Contato" [link]="true" (onClick)="scrollToSection('contato')" styleClass="p-0"></p-button>
+    <div class="hidden md:flex gap-6 items-center">
+      <button (click)="scrollToSection('propriedades')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Casas</button>
+      <button (click)="scrollToSection('galeria')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Galeria</button>
+      <button (click)="scrollToSection('disponibilidade')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Disponibilidade</button>
+      <button (click)="scrollToSection('contato')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Contato</button>
 
       @if (user$ | async) {
-        <p-button label="Dashboard" icon="pi pi-th-large" [link]="true" routerLink="/dashboard" styleClass="p-0 ml-4 font-bold"></p-button>
+        <p-button label="Dashboard" routerLink="/dashboard" styleClass="p-button-sm"></p-button>
       } @else {
-        <p-button label="Login" icon="pi pi-user" [link]="true" routerLink="/auth/login" styleClass="p-0 ml-4"></p-button>
+        <p-button label="Login" routerLink="/auth/login" styleClass="p-button-outlined p-button-sm"></p-button>
       }
-    </nav>
+    </div>
+
+    <!-- Mobile Menu Button -->
     <div class="md:hidden">
-      <p-button icon="pi pi-bars" [text]="true"></p-button>
+      <p-button icon="pi pi-bars" [text]="true" (onClick)="sidebarVisible = true"></p-button>
     </div>
   </header>
+
+  <!-- Mobile Sidebar -->
+  <p-drawer [(visible)]="sidebarVisible" position="right" styleClass="w-full sm:w-20rem">
+    <div class="flex flex-col gap-4 p-4">
+        <div class="text-2xl font-bold mb-4 text-primary">Menu</div>
+
+        <button (click)="scrollToSection('propriedades')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
+            <i class="pi pi-home mr-2"></i> Casas
+        </button>
+        <button (click)="scrollToSection('galeria')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
+            <i class="pi pi-images mr-2"></i> Galeria
+        </button>
+        <button (click)="scrollToSection('disponibilidade')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
+            <i class="pi pi-calendar mr-2"></i> Disponibilidade
+        </button>
+        <button (click)="scrollToSection('contato')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
+            <i class="pi pi-envelope mr-2"></i> Contato
+        </button>
+
+        <div class="h-px bg-surface-200 my-2"></div>
+
+        @if (user$ | async) {
+            <p-button label="Ir para Dashboard" icon="pi pi-th-large" routerLink="/dashboard" styleClass="w-full" (onClick)="sidebarVisible = false"></p-button>
+        } @else {
+            <p-button label="Fazer Login" icon="pi pi-user" routerLink="/auth/login" styleClass="p-button-outlined w-full" (onClick)="sidebarVisible = false"></p-button>
+        }
+    </div>
+  </p-drawer>
 
   <main class="flex-grow">
     <router-outlet></router-outlet>

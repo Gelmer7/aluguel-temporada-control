@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -13,8 +13,22 @@ import { GalleriaModule } from 'primeng/galleria';
   imports: [CommonModule, FormsModule, ButtonModule, CardModule, ImageModule, DatePickerModule, GalleriaModule],
   templateUrl: './home-page.html',
 })
-export class HomePage {
+export class HomePage implements OnInit {
   activeIndex: number = 0;
+  numberOfMonths: number = 2;
+
+  ngOnInit() {
+    this.updateCalendarView();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.updateCalendarView();
+  }
+
+  updateCalendarView() {
+    this.numberOfMonths = window.innerWidth < 768 ? 1 : 2;
+  }
 
   properties = [
     {
