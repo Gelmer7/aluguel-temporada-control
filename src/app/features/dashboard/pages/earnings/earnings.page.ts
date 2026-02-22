@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect, viewChild, TemplateRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, inject, computed, OnInit, effect, viewChild, TemplateRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -11,11 +11,12 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { TooltipModule } from 'primeng/tooltip';
 import { FloatLabel } from 'primeng/floatlabel';
-import { MessageService } from 'primeng/api';
+import { MessageService, MenuItem } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { ButtonModule } from 'primeng/button';
 import { DatePickerModule } from 'primeng/datepicker';
 import { PopoverModule } from 'primeng/popover';
+import { MenuModule } from 'primeng/menu';
 
 // Components
 import { FilterContainerComponent } from '../../../../components/ui/filter-container/filter-container.component';
@@ -23,6 +24,7 @@ import { TablePaginatorComponent } from '../../../../components/ui/table-paginat
 import { EarningsPaymentsChartsComponent } from '../../components/charts/earnings-payments-charts/earnings-payments-charts.component';
 import { EarningsExpenseChartsComponent } from '../../components/charts/earnings-expense-charts/earnings-expense-charts.component';
 import { EarningsSummaryChartsComponent } from '../../components/charts/earnings-summary-charts/earnings-summary-charts.component';
+import { StackedBarChartComponent } from '../../../../components/ui/charts/stacked-bar-chart/stacked-bar-chart.component';
 
 // Services & Models
 import { HouseService } from '../../../../services/house.service';
@@ -31,6 +33,9 @@ import { UnifiedEarning } from '../../../../models/airbnb.model';
 import { SupabaseService } from '../../../../services/supabase.service';
 import { Expense } from '../../../../models/expense.model';
 import { DateUtils } from '../../../../shared/utils/date.utils';
+import { PdfService } from '../../../../services/pdf.service';
+import { calculateEarningsChartData } from '../../../../shared/utils/chart.utils';
+import { GlobalColors } from '../../../../shared/design/colors';
 
 @Component({
   selector: 'app-earnings-page',
@@ -52,11 +57,13 @@ import { DateUtils } from '../../../../shared/utils/date.utils';
     ToastModule,
     DatePickerModule,
     PopoverModule,
+    MenuModule,
     FilterContainerComponent,
     TablePaginatorComponent,
     EarningsPaymentsChartsComponent,
     EarningsExpenseChartsComponent,
     EarningsSummaryChartsComponent,
+    StackedBarChartComponent,
   ],
   templateUrl: './earnings.page.html',
 })
@@ -66,8 +73,13 @@ export class EarningsPage implements OnInit {
   private readonly houseService = inject(HouseService);
   private readonly messageService = inject(MessageService);
   private readonly headerService = inject(HeaderService);
+  private readonly pdfService = inject(PdfService);
 
   headerActions = viewChild.required<TemplateRef<any>>('headerActions');
+  
+  @ViewChild('hiddenChart') hiddenChart!: StackedBarChartComponent;
+
+  protected readonly chartColors = [GlobalColors.revenue, GlobalColors.expense, GlobalColors.average];
 
   // Filtros
   protected readonly selectedYear = signal<number | string>('ALL');
@@ -80,16 +92,67 @@ export class EarningsPage implements OnInit {
   protected readonly showExpenseChart = signal<boolean>(false);
   protected readonly showSummaryChart = signal<boolean>(false);
 
+  protected readonly pdfChartData = computed(() => {
+    return calculateEarningsChartData(
+      this.filteredPayments(),
+      this.filteredExpenses(),
+      this.translate
+    );
+  });
+
+  protected readonly exportMenu = computed<MenuItem[]>(() => [
+    {
+      label: this.translate.instant('ACTIONS.EXPORT_FULL'),
+      icon: 'pi pi-file-pdf',
+      command: () => this.generatePdf('full'),
+    },
+    {
+      label: this.translate.instant('ACTIONS.EXPORT_SUMMARY'),
+      icon: 'pi pi-chart-bar',
+      command: () => this.generatePdf('summary'),
+    },
+  ]);
+
+  protected async generatePdf(mode: 'full' | 'summary') {
+    let chartImage: string | undefined;
+
+    if (mode === 'summary') {
+      // Ensure chart is ready
+      chartImage = this.hiddenChart?.getChartImage() ?? undefined;
+      if (!chartImage) {
+         this.messageService.add({
+            severity: 'warn',
+            summary: 'Aviso',
+            detail: 'Gráfico não disponível para exportação.'
+         });
+      }
+    }
+
+    const data = {
+      year: this.selectedYear(),
+      months: this.selectedMonths(),
+      types: this.selectedTypes(),
+      houseCode: this.houseService.currentHouseCode() || undefined,
+      payments: this.filteredPayments(),
+      expenses: this.filteredExpenses(),
+      totals: {
+        received: this.totalReceived(),
+        expenses: this.totalExpenses(),
+        earnings: this.totalEarnings(),
+        averageNet: this.averageNet(),
+      },
+      chartImage,
+      mode
+    };
+
+    this.pdfService.generateEarningsPdf(data);
+  }
+
   // Pagination
   protected readonly firstPayment = signal(0);
   protected readonly rowsPayment = signal(10);
   protected readonly firstExpense = signal(0);
   protected readonly rowsExpense = signal(10);
-
-  protected onDownloadPDF() {
-    // TODO: Implement PDF download
-    console.log('Download PDF clicked');
-  }
 
   protected onPaymentPageChange(event: any) {
     this.firstPayment.set(event.first);

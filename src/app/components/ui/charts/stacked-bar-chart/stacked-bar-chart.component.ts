@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, input, computed, inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, input, computed, inject, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxEchartsDirective, provideEchartsCore } from 'ngx-echarts';
 import * as echarts from 'echarts';
@@ -48,12 +48,33 @@ export class StackedBarChartComponent {
   /** Custom colors for the series */
   colors = input<string[]>([]);
 
+  /** Enable animation */
+  animation = input<boolean>(true);
+
   /** Default ECharts 5 color palette to ensure visibility */
   private readonly defaultPalette = [
     '#5470c6', '#91cc75', '#fac858', '#ee6666', '#73c0de',
     '#3ba272', '#fc8452', '#9a60b4', '#ea7ccc', '#37A2DA',
     '#32C5E9', '#67E0E3', '#9FE6B8', '#FFDB5C', '#ff9f7f'
   ];
+
+  private echartsInstance: any;
+
+  onChartInit(ec: any) {
+    this.echartsInstance = ec;
+  }
+
+  /**
+   * Returns the base64 image of the chart
+   */
+  public getChartImage(): string | null {
+    if (!this.echartsInstance) return null;
+    return this.echartsInstance.getDataURL({
+      type: 'png',
+      pixelRatio: 2,
+      backgroundColor: '#fff'
+    });
+  }
 
   chartOption = computed(() => {
     const seriesData = this.series();
@@ -102,7 +123,7 @@ export class StackedBarChartComponent {
 
     return {
       color: colors,
-      animation: true,
+      animation: this.animation(),
       backgroundColor: 'transparent',
       tooltip: {
         trigger: 'axis',

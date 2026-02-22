@@ -18,6 +18,7 @@ import { HouseService } from '../../../../services/house.service';
 import { HeaderService } from '../../../../services/header';
 import { FinancialYear, FinancialSummary, FinancialMonth } from './reports.model';
 import { DateUtils } from '../../../../shared/utils/date.utils';
+import { GlobalColors } from '../../../../shared/design/colors';
 
 @Component({
   selector: 'app-reports-page',
@@ -151,21 +152,21 @@ export class ReportsPage implements OnInit {
         type: 'bar',
         stack: 'total',
         data: data.map(y => y.totalGross),
-        itemStyle: { color: '#22c55e' }
+        itemStyle: { color: GlobalColors.revenue }
       },
       {
         name: this.translate.instant('REPORTS.EXPENSES'),
         type: 'bar',
         stack: 'total',
         data: data.map(y => y.totalExpenses),
-        itemStyle: { color: '#ef4444' }
+        itemStyle: { color: GlobalColors.expense }
       },
       {
         name: this.translate.instant('REPORTS.NET'),
         type: 'bar',
         stack: 'total',
         data: data.map(y => y.totalNet),
-        itemStyle: { color: '#3b82f6' }
+        itemStyle: { color: GlobalColors.netIncome }
       }
     ];
 

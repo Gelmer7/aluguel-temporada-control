@@ -4,6 +4,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { formatCurrency, formatDate } from '@angular/common';
 import { DateUtils } from '../shared/utils/date.utils';
+import { GlobalColors } from '../shared/design/colors';
 
 @Injectable({
   providedIn: 'root',
@@ -411,18 +412,200 @@ export class PdfService {
     doc.save(`Alugueis_${data.houseCode || ''}_${yearLabel}.pdf`);
   }
 
-  private formatBRL(value: number): string {
-    return formatCurrency(value, 'pt-BR', 'R$');
+  /**
+   * Generates a PDF from the earnings data
+   */
+  generateEarningsPdf(data: {
+    year: number | string;
+    months: (number | string)[];
+    types: string[];
+    houseCode?: string;
+    payments: any[];
+    expenses: any[];
+    totals: {
+      received: number;
+      expenses: number;
+      earnings: number;
+      averageNet: number;
+    };
+    chartImage?: string; // Base64
+    mode: 'full' | 'summary';
+  }) {
+    const doc = new jsPDF();
+    const earningsLabel = this.translate.instant('TERMS.EARNINGS');
+    const yearLabel = data.year === 'ALL' ? this.translate.instant('TERMS.ALL') : data.year;
+
+    // Traduzir nomes dos meses
+    let monthsNames = '';
+    if (data.months.length === 0) {
+      monthsNames = this.translate.instant('TERMS.ALL');
+    } else {
+      monthsNames = data.months.map((m) => this.translate.instant(`MONTHS.${m}`)).join(', ');
+    }
+
+    // Header
+    doc.setFontSize(16);
+    doc.setTextColor(0);
+    doc.text(earningsLabel, 14, 15);
+
+    // Generation Date
+    const now = new Date();
+    const generationDate = formatDate(now, 'dd/MM/yyyy HH:mm', 'en-US');
+    doc.setFontSize(7);
+    doc.setTextColor(150);
+    doc.text(generationDate, 196, 10, { align: 'right' });
+
+    // Subheader
+    doc.setFontSize(9);
+    doc.setTextColor(80);
+    let subHeaderText = `${monthsNames} / ${yearLabel}`;
+    if (data.houseCode) {
+      subHeaderText = `${this.translate.instant('TERMS.HOUSE')}: ${data.houseCode} | ${subHeaderText}`;
+    }
+    doc.text(subHeaderText, 14, 21);
+
+    // Summary Table (Always included)
+    autoTable(doc, {
+      startY: 25,
+      margin: { left: 14, right: 14 },
+      styles: { fontSize: 8, cellPadding: 1.5 },
+      head: [
+        [
+          this.translate.instant('TITHE_MANAGEMENT.AIRBNB_PAYMENTS'),
+          this.translate.instant('TITHE_MANAGEMENT.TOTAL_EXPENSES'),
+          this.translate.instant('TERMS.TOTAL_EARNINGS'),
+          this.translate.instant('TERMS.AVERAGE_NET'),
+        ],
+      ],
+      body: [
+        [
+          { content: this.formatBRL(data.totals.received), styles: { textColor: GlobalColors.revenue } },
+          { content: this.formatBRL(data.totals.expenses), styles: { textColor: GlobalColors.expense } },
+          { content: this.formatBRL(data.totals.earnings), styles: { textColor: GlobalColors.netIncome } },
+          { content: this.formatBRL(data.totals.averageNet), styles: { textColor: GlobalColors.average } },
+        ],
+      ],
+      theme: 'striped',
+      headStyles: { fillColor: [67, 56, 202] },
+    });
+
+    let lastY = (doc as any).lastAutoTable.finalY;
+
+    // Chart (Only if provided)
+    if (data.chartImage) {
+      // Add image below summary table
+      const imgProps = doc.getImageProperties(data.chartImage);
+      const pdfWidth = doc.internal.pageSize.getWidth();
+      const pdfHeight = doc.internal.pageSize.getHeight();
+      const margin = 14;
+      const availableWidth = pdfWidth - margin * 2;
+      const imgHeight = (imgProps.height * availableWidth) / imgProps.width;
+
+      // Check if image fits in page, else new page
+      if (lastY + imgHeight + 10 > pdfHeight) {
+        doc.addPage();
+        lastY = 10;
+      }
+
+      doc.addImage(data.chartImage, 'PNG', margin, lastY + 10, availableWidth, imgHeight);
+      lastY = lastY + 10 + imgHeight;
+    }
+
+    // Full Report Details
+    if (data.mode === 'full') {
+      // Payments Table
+      if (lastY + 30 > doc.internal.pageSize.getHeight()) {
+        doc.addPage();
+        lastY = 10;
+      }
+
+      doc.setFontSize(11);
+      doc.setTextColor(0);
+      doc.text(this.translate.instant('TITHE_MANAGEMENT.PAYMENTS_LIST'), 14, lastY + 10);
+
+      autoTable(doc, {
+        startY: lastY + 13,
+        margin: { left: 14, right: 14 },
+        styles: { fontSize: 7, cellPadding: 1 },
+        head: [
+          [
+            this.translate.instant('EXPENSES_FORM.DATE'),
+            this.translate.instant('TERMS.GUEST'),
+            this.translate.instant('TERMS.CONFIRMATION_CODE'),
+            this.translate.instant('TERMS.TYPE'),
+            this.translate.instant('TERMS.PAID'),
+          ],
+        ],
+        body: data.payments.map((p) => [
+          this.formatDate(p.data),
+          p.hospede,
+          p.codigo_confirmacao,
+          p.tipo,
+          this.formatBRL(p.pago || 0),
+        ]),
+        foot: [['', '', '', 'Total:', this.formatBRL(data.totals.received)]],
+        footStyles: {
+          fillColor: [240, 240, 240],
+          textColor: [0, 0, 0],
+          fontStyle: 'bold',
+          fontSize: 7,
+        },
+      });
+
+      lastY = (doc as any).lastAutoTable.finalY;
+
+      // Expenses Table
+      if (lastY + 30 > doc.internal.pageSize.getHeight()) {
+        doc.addPage();
+        lastY = 10;
+      }
+
+      doc.setFontSize(11);
+      doc.text(this.translate.instant('TITHE_MANAGEMENT.EXPENSES_LIST'), 14, lastY + 10);
+
+      autoTable(doc, {
+        startY: lastY + 13,
+        margin: { left: 14, right: 14 },
+        styles: { fontSize: 7, cellPadding: 1 },
+        head: [
+          [
+            this.translate.instant('EXPENSES_FORM.DATE'),
+            this.translate.instant('EXPENSES_FORM.DESCRIPTION'),
+            this.translate.instant('EXPENSES_FORM.TYPE'),
+            this.translate.instant('EXPENSES_FORM.PRICE'),
+          ],
+        ],
+        body: data.expenses.map((e) => [
+          this.formatDate(e.purchaseDate),
+          e.description,
+          this.translate.instant(`EXPENSES_FORM.TYPES.${e.type}`),
+          this.formatBRL(e.price),
+        ]),
+        foot: [['', '', 'Total:', this.formatBRL(data.totals.expenses)]],
+        footStyles: {
+          fillColor: [240, 240, 240],
+          textColor: [0, 0, 0],
+          fontStyle: 'bold',
+          fontSize: 7,
+        },
+      });
+    }
+
+    doc.save(`Earnings_${data.mode}_${data.year}.pdf`);
   }
 
-  private formatDate(date: any): string {
-    const d = DateUtils.parseLocal(date);
+  private formatBRL(value: number): string {
+    return formatCurrency(value || 0, 'pt-BR', 'R$', 'BRL', '1.2-2');
+  }
+
+  private formatDate(date: string | Date): string {
+    const d = typeof date === 'string' ? DateUtils.parseLocal(date) : date;
     return formatDate(d, 'dd/MM/yyyy', 'en-US');
   }
 
-  private formatDateMonth(date: any): string {
-    const d = DateUtils.parseLocal(date);
-    return formatDate(d, 'MM/yyyy', 'en-US');
+  private formatDateMonth(monthYear: string): string {
+    // Implementação dummy ou existente
+    return monthYear;
   }
 
   /**

@@ -13,3 +13,14 @@ export const AppColors: AppColorConfig = {
   damage: 'bg-red-50 text-red-900 dark:bg-red-950 dark:text-red-200',
   simulation: 'bg-blue-50 text-blue-900 dark:bg-blue-950 dark:text-blue-200',
 };
+
+/**
+ * Global semantic colors for the application.
+ * Used for Charts, PDFs, and UI consistent styling.
+ */
+export const GlobalColors = {
+  revenue: '#10b981',   // Green (Receitas) - emerald-500
+  expense: '#f43f5e',   // Red (Gastos) - rose-500
+  netIncome: '#3b82f6', // Blue (Ganhos) - blue-500
+  average: '#d97706',   // Dark Orange (Média de lucro) - amber-600
+};

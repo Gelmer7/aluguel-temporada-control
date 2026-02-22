@@ -10,7 +10,8 @@
     <app-stacked-bar-chart
       [series]="chartData()!.series"
       [labels]="chartData()!.labels"
-      [groups]="chartData()!.years"
+      [groups]="chartData()!.groups"
+      [colors]="chartColors"
       height="400"
     />
   } @else {

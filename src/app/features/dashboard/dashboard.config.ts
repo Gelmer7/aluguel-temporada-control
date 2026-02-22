@@ -28,19 +28,19 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
   {
     id: 'revenue',
     label: 'TERMS.REVENUE',
-    icon: 'pi-arrow-down',
+    icon: 'pi-arrow-down text-revenue',
     route: '/dashboard/revenue',
   },
   {
     id: 'expenses',
     label: 'TERMS.EXPENSES',
-    icon: 'pi-arrow-up',
+    icon: 'pi-arrow-up text-expense',
     route: '/dashboard/expenses',
   },
   {
     id: 'earnings',
     label: 'TERMS.EARNINGS',
-    icon: 'pi-dollar',
+    icon: 'pi-dollar text-net-income',
     route: '/dashboard/earnings',
   },
   {
