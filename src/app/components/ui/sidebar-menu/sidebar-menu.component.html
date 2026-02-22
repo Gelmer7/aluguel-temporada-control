@@ -37,7 +37,11 @@
           tooltipPosition="right"
         >
           @if (item.image) {
-            <img [src]="item.image" class="w-6 h-6 object-contain flex-shrink-0 dark:invert" />
+            <img
+              [src]="item.image"
+              class="w-5 h-5 object-contain flex-shrink-0"
+              [ngClass]="item.imageClass || 'dark:invert'"
+            />
           } @else {
             <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0"></span>
           }

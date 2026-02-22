@@ -16,7 +16,8 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     id: 'csv-viewer',
     label: 'ACTIONS.VIEW_CSV',
     icon: '',
-    image: 'airbnb_black.svg',
+    image: 'airbnb_rose.svg',
+    imageClass: 'dark:brightness-100',
     route: '/dashboard/csv-reports/viewer',
   },
   {

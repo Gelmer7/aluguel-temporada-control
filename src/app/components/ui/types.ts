@@ -10,6 +10,8 @@ export interface NavItem {
   icon: string;
   /** Caminho para um ícone customizado (SVG/IMG) (opcional). */
   image?: string;
+  /** Classe CSS adicional para a imagem (opcional). */
+  imageClass?: string;
   /** Rota Angular (routerLink). */
   route: string;
   /** Valor do badge no item (opcional). */
