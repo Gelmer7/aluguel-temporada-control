@@ -69,14 +69,30 @@ export class EarningsSummaryChartsComponent {
     const years = sortedKeys.map((key) => key.split('-')[0]);
 
     // 4. Create series
+    const incomeData = sortedKeys.map((key) => monthlyData[key].income);
+    const expenseData = sortedKeys.map((key) => -Math.abs(monthlyData[key].expense));
+
+    // Calculate Average Net Earnings (Income - Expenses)
+    const netData = sortedKeys.map((key) => monthlyData[key].income - monthlyData[key].expense);
+    const totalNet = netData.reduce((acc, curr) => acc + curr, 0);
+    const averageNet = netData.length > 0 ? totalNet / netData.length : 0;
+    const averageData = sortedKeys.map(() => averageNet);
+
+    const formattedAverage = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(averageNet);
+
     const series: StackedBarSeries[] = [
       {
         name: this.translate.instant('TERMS.EARNINGS'),
-        data: sortedKeys.map((key) => monthlyData[key].income),
+        data: incomeData,
       },
       {
         name: this.translate.instant('TERMS.EXPENSES'),
-        data: sortedKeys.map((key) => -Math.abs(monthlyData[key].expense)),
+        data: expenseData,
+      },
+      {
+        name: `${this.translate.instant('TERMS.AVERAGE_NET')}: ${formattedAverage}`,
+        data: averageData,
+        type: 'line'
       }
     ];
 

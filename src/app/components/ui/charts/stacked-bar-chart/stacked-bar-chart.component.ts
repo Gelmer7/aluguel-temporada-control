@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export interface StackedBarSeries {
   name: string;
   data: number[];
+  type?: 'bar' | 'line';
 }
 
 @Component({
@@ -68,24 +69,36 @@ export class StackedBarChartComponent {
     // Use input colors if provided, otherwise fallback to default palette
     const colors = inputColors.length > 0 ? inputColors : this.defaultPalette;
 
-    const formattedSeries = seriesData.map((s, index) => ({
-      name: s.name,
-      type: 'bar',
-      stack: 'total',
-      xAxisIndex: 0,
-      yAxisIndex: 0,
-      data: s.data,
-      emphasis: { focus: 'series' },
-      barMaxWidth: 50,
-      itemStyle: {
-        color: colors[index % colors.length],
-        borderRadius: [2, 2, 0, 0],
-        borderWidth: 1,
-        borderColor: 'rgba(255, 255, 255, 0.5)',
-        opacity: 1
-      },
-      z: 3
-    }));
+    const formattedSeries = seriesData.map((s, index) => {
+      const isLine = s.type === 'line';
+      return {
+        name: s.name,
+        type: s.type || 'bar',
+        stack: isLine ? undefined : 'total',
+        xAxisIndex: 0,
+        yAxisIndex: 0,
+        data: s.data,
+        emphasis: { focus: 'series' },
+        barMaxWidth: 50,
+        itemStyle: {
+          color: colors[index % colors.length],
+          borderRadius: isLine ? 0 : [2, 2, 0, 0],
+          borderWidth: isLine ? 2 : 1,
+          borderColor: isLine ? colors[index % colors.length] : 'rgba(255, 255, 255, 0.5)',
+          opacity: 1
+        },
+        // Line specific properties
+        ...(isLine ? {
+          symbol: 'none', // or 'circle'
+          smooth: true,
+          lineStyle: {
+            width: 3,
+            type: 'dashed'
+          }
+        } : {}),
+        z: isLine ? 4 : 3
+      };
+    });
 
     return {
       color: colors,
@@ -109,7 +122,11 @@ export class StackedBarChartComponent {
                 : absValue.toLocaleString(locale);
 
               html += `${p.marker} ${p.seriesName}: <b>${valueFormatted}</b><br/>`;
-              total += p.value;
+
+              // Only add to total if it is a bar series
+              if (p.seriesType === 'bar') {
+                total += p.value;
+              }
             }
           });
           html += `<hr style="margin: 5px 0; border: 0; border-top: 1px solid #eee;" />`;

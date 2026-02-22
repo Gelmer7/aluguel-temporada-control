@@ -1,24 +1,39 @@
 <div class="flex flex-col h-full overflow-hidden p-2 gap-2">
+  <ng-template #headerActions>
+    <p-button
+      icon="pi pi-file-pdf"
+      severity="secondary"
+      (onClick)="onDownloadPDF()"
+      [pTooltip]="'TITHE_MANAGEMENT.DOWNLOAD_PDF' | translate"
+      tooltipPosition="left"
+      [size]="'small'"
+    />
+  </ng-template>
+
   <p-toast />
 
   <!-- Filtros e Resumo -->
   <div class="flex flex-col gap-2">
     <app-filter-container>
       <ng-template #filterSummary class="flex flex-wrap items-center gap-2">
-        <span>{{ 'TERMS.YEAR' | translate }}:
+        <span
+          >{{ 'TERMS.YEAR' | translate }}:
           <span class="text-primary">
             @if (selectedYear() === 'ALL') {
               {{ 'TERMS.ALL' | translate }}
             } @else {
               {{ selectedYear() }}
             }
-          </span></span>
+          </span></span
+        >
         <span>{{ 'TERMS.MONTH' | translate }}:
           <span class="text-primary">
-            @if (selectedMonth() === 'ALL') {
+            @if (selectedMonths().length === 0) {
               {{ 'TERMS.ALL' | translate }}
             } @else {
-              {{ 'MONTHS.' + selectedMonth() | translate }}
+              @for (month of selectedMonths(); track month) {
+                {{ 'MONTHS.' + month | translate }}{{ !$last ? ', ' : '' }}
+              }
             }
           </span></span>
         @if (selectedTypes().length > 0) {
@@ -57,23 +72,22 @@
 
         <!-- mes -->
         <p-floatLabel class="flex-1 min-w-[120px]" variant="in">
-          <p-select
+          <p-multiSelect
             inputId="month-select"
             [options]="monthOptions()"
-            [(ngModel)]="selectedMonth"
+            [(ngModel)]="selectedMonths"
             optionLabel="label"
             optionValue="value"
             [fluid]="true"
             variant="filled"
+            [maxSelectedLabels]="3"
+            [selectedItemsLabel]="'{0} ' + ('TERMS.SELECTED' | translate)"
             showClear="true"
           >
-            <ng-template pTemplate="selectedItem" let-selectedOption>
-              {{ selectedOption.label | translate }}
-            </ng-template>
             <ng-template pTemplate="item" let-option>
               {{ option.label | translate }}
             </ng-template>
-          </p-select>
+          </p-multiSelect>
           <label for="month-select">{{ 'TERMS.MONTH' | translate }}</label>
         </p-floatLabel>
 
@@ -193,17 +207,17 @@
     </app-filter-container>
 
     <!-- Resumo -->
-    <div class="shadow-sm border rounded-lg p-1 text-xs relative group">
-      <div class="absolute right-2 top-2 z-10">
-        <p-button
-          icon="pi pi-chart-line"
-          [rounded]="true"
-          [text]="true"
-          severity="secondary"
+    <div class="rounded-xl shadow-sm border flex flex-col p-1">
+      <div
+        class="flex items-center justify-between p-2 border-b border-surface-200 dark:border-surface-700 bg-surface-50/50 dark:bg-surface-800/50"
+      >
+        <span class="font-bold text-sm">{{ 'REPORTS.SUMMARY' | translate }}</span>
+        <i
+          class="pi pi-chart-line cursor-pointer hover:text-primary transition-colors"
           (click)="showSummaryChart.set(true)"
           [pTooltip]="'REPORTS.SUMMARY' | translate"
           tooltipPosition="left"
-        />
+        ></i>
       </div>
       <p-table [value]="[{}]" [responsiveLayout]="'scroll'" size="small">
         <ng-template pTemplate="header">
@@ -211,6 +225,7 @@
             <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.AIRBNB_PAYMENTS' | translate }}</th>
             <th class="!bg-transparent">{{ 'TITHE_MANAGEMENT.TOTAL_EXPENSES' | translate }}</th>
             <th class="!bg-transparent">{{ 'TERMS.TOTAL_EARNINGS' | translate }}</th>
+            <th class="!bg-transparent">{{ 'TERMS.AVERAGE_NET' | translate }}</th>
           </tr>
         </ng-template>
         <ng-template pTemplate="body">
@@ -218,6 +233,7 @@
             <td class="font-semibold">{{ totalReceived() | currency: 'BRL' }}</td>
             <td class="font-semibold text-red-500">{{ totalExpenses() | currency: 'BRL' }}</td>
             <td class="font-semibold bg-primary/10">{{ totalEarnings() | currency: 'BRL' }}</td>
+            <td class="font-semibold text-blue-500">{{ averageNet() | currency: 'BRL' }}</td>
           </tr>
         </ng-template>
       </p-table>

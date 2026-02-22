@@ -67,9 +67,11 @@ export class EarningsPage implements OnInit {
   private readonly messageService = inject(MessageService);
   private readonly headerService = inject(HeaderService);
 
+  headerActions = viewChild.required<TemplateRef<any>>('headerActions');
+
   // Filtros
   protected readonly selectedYear = signal<number | string>('ALL');
-  protected readonly selectedMonth = signal<number | string>('ALL');
+  protected readonly selectedMonths = signal<number[]>([]);
   protected readonly selectedTypes = signal<string[]>([]);
   protected readonly filterDateRange = signal<Date[] | null>(null);
 
@@ -83,6 +85,11 @@ export class EarningsPage implements OnInit {
   protected readonly rowsPayment = signal(10);
   protected readonly firstExpense = signal(0);
   protected readonly rowsExpense = signal(10);
+
+  protected onDownloadPDF() {
+    // TODO: Implement PDF download
+    console.log('Download PDF clicked');
+  }
 
   protected onPaymentPageChange(event: any) {
     this.firstPayment.set(event.first);
@@ -121,7 +128,6 @@ export class EarningsPage implements OnInit {
   ]);
 
   protected readonly monthOptions = computed(() => [
-    { label: 'TERMS.ALL', value: 'ALL' },
     ...Array.from({ length: 12 }, (_, i) => ({
       label: this.translate.instant(`MONTHS.${i}`),
       value: i,
@@ -145,16 +151,22 @@ export class EarningsPage implements OnInit {
       this.loadData();
     });
 
-    this.headerService.setHeader({
-      title: 'TERMS.EARNINGS',
-      icon: 'pi-dollar',
+    effect(() => {
+      const actions = this.headerActions();
+      if (actions) {
+        this.headerService.setHeader({
+          title: 'TERMS.EARNINGS',
+          icon: 'pi-dollar',
+          actions: actions
+        });
+      }
     });
   }
 
   // Cálculos
   protected readonly filteredPayments = computed(() => {
     const year = this.selectedYear();
-    const month = this.selectedMonth();
+    const months = this.selectedMonths();
     const types = this.selectedTypes();
     const range = this.filterDateRange();
 
@@ -171,7 +183,7 @@ export class EarningsPage implements OnInit {
       }
 
       const matchesYear = year === 'ALL' || date.getFullYear() === year;
-      const matchesMonth = month === 'ALL' || date.getMonth() === month;
+      const matchesMonth = months.length === 0 || months.includes(date.getMonth());
       const matchesType = types.length === 0 || types.includes(p.tipo);
       return matchesYear && matchesMonth && matchesType;
     });
@@ -179,7 +191,7 @@ export class EarningsPage implements OnInit {
 
   protected readonly filteredExpenses = computed(() => {
     const year = this.selectedYear();
-    const month = this.selectedMonth();
+    const months = this.selectedMonths();
     const range = this.filterDateRange();
 
     return this.expenses().filter((e) => {
@@ -195,7 +207,7 @@ export class EarningsPage implements OnInit {
       }
 
       const matchesYear = year === 'ALL' || date.getFullYear() === year;
-      const matchesMonth = month === 'ALL' || date.getMonth() === month;
+      const matchesMonth = months.length === 0 || months.includes(date.getMonth());
       return matchesYear && matchesMonth;
     });
   });
@@ -208,7 +220,7 @@ export class EarningsPage implements OnInit {
 
   protected clearFilters() {
     this.selectedYear.set('ALL');
-    this.selectedMonth.set('ALL');
+    this.selectedMonths.set([]);
     const allTypes = Array.from(new Set(this.payments().map((p) => p.tipo).filter(Boolean)));
     this.selectedTypes.set(allTypes);
     this.filterDateRange.set(null);
@@ -226,6 +238,29 @@ export class EarningsPage implements OnInit {
 
   protected readonly totalEarnings = computed(() => {
     return this.totalReceived() - this.totalExpenses();
+  });
+
+  protected readonly averageNet = computed(() => {
+    const payments = this.filteredPayments();
+    const expenses = this.filteredExpenses();
+    const months = new Set<string>();
+
+    payments.forEach((p) => {
+      const date = DateUtils.parseLocal(p.data);
+      const key = `${date.getFullYear()}-${date.getMonth()}`;
+      months.add(key);
+    });
+
+    expenses.forEach((e) => {
+      const date = DateUtils.parseLocal(e.purchaseDate);
+      const key = `${date.getFullYear()}-${date.getMonth()}`;
+      months.add(key);
+    });
+
+    const total = this.totalEarnings();
+    const count = months.size;
+
+    return count > 0 ? total / count : 0;
   });
 
   async ngOnInit() {
