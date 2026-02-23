@@ -16,6 +16,7 @@ export interface AirbnbReview {
 
   // Feedback Detalhado (feedbackDetalhado)
   cleanlinessRating?: number; // limpeza
+  accuracyRating?: number; // exatidaoDoAnuncio
   checkinRating?: number; // checkIn
   communicationRating?: number; // comunicacao
   locationRating?: number; // localizacao

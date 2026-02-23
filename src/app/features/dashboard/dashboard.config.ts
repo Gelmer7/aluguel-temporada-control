@@ -27,6 +27,12 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     route: '/dashboard/payouts-reservas',
   },
   {
+    id: 'feedback-analytics',
+    label: 'Análise de Feedback',
+    icon: 'pi-chart-pie',
+    route: '/dashboard/feedback-analytics',
+  },
+  {
     id: 'manual-rentals',
     label: 'TERMS.MANUAL_RENTALS',
     icon: 'pi-warehouse',

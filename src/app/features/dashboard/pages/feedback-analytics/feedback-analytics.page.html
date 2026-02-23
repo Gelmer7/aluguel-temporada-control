@@ -1,0 +1,108 @@
+<div class="h-full flex flex-col gap-4 p-4 overflow-y-auto">
+
+    <!-- Loading State -->
+    @if (loading()) {
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <p-skeleton height="100px"></p-skeleton>
+        <p-skeleton height="100px"></p-skeleton>
+        <p-skeleton height="100px"></p-skeleton>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-96">
+        <p-skeleton height="100%"></p-skeleton>
+        <p-skeleton height="100%"></p-skeleton>
+    </div>
+    } @else {
+
+    <!-- KPIs Topo -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <!-- NPS / Média Geral -->
+        <p-card styleClass="h-full border-l-4 border-primary shadow-sm">
+            <div class="flex flex-col gap-2">
+                <span class="text-surface-500 font-medium text-sm uppercase">Média Geral (NPS Real)</span>
+                <div class="flex items-end gap-2">
+                    <span class="text-4xl font-bold text-primary">{{ overallStats().average | number:'1.1-1' }}</span>
+                    <div class="flex mb-1.5 text-yellow-500">
+                        <i class="pi pi-star-fill"></i>
+                    </div>
+                </div>
+                <span class="text-xs text-surface-400">Baseado em {{ overallStats().count }} avaliações</span>
+            </div>
+        </p-card>
+
+        <!-- Ponto Forte -->
+        <p-card styleClass="h-full border-l-4 border-green-500 shadow-sm">
+            <div class="flex flex-col gap-2">
+                <span class="text-surface-500 font-medium text-sm uppercase">Ponto Forte</span>
+                <div class="flex items-center gap-2">
+                    <i class="pi pi-thumbs-up-fill text-green-500 text-2xl"></i>
+                    <span class="text-xl font-bold text-surface-900 dark:text-surface-0">{{ highlights().best?.label
+                        }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-green-600">{{ highlights().best?.average | number:'1.1-1'
+                        }}</span>
+                    <span class="text-xs text-surface-400">Melhor média entre as categorias</span>
+                </div>
+            </div>
+        </p-card>
+
+        <!-- Ponto de Atenção -->
+        <p-card styleClass="h-full border-l-4 border-red-500 shadow-sm">
+            <div class="flex flex-col gap-2">
+                <span class="text-surface-500 font-medium text-sm uppercase">Ponto de Atenção</span>
+                <div class="flex items-center gap-2">
+                    <i class="pi pi-exclamation-triangle text-red-500 text-2xl"></i>
+                    <span class="text-xl font-bold text-surface-900 dark:text-surface-0">{{ highlights().worst?.label
+                        }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-red-600">{{ highlights().worst?.average | number:'1.1-1'
+                        }}</span>
+                    <span class="text-xs text-surface-400">Menor média entre as categorias</span>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+    <!-- Gráficos -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
+        <!-- Radar Chart -->
+        <p-card header="Análise por Categoria" styleClass="h-full shadow-sm flex flex-col">
+            <div class="flex justify-center items-center h-full min-h-[300px]">
+                <p-chart type="radar" [data]="radarData()" [options]="radarOptions"
+                    class="w-full max-w-[400px]"></p-chart>
+            </div>
+        </p-card>
+
+        <!-- Lista de Insights (Placeholder para Futuro) -->
+        <p-card header="Últimos Insights" styleClass="h-full shadow-sm">
+            <div class="flex flex-col gap-3">
+                <div
+                    class="p-3 bg-surface-50 dark:bg-surface-800 rounded border border-surface-200 dark:border-surface-700">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="pi pi-lightbulb text-yellow-500"></i>
+                        <span class="font-bold text-sm">Dica Pro:</span>
+                    </div>
+                    <p class="text-sm text-surface-600 dark:text-surface-300">
+                        Sua nota de <strong>Limpeza</strong> está abaixo da média geral. Considere revisar o checklist da
+                        equipe de limpeza.
+                    </p>
+                </div>
+
+                <div
+                    class="p-3 bg-surface-50 dark:bg-surface-800 rounded border border-surface-200 dark:border-surface-700">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="pi pi-chart-line text-blue-500"></i>
+                        <span class="font-bold text-sm">Tendência:</span>
+                    </div>
+                    <p class="text-sm text-surface-600 dark:text-surface-300">
+                        <strong>Localização</strong> continua sendo seu diferencial competitivo mais forte (4.9). Use isso
+                        no marketing!
+                    </p>
+                </div>
+            </div>
+        </p-card>
+    </div>
+
+    }
+</div>

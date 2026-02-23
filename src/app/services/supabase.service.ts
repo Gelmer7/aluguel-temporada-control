@@ -258,6 +258,7 @@ export class SupabaseService {
         host_response: review.hostResponse,
         private_feedback: review.privateFeedback,
         cleanliness_rating: review.cleanlinessRating,
+        accuracy_rating: review.accuracyRating,
         checkin_rating: review.checkinRating,
         communication_rating: review.communicationRating,
         location_rating: review.locationRating,

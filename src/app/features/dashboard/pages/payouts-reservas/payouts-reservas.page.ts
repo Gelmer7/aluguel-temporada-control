@@ -456,6 +456,7 @@ export class PayoutsReservasPage {
             hostResponse: r.host_response,
             privateFeedback: r.private_feedback,
             cleanlinessRating: r.cleanliness_rating,
+            accuracyRating: r.accuracy_rating,
             checkinRating: r.checkin_rating,
             communicationRating: r.communication_rating,
             locationRating: r.location_rating,
@@ -479,6 +480,7 @@ export class PayoutsReservasPage {
                 privateFeedback: json.avaliacaoGeral?.mensagemPrivada,
 
                 cleanlinessRating: this.parseRating(json.feedbackDetalhado?.limpeza),
+                accuracyRating: this.parseRating(json.feedbackDetalhado?.exatidaoDoAnuncio),
                 checkinRating: this.parseRating(json.feedbackDetalhado?.checkIn),
                 communicationRating: this.parseRating(json.feedbackDetalhado?.comunicacao),
                 locationRating: this.parseRating(json.feedbackDetalhado?.localizacao),
