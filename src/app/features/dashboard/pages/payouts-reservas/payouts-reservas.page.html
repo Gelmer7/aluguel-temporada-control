@@ -1,0 +1,244 @@
+<!-- Container principal da página -->
+<p-toast />
+<div class="h-full flex flex-col p-2 bg-surface-50 dark:bg-surface-950 gap-2 overflow-hidden">
+  <!-- Filtros Reutilizáveis -->
+  <app-filter-container>
+    <!-- Resumo dos filtros (aparece quando colapsado) -->
+    <ng-template #filterSummary>
+      <span
+        >Ano: <span class="text-primary">{{ selectedYear() || 'Todos' }}</span></span
+      >
+      <span
+        >Mês: <span class="text-primary">{{ getSelectedMonthLabel() }}</span></span
+      >
+      @if (getFormattedDateRange()) {
+        <span
+          >Período: <span class="text-primary">{{ getFormattedDateRange() }}</span></span
+        >
+      }
+    </ng-template>
+
+    <!-- Conteúdo dos filtros -->
+    <!-- filtro Ano  -->
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
+      <p-select
+        inputId="year_select"
+        [options]="years()"
+        [ngModel]="selectedYear()"
+        (ngModelChange)="onYearChange($event)"
+        [showClear]="true"
+        class="w-full"
+        appendTo="body"
+      ></p-select>
+      <label for="year_select">Ano</label>
+    </p-floatlabel>
+    <!-- Filtro de Mês -->
+    <p-floatlabel class="flex-1 min-w-[120px]" variant="in">
+      <p-multiselect
+        inputId="month_select"
+        [options]="months"
+        [ngModel]="selectedMonth()"
+        (ngModelChange)="onMonthChange($event)"
+        optionLabel="label"
+        optionValue="value"
+        class="w-full"
+        appendTo="body"
+        [maxSelectedLabels]="2"
+        selectedItemsLabel="{0} meses"
+      ></p-multiselect>
+      <label for="month_select">Mês</label>
+    </p-floatlabel>
+
+    <!-- Filtro de Período via Popover -->
+    <div class="flex items-center self-center h-full">
+      <p-button
+        icon="pi pi-calendar"
+        [rounded]="true"
+        [text]="true"
+        (click)="op_date_filter.toggle($event)"
+        [pTooltip]="'Filtrar por período'"
+        tooltipPosition="top"
+        [severity]="filterDateRange() ? 'primary' : 'secondary'"
+        [styleClass]="filterDateRange() ? 'shadow-[0_0_10px_rgba(var(--p-primary-500-rgb),0.4)] bg-primary/10' : ''"
+      >
+        @if (filterDateRange()) {
+          <span
+            class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-white animate-pulse"
+          >
+            !
+          </span>
+        }
+      </p-button>
+
+      <p-popover #op_date_filter>
+        <div class="p-3 flex flex-col gap-3 min-w-[280px]">
+          <div class="flex items-center justify-between border-b border-surface-200 dark:border-surface-700 pb-2">
+            <span class="text-sm font-semibold text-surface-700 dark:text-surface-100">Selecionar Período</span>
+            @if (filterDateRange()) {
+              <p-button
+                icon="pi pi-trash"
+                [text]="true"
+                severity="danger"
+                size="small"
+                (click)="onDateRangeChange(null); op_date_filter.hide()"
+                pTooltip="Limpar Filtro"
+              />
+            }
+          </div>
+          <div class="flex flex-col gap-1">
+            <label for="popover_range_date" class="text-xs text-surface-500 mb-1">{{ 'TERMS.DATE_RANGE' | translate }}</label>
+            <p-datepicker
+              inputId="popover_range_date"
+              [ngModel]="filterDateRange()"
+              (ngModelChange)="onDateRangeChange($event)"
+              selectionMode="range"
+              [showIcon]="true"
+              [showClear]="false"
+              [readonlyInput]="false"
+              class="w-full"
+              appendTo="body"
+              [dateFormat]="'PRIMENG.dateFormat' | translate"
+              [placeholder]="'PRIMENG.dateFormat' | translate"
+              styleClass="w-full"
+            ></p-datepicker>
+          </div>
+          <div class="text-[10px] text-surface-400 italic">
+            {{ 'TERMS.DATE_PICKER_HINT' | translate }}
+          </div>
+        </div>
+      </p-popover>
+    </div>
+
+    <!-- Limpar Filtros -->
+    <div class="flex items-center">
+      <p-button
+        icon="pi pi-filter-slash"
+        [text]="true"
+        severity="secondary"
+        size="small"
+        class="p-button-sm"
+        (click)="clearFilters()"
+        pTooltip="Limpar Filtros"
+        tooltipPosition="top"
+      />
+    </div>
+  </app-filter-container>
+
+  <!-- Área da tabela com scroll -->
+  <div
+    class="flex-1 min-h-0 bg-surface-0 dark:bg-surface-900 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 flex flex-col overflow-hidden"
+  >
+    <!-- Barra de ferramentas superior (caption) -->
+    <div
+      class="flex items-center justify-start p-1 border-b border-surface-200 dark:border-surface-700"
+    >
+      <!-- campo de busca -->
+      <p-iconfield iconPosition="left" class="flex-1 sm:flex-none sm:w-80">
+        <p-inputicon>
+          <i class="pi pi-search"></i>
+        </p-inputicon>
+        <input
+          pInputText
+          type="text"
+          [ngModel]="filterQuery()"
+          (ngModelChange)="onFilter($event)"
+          placeholder="Pesquisar..."
+          class="w-full p-inputtext-sm"
+        />
+      </p-iconfield>
+    </div>
+
+    <div class="flex-1 min-h-0 w-full overflow-auto flex flex-col">
+      <p-table
+        #dt
+        [value]="pagedRows()"
+        [scrollable]="true"
+        scrollHeight="flex"
+        [tableStyle]="{ 'min-width': '60rem' }"
+        dataKey="__id"
+        [rowTrackBy]="rowTrackBy"
+        [loading]="loading()"
+        [columns]="cols"
+        class="p-datatable-sm h-full flex flex-col text-xs sm:text-base"
+      >
+        <!-- Cabeçalho das colunas (th) -->
+        <ng-template pTemplate="header" let-columns>
+          <tr class="text-xs sm:text-base">
+            @for (col of columns; track col.field) {
+              <th
+                class="bg-surface-50 dark:bg-surface-800"
+              >
+                <div class="flex items-center gap-1">
+                  <span
+                    class="truncate"
+                    [pTooltip]="col.headerFull"
+                    tooltipPosition="top"
+                    showDelay="200"
+                    hideDelay="0"
+                    >{{ col.headerAbbr }}</span
+                  >
+                </div>
+              </th>
+            }
+          </tr>
+        </ng-template>
+
+        <!-- Corpo das linhas (td) -->
+        <ng-template pTemplate="body" let-row let-columns="columns">
+          <tr
+            class="hover:bg-surface-50 dark:hover:bg-surface-800/50 transition-colors duration-200 text-xs sm:text-base"
+          >
+            @for (col of columns; track col.field) {
+              <td
+                [pTooltip]="colTooltip(row, col.field)"
+                tooltipPosition="top"
+                [showDelay]="200"
+                [hideDelay]="0"
+              >
+                @if (col.field === 'Hóspede') {
+                  <a
+                    [href]="reservationUrl(getCellValue(row, 'Código de Confirmação'))"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary dark:text-primary-400 hover:underline block truncate"
+                  >{{ getCellValue(row, 'Hóspede') }}
+                  </a>
+                } @else if (col.field === 'Tipo') {
+                  <div
+                    class="px-2 py-0.5 rounded text-xs font-medium inline-block transition-colors bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+                  >
+                    {{ getCellValue(row, 'Tipo') }}
+                  </div>
+                } @else {
+                  <span
+                    class="block truncate"
+                    [class.font-medium]="isCurrencyField(col.field)"
+                  >
+                    {{ getCellValue(row, col.field) }}
+                  </span>
+                }
+              </td>
+            }
+          </tr>
+        </ng-template>
+        
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td [attr.colspan]="cols.length" class="text-center p-4 text-surface-500">
+                    Nenhum registro encontrado.
+                </td>
+            </tr>
+        </ng-template>
+      </p-table>
+    </div>
+
+    <!-- Paginador Reutilizável -->
+    <app-table-paginator
+      [first]="first()"
+      [rows]="rowsPerPage()"
+      [totalRecords]="visibleRows().length"
+      [rowsPerPageOptions]="[10, 20, 50, 100]"
+      (onPageChange)="onPageChange($event)"
+    />
+  </div>
+</div>

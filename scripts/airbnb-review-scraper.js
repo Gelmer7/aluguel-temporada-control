@@ -79,9 +79,27 @@ async function scrapeAirbnbReviews() {
   try {
     console.log('🌍 Acessando o painel de avaliações...');
     // URL principal de reviews (pode ser ajustada para um link específico ou lista geral)
-    // O usuário pode colar um link de detalhe específico aqui para testar
-    // const targetUrl = 'https://www.airbnb.com.br/hosting/reviews';
-    const targetUrl = 'https://www.airbnb.com.br/progress/reviews/details/1593634609766709296';
+    // Se o usuário passou um ID ou URL como argumento, usa ele
+    const userInput = process.argv[2];
+    let targetUrl;
+
+    if (userInput) {
+        if (userInput.startsWith('http')) {
+            targetUrl = userInput;
+        } else if (/^\d+$/.test(userInput)) {
+            // Se for apenas números, assume que é o ID
+            targetUrl = `https://www.airbnb.com.br/progress/reviews/details/${userInput}`;
+        } else {
+            console.error('❌ Argumento inválido. Use uma URL completa ou o ID da avaliação.');
+            process.exit(1);
+        }
+        console.log(`🎯 Alvo definido via argumento: ${targetUrl}`);
+    } else {
+        // Fallback padrão (última avaliação conhecida)
+        targetUrl = 'https://www.airbnb.com.br/progress/reviews/details/1593634609766709296';
+        console.log(`⚠️ Nenhum argumento fornecido. Usando URL padrão: ${targetUrl}`);
+        console.log(`💡 Dica: Você pode rodar "node scripts/airbnb-review-scraper.js <ID_OU_URL>" para extrair outra avaliação.`);
+    }
 
     await page.goto(targetUrl, { waitUntil: 'networkidle2' });
 
@@ -463,7 +481,7 @@ async function extractDetailedReviewData(page) {
     // Estrelas da Avaliação Geral
     const overallRating = getOverallRating();
     if (overallRating) {
-      result.avaliacaoGeral.estrelasAvaliacaoGeral = `${parseFloat(overallRating.replace(',', '.'))} Estrelas`;
+      result.avaliacaoGeral.estrelasAvaliacaoGeral = parseFloat(overallRating.replace(',', '.'));
     }
 
     // Avaliação pública
@@ -514,9 +532,8 @@ async function extractDetailedReviewData(page) {
     for (const [key, field] of Object.entries(categories)) {
       const rating = getRatingByCategory([key]);
       if (rating) {
-        // Converte para número se possível e adiciona "Estrelas"
         const num = parseFloat(rating.replace(',', '.'));
-        result.feedbackDetalhado[field] = `${num} Estrelas`;
+        result.feedbackDetalhado[field] = num;
       }
     }
 

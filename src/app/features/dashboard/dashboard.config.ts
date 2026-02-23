@@ -21,6 +21,12 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     route: '/dashboard/csv-reports/viewer',
   },
   {
+    id: 'payouts-reservas',
+    label: 'Payouts / Reservas',
+    icon: 'pi-calendar-clock',
+    route: '/dashboard/payouts-reservas',
+  },
+  {
     id: 'manual-rentals',
     label: 'TERMS.MANUAL_RENTALS',
     icon: 'pi-warehouse',

@@ -18,6 +18,11 @@ export const DASHBOARD_ROUTES: Routes = [
           import('./pages/csv-viewer/csv-viewer.page').then((m) => m.CsvViewerPage),
       },
       {
+        path: 'payouts-reservas',
+        loadComponent: () =>
+          import('./pages/payouts-reservas/payouts-reservas.page').then((m) => m.PayoutsReservasPage),
+      },
+      {
         path: 'airbnb-payments',
         loadComponent: () =>
           import('./pages/airbnb-payments/airbnb-payments.page').then((m) => m.AirbnbPaymentsPage),
