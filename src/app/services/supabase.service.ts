@@ -3,6 +3,7 @@ import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { environment } from '../../environments/environment';
 import { AirbnbNormalizedRow, ManualRental, UnifiedEarning } from '../models/airbnb.model';
 import { Expense } from '../models/expense.model';
+import { AirbnbReview } from '../models/review.model';
 import { HouseService } from './house.service';
 
 @Injectable({
@@ -213,6 +214,63 @@ export class SupabaseService {
 
   async deleteTithe(id: string) {
     return await this.supabase.from('tithes').delete().eq('id', id);
+  }
+
+  // --- Reviews Methods ---
+
+  /**
+   * Busca todos os reviews
+   */
+  async getReviews() {
+    const { data, error } = await this.supabase
+      .from('airbnb_reviews')
+      .select('*')
+      .eq('house_code', this.houseService.currentHouseCode())
+      .order('created_at', { ascending: false });
+    
+    return { data, error };
+  }
+
+  /**
+   * Busca um review pelo código de reserva
+   */
+  async getReviewByReservation(reservationCode: string) {
+    const { data, error } = await this.supabase
+      .from('airbnb_reviews')
+      .select('*')
+      .eq('reservation_code', reservationCode)
+      .single();
+      
+    return { data, error };
+  }
+
+  /**
+   * Salva ou atualiza um review
+   */
+  async saveReview(review: AirbnbReview) {
+     const dbReview = {
+        review_id: review.reviewId,
+        reservation_code: review.reservationCode,
+        guest_name: review.guestName,
+        review_url: review.reviewUrl,
+        overall_rating: review.overallRating,
+        public_comment: review.publicComment,
+        host_response: review.hostResponse,
+        private_feedback: review.privateFeedback,
+        cleanliness_rating: review.cleanlinessRating,
+        checkin_rating: review.checkinRating,
+        communication_rating: review.communicationRating,
+        location_rating: review.locationRating,
+        value_rating: review.valueRating,
+        house_code: this.houseService.currentHouseCode()
+     };
+
+     const { data, error } = await this.supabase
+        .from('airbnb_reviews')
+        .upsert(dbReview, { onConflict: 'review_id' })
+        .select();
+
+     return { data, error };
   }
 }
 
