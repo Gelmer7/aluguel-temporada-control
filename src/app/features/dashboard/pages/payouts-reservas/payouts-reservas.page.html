@@ -203,6 +203,17 @@
                     class="text-primary dark:text-primary-400 hover:underline block truncate"
                   >{{ getCellValue(row, 'Hóspede') }}
                   </a>
+                } @else if (col.field === 'Feedback') {
+                  <div class="flex items-center gap-2">
+                    <div class="flex gap-0.5 text-yellow-500">
+                        <i class="pi pi-star-fill text-xs"></i>
+                        <i class="pi pi-star-fill text-xs"></i>
+                        <i class="pi pi-star-fill text-xs"></i>
+                        <i class="pi pi-star-fill text-xs"></i>
+                        <i class="pi pi-star-fill text-xs"></i>
+                    </div>
+                    <i class="pi pi-comments text-blue-900 dark:text-blue-400 text-lg"></i>
+                  </div>
                 } @else if (col.field === 'Tipo') {
                   <div
                     class="px-2 py-0.5 rounded text-xs font-medium inline-block transition-colors bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"

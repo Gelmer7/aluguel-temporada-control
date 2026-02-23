@@ -86,13 +86,13 @@ export class PayoutsReservasPage {
       if (actions) {
         this.headerService.setHeader({
           title: 'Payouts / Reservas',
-          icon: 'pi pi-calendar-check',
+          icon: 'pi pi-calendar-clock',
           actions: actions,
         });
       } else {
          this.headerService.setHeader({
           title: 'Payouts / Reservas',
-          icon: 'pi pi-calendar-check',
+          icon: 'pi pi-calendar-clock',
         });
       }
     });
@@ -115,14 +115,16 @@ export class PayoutsReservasPage {
 
   protected readonly loading = signal<boolean>(false);
   protected readonly rows = signal<ViewerRow[]>([]);
-  
+
   // Columns definition
   protected readonly cols = [
     { field: 'Data', headerFull: 'Data', headerAbbr: 'Data' },
     { field: 'Hóspede', headerFull: 'Hóspede', headerAbbr: 'Hóspede' },
+    { field: 'Feedback', headerFull: 'Feedback', headerAbbr: 'Feedback' },
     { field: 'Tipo', headerFull: 'Tipo', headerAbbr: 'Tipo' },
     { field: 'Código de Confirmação', headerFull: 'Código Conf.', headerAbbr: 'Cód. Conf.' },
     { field: 'Inicio-Fim', headerFull: 'Início - Fim', headerAbbr: 'Início - Fim' },
+    { field: 'Noites', headerFull: 'Noites', headerAbbr: 'Noites' },
     { field: 'Valor', headerFull: 'Valor', headerAbbr: 'Valor' },
   ];
 
@@ -154,7 +156,7 @@ export class PayoutsReservasPage {
     // I will filter for rows that CONTAIN "Payout/Reserva" or EXACTLY "Payout/Reserva".
     // Given the requirement "Todos Os itens da tabela airbnb_log que tenham o tipo: 'Payout/Reserva'",
     // I will check if __norm.tipo includes 'Payout/Reserva'.
-    
+
     // Wait, let's just filter for everything that is related to Payouts of Reservations.
     // But user specifically said type "Payout/Reserva".
     // I'll stick to exact match or starts with "Payout/Reserva".
@@ -204,7 +206,7 @@ export class PayoutsReservasPage {
         const derived = [
              this.getCellValue(row, 'Inicio-Fim'),
         ];
-        
+
         return [...rawValues, ...derived].some((val) => StringUtils.normalize(val).includes(query));
       });
     }
@@ -223,19 +225,19 @@ export class PayoutsReservasPage {
     }
     return null;
   }
-  
+
   protected getCellValue(row: ViewerRow, field: string): string {
     if (field === 'Inicio-Fim') {
         const start = row.__norm.dataInicio;
         const end = row.__norm.dataTermino;
         if (!start || !end) return '';
-        
+
         const formatDate = (dStr: string) => {
             const d = this.parseAirbnbDate(dStr);
             if (!d) return dStr;
             return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getFullYear()).slice(-2)}`;
         };
-        
+
         return `${formatDate(start)} - ${formatDate(end)}`;
     }
     return getCellValueHelper(row, field);
@@ -281,7 +283,7 @@ export class PayoutsReservasPage {
       const year = d.getFullYear();
       return `${day}/${month}/${year}`;
     };
-    
+
     if (range[1]) {
         return `${format(range[0])} - ${format(range[1])}`;
     }
@@ -300,7 +302,7 @@ export class PayoutsReservasPage {
           __raw: item.raw_data,
           __norm: normalizeAirbnbRow(item.raw_data),
         }));
-        
+
         this.rows.set(rows);
       } else {
         this.messageService.add({
@@ -354,18 +356,18 @@ export class PayoutsReservasPage {
     this.first.set(event.first);
     this.rowsPerPage.set(event.rows);
   }
-  
+
   rowTrackBy(index: number, item: ViewerRow) {
     return item.__id;
   }
-  
+
   reservationUrl(code?: string): string {
     const c = (code ?? '').trim();
     return c
       ? `https://www.airbnb.com.br/hosting/reservations/details/${encodeURIComponent(c)}`
       : '';
   }
-  
+
   isCurrencyField(field: string): boolean {
       return field === 'Valor';
   }
