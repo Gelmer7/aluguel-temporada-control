@@ -1,0 +1,84 @@
+<div class="review-card" *ngIf="review">
+    <p-card styleClass="shadow-sm">
+        <ng-template pTemplate="header">
+            <div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
+                <div class="flex items-center gap-3">
+                    <p-avatar
+                        [image]="review.guestAvatarUrl"
+                        [label]="!review.guestAvatarUrl ? review.guestName.charAt(0) : ''"
+                        shape="circle"
+                        size="large"
+                        styleClass="bg-primary text-white font-bold">
+                    </p-avatar>
+                    <div>
+                        <h3 class="font-bold text-lg text-gray-900 dark:text-gray-100">{{ review.guestName }}</h3>
+                        <p class="text-sm text-gray-500">{{ review.submittedAt | date:'mediumDate' }}</p>
+                    </div>
+                </div>
+                <div class="flex flex-col items-end">
+                    <div class="flex items-center gap-2">
+                        <span class="text-xl font-bold">{{ review.ratingOverall }}</span>
+                        <p-rating [(ngModel)]="review.ratingOverall" [readonly]="true" [stars]="5"></p-rating>
+                    </div>
+                    <span class="text-xs text-gray-400">Reserva: {{ review.reservationCode }}</span>
+                </div>
+            </div>
+        </ng-template>
+
+        <div class="content space-y-6">
+            <!-- Public Comment -->
+            <div class="public-comment">
+                <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-2">Comentário Público</h4>
+                <p class="text-gray-600 dark:text-gray-400 italic bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
+                    "{{ review.publicComment }}"
+                </p>
+            </div>
+
+            <!-- Private Feedback -->
+            <div *ngIf="review.privateFeedback" class="private-feedback border-l-4 border-yellow-500 pl-4 py-1">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="pi pi-lock text-yellow-600"></i>
+                    <h4 class="font-semibold text-gray-700 dark:text-gray-300">Feedback Privado</h4>
+                    <p-tag value="Somente para você" severity="warn" [rounded]="true"></p-tag>
+                </div>
+                <p class="text-gray-600 dark:text-gray-400">
+                    {{ review.privateFeedback }}
+                </p>
+            </div>
+
+            <!-- Detailed Ratings Grid -->
+            <div class="ratings-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 bg-gray-50 dark:bg-gray-800/50 p-4 rounded-lg">
+                <div class="rating-item flex justify-between items-center" *ngIf="review.ratingCleanliness">
+                    <span class="text-sm">Limpeza</span>
+                    <p-rating [(ngModel)]="review.ratingCleanliness" [readonly]="true" styleClass="text-sm"></p-rating>
+                </div>
+                <div class="rating-item flex justify-between items-center" *ngIf="review.ratingAccuracy">
+                    <span class="text-sm">Veracidade</span>
+                    <p-rating [(ngModel)]="review.ratingAccuracy" [readonly]="true" styleClass="text-sm"></p-rating>
+                </div>
+                <div class="rating-item flex justify-between items-center" *ngIf="review.ratingCheckIn">
+                    <span class="text-sm">Check-in</span>
+                    <p-rating [(ngModel)]="review.ratingCheckIn" [readonly]="true" styleClass="text-sm"></p-rating>
+                </div>
+                <div class="rating-item flex justify-between items-center" *ngIf="review.ratingCommunication">
+                    <span class="text-sm">Comunicação</span>
+                    <p-rating [(ngModel)]="review.ratingCommunication" [readonly]="true" styleClass="text-sm"></p-rating>
+                </div>
+                <div class="rating-item flex justify-between items-center" *ngIf="review.ratingLocation">
+                    <span class="text-sm">Localização</span>
+                    <p-rating [(ngModel)]="review.ratingLocation" [readonly]="true" styleClass="text-sm"></p-rating>
+                </div>
+                <div class="rating-item flex justify-between items-center" *ngIf="review.ratingValue">
+                    <span class="text-sm">Custo-benefício</span>
+                    <p-rating [(ngModel)]="review.ratingValue" [readonly]="true" styleClass="text-sm"></p-rating>
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="tags flex flex-wrap gap-2" *ngIf="review.positiveFeedbackTags?.length || review.improvementFeedbackTags?.length">
+                <p-chip *ngFor="let tag of review.positiveFeedbackTags" [label]="tag" icon="pi pi-check" styleClass="bg-green-100 text-green-700"></p-chip>
+                <p-chip *ngFor="let tag of review.improvementFeedbackTags" [label]="tag" icon="pi pi-exclamation-circle" styleClass="bg-red-100 text-red-700"></p-chip>
+            </div>
+        </div>
+    </p-card>
+</div>
