@@ -25,6 +25,11 @@ interface RatingCategory {
   average: number;
 }
 
+import { Dialog } from 'primeng/dialog';
+import { TableModule } from 'primeng/table';
+import { DialogComponent } from '../../../../components/ui/dialog/dialog.component';
+import { TablePaginatorComponent } from '../../../../components/ui/table-paginator/table-paginator.component';
+
 @Component({
   selector: 'app-feedback-analytics-page',
   standalone: true,
@@ -41,7 +46,10 @@ interface RatingCategory {
     SelectModule,
     DatePicker,
     FloatLabel,
-    Button
+    Button,
+    TableModule,
+    DialogComponent,
+    TablePaginatorComponent
   ],
   templateUrl: './feedback-analytics.page.html'
 })
@@ -52,12 +60,39 @@ export class FeedbackAnalyticsPage {
   loading = signal(true);
   reviews = signal<AirbnbReview[]>([]);
 
+  // Dialog de Detalhes
+  detailsVisible = signal(false);
+  detailsHeader = signal('');
+  detailsReviews = signal<AirbnbReview[]>([]);
+  detailsCategory = signal<RatingCategory | null>(null);
+  dialogFirst = signal(0);
+  dialogRows = signal(5);
+  detailsReviewsPaged = computed(() => {
+      const list = this.detailsReviews();
+      const start = this.dialogFirst();
+      const end = start + this.dialogRows();
+      return list.slice(start, end);
+  });
+
   // Filtros (Pilar 3)
   selectedProperties = signal<string[]>([]);
-  selectedSentiments = signal<string[]>([]);
-  selectedRatings = signal<number[]>([]);
-  selectedTags = signal<string[]>([]);
   dateRange = signal<Date[] | null>(null);
+
+  // Mensagens privadas
+  privateCountAll = computed(() => this.reviews().filter(r => !!r.privateFeedback).length);
+  privateCountFiltered = computed(() => this.filteredReviews().filter(r => !!r.privateFeedback).length);
+
+  // Lógica de cor da borda por média
+  readonly greenThreshold = 5;
+  readonly orangeThreshold = 4.9;
+  readonly redThreshold = 4.8;
+
+  getBorderClass(avg: number): string {
+      if (avg >= this.greenThreshold) return 'border-l-4 border-green-500 shadow-sm';
+      if (avg >= this.orangeThreshold && avg < this.greenThreshold) return 'border-l-4 border-orange-500 shadow-sm';
+      if (avg < this.redThreshold) return 'border-l-4 border-red-500 shadow-sm';
+      return 'border-l-4 border-surface-200 dark:border-surface-700 shadow-sm';
+  }
 
   // Opções de Filtro
   uniqueProperties = computed(() => {
@@ -69,37 +104,11 @@ export class FeedbackAnalyticsPage {
     return Array.from(props).map(p => ({ label: p, value: p }));
   });
 
-  uniqueTags = computed(() => {
-    const reviews = this.reviews();
-    const tags = new Set<string>();
-    reviews.forEach(r => {
-        if (r.positiveFeedbackTags) r.positiveFeedbackTags.forEach(t => tags.add(t));
-        if (r.improvementFeedbackTags) r.improvementFeedbackTags.forEach(t => tags.add(t));
-    });
-    return Array.from(tags).sort().map(t => ({ label: t, value: t }));
-  });
-
-  sentimentOptions = [
-    { label: 'Positivo', value: 'POSITIVE' },
-    { label: 'Neutro', value: 'NEUTRAL' },
-    { label: 'Negativo', value: 'NEGATIVE' }
-  ];
-
-  ratingOptions = [
-    { label: '5 Estrelas', value: 5 },
-    { label: '4 Estrelas', value: 4 },
-    { label: '3 Estrelas', value: 3 },
-    { label: '2 Estrelas', value: 2 },
-    { label: '1 Estrela', value: 1 }
-  ];
 
   // Reviews Filtrados
   filteredReviews = computed(() => {
       let data = this.reviews();
       const properties = this.selectedProperties();
-      const sentiments = this.selectedSentiments();
-      const ratings = this.selectedRatings();
-      const tags = this.selectedTags();
       const range = this.dateRange();
 
       // Filtro por Propriedade
@@ -107,26 +116,6 @@ export class FeedbackAnalyticsPage {
           data = data.filter(r => r.houseCode && properties.includes(r.houseCode));
       }
 
-      // Filtro por Sentimento
-      if (sentiments.length > 0) {
-          data = data.filter(r => r.sentiment && sentiments.includes(r.sentiment));
-      }
-
-      // Filtro por Avaliação
-      if (ratings.length > 0) {
-          data = data.filter(r => {
-             const val = Math.floor(r.overallRating || 0);
-             return ratings.includes(val);
-          });
-      }
-
-      // Filtro por Tags
-      if (tags.length > 0) {
-          data = data.filter(r => {
-              const reviewTags = [...(r.positiveFeedbackTags || []), ...(r.improvementFeedbackTags || [])];
-              return tags.some(t => reviewTags.includes(t));
-          });
-      }
 
       // Filtro por Data
       if (range && range.length === 2 && range[0] && range[1]) {
@@ -188,18 +177,7 @@ export class FeedbackAnalyticsPage {
       return Object.values(categories);
   });
 
-  highlights = computed(() => {
-      const stats = this.categoryStats();
-      if (!stats.length) return { best: null, worst: null };
-
-      // Ordenar por média
-      const sorted = [...stats].sort((a, b) => b.average - a.average);
-
-      return {
-          best: sorted[0],
-          worst: sorted[sorted.length - 1]
-      };
-  });
+  // Removido: highlights (não há mais cards de KPI dependentes)
 
   tagStats = computed(() => {
     const reviews = this.filteredReviews();
@@ -283,10 +261,71 @@ export class FeedbackAnalyticsPage {
 
   clearFilters() {
       this.selectedProperties.set([]);
-      this.selectedSentiments.set([]);
-      this.selectedRatings.set([]);
-      this.selectedTags.set([]);
       this.dateRange.set(null);
+  }
+
+  // Removido: showCategoryDetails (não há mais cliques em KPI)
+  showCategoryDetails(category: RatingCategory) {
+      if (!category) return;
+      this.detailsCategory.set(category);
+      this.detailsHeader.set(`Detalhes: ${category.label}`);
+
+      const reviews = this.filteredReviews().filter(r => {
+          const val = Number(r[category.key]);
+          return !isNaN(val) && val > 0;
+      });
+
+      const sorted = reviews.sort((a, b) => {
+          return (Number(a[category.key]) || 0) - (Number(b[category.key]) || 0);
+      });
+
+      this.detailsReviews.set(sorted);
+      this.detailsVisible.set(true);
+  }
+
+  getCategoryRating(review: AirbnbReview): number {
+      const cat = this.detailsCategory();
+      if (!cat) return 0;
+      const val = Number(review[cat.key]);
+      return isNaN(val) ? 0 : val;
+  }
+
+  onDialogPageChange(event: any) {
+      this.dialogFirst.set(event.first ?? 0);
+      this.dialogRows.set(event.rows ?? 5);
+  }
+
+  showTagDetails(tag: string, type: 'POSITIVE' | 'IMPROVEMENT') {
+      this.detailsHeader.set(`Detalhes: ${tag} (${type === 'POSITIVE' ? 'Elogios' : 'Pontos de Atenção'})`);
+
+      const reviews = this.filteredReviews().filter(r => {
+          const tags = type === 'POSITIVE' ? r.positiveFeedbackTags : r.improvementFeedbackTags;
+          return tags?.includes(tag);
+      });
+
+      // Ordenar por data (mais recente primeiro)
+      const sorted = reviews.sort((a, b) => {
+          return new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime();
+      });
+
+      this.detailsReviews.set(sorted);
+      this.detailsVisible.set(true);
+  }
+
+  private buildPrivateMessages(list: AirbnbReview[]): string {
+      const rows = list.filter(r => !!r.privateFeedback);
+      return rows.map(r => {
+          const date = r.createdAt ? new Date(r.createdAt).toLocaleDateString('pt-BR') : '';
+          const header = `${date} - ${r.guestName} (${r.houseCode || ''})`;
+          return `${header}\n${r.privateFeedback}`;
+      }).join('\n\n');
+  }
+
+  async copyPrivateMessages(scope: 'all' | 'filtered' = 'all') {
+      const list = scope === 'all' ? this.reviews() : this.filteredReviews();
+      const text = this.buildPrivateMessages(list);
+      if (!text.trim().length) return;
+      await navigator.clipboard.writeText(text);
   }
 
   constructor() {
@@ -334,12 +373,24 @@ export class FeedbackAnalyticsPage {
                     improvementFeedbackTags: r.improvement_feedback_tags || []
                   };
 
-                  // Fallback para tags se vazio
-                  if ((!review.positiveFeedbackTags?.length && !review.improvementFeedbackTags?.length) && (review.publicComment || review.privateFeedback)) {
-                       const text = (review.publicComment || '') + ' ' + (review.privateFeedback || '');
+                  // Enriquecimento/Correção de tags com base no texto (evita falsos positivos como "cheirosa" vs "cheiro")
+                  const text = (review.publicComment || '') + ' ' + (review.privateFeedback || '');
+                  if (text.trim().length > 0) {
                        const { positive, improvement } = extractTags(text);
-                       review.positiveFeedbackTags = positive;
-                       review.improvementFeedbackTags = improvement;
+                       const posSet = new Set([...(review.positiveFeedbackTags || []), ...positive]);
+                       const impSet = new Set([...(review.improvementFeedbackTags || []), ...improvement]);
+                       const duplicates = [...posSet].filter(t => impSet.has(t));
+                       if (duplicates.length) {
+                         if ((review.overallRating || 0) >= 4) {
+                           duplicates.forEach(t => impSet.delete(t));
+                         } else if ((review.overallRating || 0) <= 3) {
+                           duplicates.forEach(t => posSet.delete(t));
+                         } else {
+                           duplicates.forEach(t => impSet.delete(t));
+                         }
+                       }
+                       review.positiveFeedbackTags = Array.from(posSet);
+                       review.improvementFeedbackTags = Array.from(impSet);
                   }
 
                   return review;

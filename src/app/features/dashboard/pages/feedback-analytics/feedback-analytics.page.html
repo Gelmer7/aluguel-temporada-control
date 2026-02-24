@@ -1,250 +1,316 @@
-<div class="h-full flex flex-col gap-4 p-4 overflow-y-auto">
-
-    <!-- Loading State -->
-    @if (loading()) {
+<div class="h-full flex flex-col gap-2 p-2 overflow-y-auto">
+  <!-- Loading State -->
+  @if (loading()) {
     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <p-skeleton height="100px"></p-skeleton>
-        <p-skeleton height="100px"></p-skeleton>
-        <p-skeleton height="100px"></p-skeleton>
+      <p-skeleton height="100px"></p-skeleton>
+      <p-skeleton height="100px"></p-skeleton>
+      <p-skeleton height="100px"></p-skeleton>
     </div>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-96">
-        <p-skeleton height="100%"></p-skeleton>
-        <p-skeleton height="100%"></p-skeleton>
+      <p-skeleton height="100%"></p-skeleton>
+      <p-skeleton height="100%"></p-skeleton>
     </div>
-    } @else {
-
+  } @else {
     <!-- KPIs Topo -->
     <!-- Filtros (Pilar 3) -->
-    <div class="flex flex-wrap gap-4 items-center bg-surface-0 dark:bg-surface-900 p-4 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700 mb-4">
-        <!-- Filtro por Imóvel -->
-        <div class="flex-1 min-w-[200px]">
-            <p-floatLabel>
-                <p-multiSelect
-                    [options]="uniqueProperties()"
-                    [ngModel]="selectedProperties()"
-                    (ngModelChange)="selectedProperties.set($event)"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Selecione os imóveis"
-                    display="chip"
-                    [showClear]="true"
-                    styleClass="w-full"
-                    [maxSelectedLabels]="1">
-                </p-multiSelect>
-                <label>Imóveis</label>
-            </p-floatLabel>
-        </div>
+    <div
+      class="flex flex-wrap gap-4 items-center bg-surface-0 dark:bg-surface-900 p-4 rounded-xl shadow-sm border border-surface-200 dark:border-surface-700"
+    >
+      <!-- Filtro por Imóvel -->
+      <div class="flex-1 min-w-[200px]">
+        <p-floatLabel variant="on">
+          <p-multiSelect
+            [options]="uniqueProperties()"
+            [ngModel]="selectedProperties()"
+            (ngModelChange)="selectedProperties.set($event)"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Selecione os imóveis"
+            display="chip"
+            [showClear]="true"
+            styleClass="w-full"
+            [maxSelectedLabels]="1"
+          >
+          </p-multiSelect>
+          <label>Imóveis</label>
+        </p-floatLabel>
+      </div>
 
-        <!-- Filtro por Data -->
-        <div class="flex-1 min-w-[200px]">
-            <p-floatLabel>
-                <p-datePicker
-                    [ngModel]="dateRange()"
-                    (ngModelChange)="dateRange.set($event)"
-                    selectionMode="range"
-                    [readonlyInput]="true"
-                    [showIcon]="true"
-                    dateFormat="dd/mm/yy"
-                    placeholder="Período"
-                    styleClass="w-full">
-                </p-datePicker>
-                <label>Período</label>
-            </p-floatLabel>
-        </div>
+      <!-- Filtro por Data -->
+      <div class="flex-1 min-w-[200px]">
+        <p-floatLabel variant="on">
+          <p-datePicker
+            [ngModel]="dateRange()"
+            (ngModelChange)="dateRange.set($event)"
+            selectionMode="range"
+            [readonlyInput]="true"
+            [showIcon]="true"
+            dateFormat="dd/mm/yy"
+            placeholder="Período"
+            styleClass="w-full"
+          >
+          </p-datePicker>
+          <label>Período</label>
+        </p-floatLabel>
+      </div>
 
-         <!-- Filtro por Sentimento -->
-         <div class="flex-1 min-w-[200px]">
-            <p-floatLabel>
-                <p-multiSelect
-                    [options]="sentimentOptions"
-                    [ngModel]="selectedSentiments()"
-                    (ngModelChange)="selectedSentiments.set($event)"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Sentimento"
-                    display="chip"
-                    [showClear]="true"
-                    styleClass="w-full">
-                    <ng-template pTemplate="item" let-item>
-                        <div class="flex items-center gap-2">
-                             <i class="pi" [ngClass]="{
-                                'pi-thumbs-up text-green-500': item.value === 'POSITIVE',
-                                'pi-minus-circle text-gray-500': item.value === 'NEUTRAL',
-                                'pi-thumbs-down text-red-500': item.value === 'NEGATIVE'
-                             }"></i>
-                            <span>{{ item.label }}</span>
-                        </div>
-                    </ng-template>
-                </p-multiSelect>
-                <label>Sentimento</label>
-            </p-floatLabel>
-        </div>
+      <!-- Botão Limpar -->
+      <p-button
+        icon="pi pi-filter-slash"
+        label="Limpar"
+        [text]="true"
+        severity="secondary"
+        (onClick)="clearFilters()"
+        [disabled]="!selectedProperties().length && !dateRange()"
+      >
+      </p-button>
+    </div>
+    <!-- Cards medias por categoria -->
+    <div class="grid grid-cols-1 gap-4 border rounded-lg">
+      <p-card
+        header="Médias por Categoria: {{ overallStats().count }} avaliações"
+        class="h-full shadow-sm"
+      >
+        <!-- Linha separada para Avaliação Geral -->
+        <div class="grid grid-cols-1 gap-3 mb-3">
+          <div
+            class="flex items-center justify-between p-3 bg-surface-50 border dark:bg-surface-900/30 rounded-md border-surface-200 dark:border-surface-700"
+            [ngClass]="getBorderClass(overallStats().average)"
+          >
+            <span class="text-lg font-medium text-surface-600 dark:text-surface-300"
+              >Avaliação Geral</span
+            >
 
-        <!-- Filtro por Avaliação -->
-        <div class="flex-1 min-w-[200px]">
-            <p-floatLabel>
-                <p-multiSelect
-                    [options]="ratingOptions"
-                    [ngModel]="selectedRatings()"
-                    (ngModelChange)="selectedRatings.set($event)"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Avaliação"
-                    display="chip"
-                    [showClear]="true"
-                    styleClass="w-full">
-                    <ng-template pTemplate="item" let-item>
-                        <div class="flex items-center gap-2">
-                            <i class="pi pi-star-fill text-yellow-500"></i>
-                            <span>{{ item.label }}</span>
-                        </div>
-                    </ng-template>
-                </p-multiSelect>
-                <label>Avaliação</label>
-            </p-floatLabel>
+            <div class="flex items-end gap-2">
+              <span class="text-lg font-bold text-primary">{{
+                overallStats().average | number: '1.2-2'
+              }}</span>
+              <div class="flex mb-1.5 text-yellow-500">
+                <i class="pi pi-star-fill"></i>
+              </div>
+            </div>
+          </div>
         </div>
+        <!-- Linha para categorias -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+          @for (cat of categoryStats(); track cat.name) {
+            <div
+              class="flex items-center justify-between p-3 bg-surface-50 dark:bg-surface-900/30 rounded-md border-surface-200 dark:border-surface-700 cursor-pointer hover:shadow-sm transition-shadow"
+              [ngClass]="getBorderClass(cat.average)"
+              (click)="showCategoryDetails(cat)"
+            >
+              <span class="text-sm font-medium text-surface-600 dark:text-surface-300">{{
+                cat.label
+              }}</span>
 
-        <!-- Filtro por Tags -->
-        <div class="flex-1 min-w-[200px]">
-            <p-floatLabel>
-                <p-multiSelect
-                    [options]="uniqueTags()"
-                    [ngModel]="selectedTags()"
-                    (ngModelChange)="selectedTags.set($event)"
-                    optionLabel="label"
-                    optionValue="value"
-                    placeholder="Tags"
-                    display="chip"
-                    [showClear]="true"
-                    styleClass="w-full"
-                    [filter]="true"
-                    filterBy="label"
-                    [maxSelectedLabels]="2">
-                </p-multiSelect>
-                <label>Tags</label>
-            </p-floatLabel>
+              <div class="flex items-end gap-2">
+                <span class="text-lg font-bold">{{ cat.average | number: '1.2-2' }}</span>
+                <div class="flex mb-1.5 text-yellow-500">
+                  <i class="pi pi-star-fill"></i>
+                </div>
+              </div>
+            </div>
+          }
         </div>
-
-        <!-- Botão Limpar -->
-        <p-button
-            icon="pi pi-filter-slash"
-            label="Limpar"
-            [text]="true"
-            severity="secondary"
-            (onClick)="clearFilters()"
-            [disabled]="!selectedProperties().length && !selectedSentiments().length && !dateRange() && !selectedRatings().length && !selectedTags().length">
-        </p-button>
+      </p-card>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <!-- NPS / Média Geral -->
-        <p-card styleClass="h-full border-l-4 border-primary shadow-sm">
-            <div class="flex flex-col gap-2">
-                <span class="text-surface-500 font-medium text-sm uppercase">Média Geral (NPS Real)</span>
-                <div class="flex items-end gap-2">
-                    <span class="text-4xl font-bold text-primary">{{ overallStats().average | number:'1.1-1' }}</span>
-                    <div class="flex mb-1.5 text-yellow-500">
-                        <i class="pi pi-star-fill"></i>
-                    </div>
-                </div>
-                <span class="text-xs text-surface-400">Baseado em {{ overallStats().count }} avaliações</span>
+    <div class="grid grid-cols-1 gap-4 border rounded-lg">
+      <p-card header="Mensagens Privadas" styleClass="h-full shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <i class="pi pi-lock text-surface-500 text-2xl"></i>
+            <div>
+              <div class="text-sm text-surface-500">Total</div>
+              <div class="text-lg font-bold">{{ privateCountAll() }}</div>
             </div>
-        </p-card>
-
-        <!-- Ponto Forte -->
-        <p-card styleClass="h-full border-l-4 border-green-500 shadow-sm">
-            <div class="flex flex-col gap-2">
-                <span class="text-surface-500 font-medium text-sm uppercase">Ponto Forte</span>
-                <div class="flex items-center gap-2">
-                    <i class="pi pi-thumbs-up-fill text-green-500 text-2xl"></i>
-                    <span class="text-xl font-bold text-surface-900 dark:text-surface-0">{{ highlights().best?.label
-                        }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold text-green-600">{{ highlights().best?.average | number:'1.1-1'
-                        }}</span>
-                    <span class="text-xs text-surface-400">Melhor média entre as categorias</span>
-                </div>
+            <div class="w-px h-8 bg-surface-200 dark:bg-surface-700"></div>
+            <div>
+              <div class="text-sm text-surface-500">No filtro atual</div>
+              <div class="text-lg font-bold">{{ privateCountFiltered() }}</div>
             </div>
-        </p-card>
-
-        <!-- Ponto de Atenção -->
-        <p-card styleClass="h-full border-l-4 border-red-500 shadow-sm">
-            <div class="flex flex-col gap-2">
-                <span class="text-surface-500 font-medium text-sm uppercase">Ponto de Atenção</span>
-                <div class="flex items-center gap-2">
-                    <i class="pi pi-exclamation-triangle text-red-500 text-2xl"></i>
-                    <span class="text-xl font-bold text-surface-900 dark:text-surface-0">{{ highlights().worst?.label
-                        }}</span>
-                </div>
-                <div class="flex items-center gap-2">
-                    <span class="text-2xl font-bold text-red-600">{{ highlights().worst?.average | number:'1.1-1'
-                        }}</span>
-                    <span class="text-xs text-surface-400">Menor média entre as categorias</span>
-                </div>
-            </div>
-        </p-card>
+          </div>
+          <div class="flex items-center gap-2">
+            <p-button
+              icon="pi pi-copy"
+              label="Copiar todas"
+              (onClick)="copyPrivateMessages('all')"
+            ></p-button>
+            <p-button
+              [text]="true"
+              severity="secondary"
+              icon="pi pi-filter"
+              label="Copiar filtradas"
+              (onClick)="copyPrivateMessages('filtered')"
+            ></p-button>
+          </div>
+        </div>
+      </p-card>
     </div>
 
     <!-- Gráficos -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0">
-        <!-- Radar Chart -->
-        <p-card header="Análise por Categoria" styleClass="h-full shadow-sm flex flex-col">
-            <div class="flex justify-center items-center h-full min-h-[300px]">
-                <p-chart type="radar" [data]="radarData()" [options]="radarOptions"
-                    class="w-full max-w-[400px]"></p-chart>
-            </div>
-        </p-card>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 flex-1 min-h-0 border rounded-lg">
+      <!-- Radar Chart -->
+      <p-card header="Análise por Categoria" styleClass="h-full shadow-sm flex flex-col">
+        <div class="flex justify-center items-center h-full min-h-[300px]">
+          <p-chart
+            type="radar"
+            [data]="radarData()"
+            [options]="radarOptions"
+            class="w-full max-w-[400px]"
+          ></p-chart>
+        </div>
+      </p-card>
 
-        <!-- Lista de Insights (Tags) -->
-        <p-card header="Top Insights" styleClass="h-full shadow-sm">
-            <div class="flex flex-col gap-6">
-                <!-- Elogios -->
-                <div>
-                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-green-100 dark:border-green-900/30">
-                        <i class="pi pi-thumbs-up text-green-600 dark:text-green-400 text-lg"></i>
-                        <h4 class="text-base font-bold text-green-700 dark:text-green-300 m-0">Principais Elogios</h4>
-                    </div>
-                    
-                    <div class="flex flex-col gap-2">
-                        @for (item of tagStats().positive; track item.tag) {
-                            <div class="flex justify-between items-center p-2.5 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-900/30 hover:shadow-sm transition-shadow">
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ item.tag }}</span>
-                                <span class="px-2 py-0.5 bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs font-bold rounded-full min-w-[24px] text-center">{{ item.count }}</span>
-                            </div>
-                        }
-                        @if (tagStats().positive.length === 0) {
-                            <div class="text-gray-400 dark:text-gray-500 text-sm italic p-2 text-center">
-                                Nenhum elogio destacado ainda.
-                            </div>
-                        }
-                    </div>
-                </div>
-
-                <!-- Pontos de Atenção -->
-                <div>
-                    <div class="flex items-center gap-2 mb-3 pb-2 border-b border-red-100 dark:border-red-900/30">
-                        <i class="pi pi-exclamation-triangle text-red-600 dark:text-red-400 text-lg"></i>
-                        <h4 class="text-base font-bold text-red-700 dark:text-red-300 m-0">Pontos de Atenção</h4>
-                    </div>
-                    
-                    <div class="flex flex-col gap-2">
-                        @for (item of tagStats().improvement; track item.tag) {
-                            <div class="flex justify-between items-center p-2.5 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/30 hover:shadow-sm transition-shadow">
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{ item.tag }}</span>
-                                <span class="px-2 py-0.5 bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-100 text-xs font-bold rounded-full min-w-[24px] text-center">{{ item.count }}</span>
-                            </div>
-                        }
-                        @if (tagStats().improvement.length === 0) {
-                            <div class="text-gray-400 dark:text-gray-500 text-sm italic p-2 text-center">
-                                Nenhum ponto de atenção identificado.
-                            </div>
-                        }
-                    </div>
-                </div>
+      <!-- Lista de Insights (Tags) -->
+      <p-card header="Principais Insights" styleClass="h-full shadow-sm">
+        <div class="flex flex-col gap-6">
+          <!-- Elogios -->
+          <div>
+            <div
+              class="flex items-center gap-2 mb-3 pb-2 border-b border-green-100 dark:border-green-900/30"
+            >
+              <i class="pi pi-thumbs-up text-green-600 dark:text-green-400 text-lg"></i>
+              <h4 class="text-base font-bold text-green-700 dark:text-green-300 m-0">
+                Principais Elogios
+              </h4>
             </div>
-        </p-card>
+
+            <div class="flex flex-col gap-2">
+              @for (item of tagStats().positive; track item.tag) {
+                <div
+                  class="flex justify-between items-center p-2.5 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-100 dark:border-green-900/30 hover:shadow-sm transition-shadow cursor-pointer hover:bg-green-100 dark:hover:bg-green-900/40"
+                  (click)="showTagDetails(item.tag, 'POSITIVE')"
+                >
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{
+                    item.tag
+                  }}</span>
+                  <span
+                    class="px-2 py-0.5 bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs font-bold rounded-full min-w-[24px] text-center"
+                    >{{ item.count }}</span
+                  >
+                </div>
+              }
+              @if (tagStats().positive.length === 0) {
+                <div class="text-gray-400 dark:text-gray-500 text-sm italic p-2 text-center">
+                  Nenhum elogio destacado ainda.
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Pontos de Atenção -->
+          <div>
+            <div
+              class="flex items-center gap-2 mb-3 pb-2 border-b border-red-100 dark:border-red-900/30"
+            >
+              <i class="pi pi-exclamation-triangle text-red-600 dark:text-red-400 text-lg"></i>
+              <h4 class="text-base font-bold text-red-700 dark:text-red-300 m-0">
+                Pontos de Atenção
+              </h4>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              @for (item of tagStats().improvement; track item.tag) {
+                <div
+                  class="flex justify-between items-center p-2.5 bg-red-50 dark:bg-red-900/20 rounded-lg border border-red-100 dark:border-red-900/30 hover:shadow-sm transition-shadow cursor-pointer hover:bg-red-100 dark:hover:bg-red-900/40"
+                  (click)="showTagDetails(item.tag, 'IMPROVEMENT')"
+                >
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-200">{{
+                    item.tag
+                  }}</span>
+                  <span
+                    class="px-2 py-0.5 bg-red-200 dark:bg-red-800 text-red-800 dark:text-red-100 text-xs font-bold rounded-full min-w-[24px] text-center"
+                    >{{ item.count }}</span
+                  >
+                </div>
+              }
+              @if (tagStats().improvement.length === 0) {
+                <div class="text-gray-400 dark:text-gray-500 text-sm italic p-2 text-center">
+                  Nenhum ponto de atenção identificado.
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </p-card>
     </div>
+  }
 
-    }
+  <!-- Dialog de Detalhes -->
+  <app-dialog
+    [(visible)]="detailsVisible"
+    [header]="detailsHeader()"
+    [icon]="'pi pi-search'"
+    [width]="'70vw'"
+    [showFooter]="true"
+  >
+    <div content>
+      <p-table
+        [value]="detailsReviewsPaged()"
+        [scrollable]="true"
+        scrollHeight="flex"
+        styleClass="p-datatable-sm"
+      >
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 20%">Hóspede</th>
+            <th>Comentário/Avaliação</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-review>
+          <tr>
+            <td>
+              <div class="font-bold">{{ review.guestName }}</div>
+              <div>{{ review.reservationCode }}</div>
+              <div>
+                <span> {{ review.overallRating }} </span>
+                <i class="pi pi-star"></i>
+              </div>
+              <!-- <div class="text-xs text-surface-500">{{ review.houseCode }}</div> -->
+            </td>
+
+            <td>
+              <div class="flex flex-col gap-1">
+                <div>
+                  <div class="flex items-center gap-2">
+                    <span class="font-bold text-lg">{{ getCategoryRating(review) }}</span>
+                    <i class="pi pi-star-fill text-yellow-500 text-sm"></i>
+                  </div>
+                </div>
+                @if (review.publicComment) {
+                  <p class="m-0 text-sm italic text-surface-700 dark:text-surface-200">
+                    "{{ review.publicComment }}"
+                  </p>
+                }
+                @if (review.privateFeedback) {
+                  <div
+                    class="mt-1 text-xs text-surface-500 border-t border-surface-200 dark:border-surface-700 pt-1"
+                  >
+                    <span class="font-bold">Privado:</span> {{ review.privateFeedback }}
+                  </div>
+                }
+              </div>
+            </td>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="emptymessage">
+          <tr>
+            <td colspan="4" class="text-center p-4">
+              Nenhuma avaliação encontrada para este critério.
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+    <div footer-actions class="w-full">
+      <app-table-paginator
+        [first]="dialogFirst()"
+        [rows]="dialogRows()"
+        [totalRecords]="detailsReviews().length"
+        [rowsPerPageOptions]="[5, 10, 20]"
+        (onPageChange)="onDialogPageChange($event)"
+      />
+    </div>
+  </app-dialog>
 </div>
