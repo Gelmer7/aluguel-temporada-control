@@ -86,6 +86,18 @@ export class SidebarMenuComponent {
       const lang = this.languageService.currentLang();
       this.updateUserMenu(lang);
     });
+    // Expand subitems by default on mobile when the drawer is opened
+    effect(() => {
+      const isMobile = !this.isDesktop();
+      const visible = this.visible();
+      const items = this.items();
+      if (isMobile && visible) {
+        const ids = items
+          .filter((i) => Array.isArray(i.items) && i.items.length > 0)
+          .map((i) => i.id);
+        this.expandedItems.set(new Set(ids));
+      }
+    });
   }
 
   protected trackById = (_: number, item: NavItem) => item.id;
