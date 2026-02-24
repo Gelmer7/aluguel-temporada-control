@@ -263,6 +263,9 @@ export class SupabaseService {
         communication_rating: review.communicationRating,
         location_rating: review.locationRating,
         value_rating: review.valueRating,
+        sentiment: review.sentiment,
+        positive_feedback_tags: review.positiveFeedbackTags,
+        improvement_feedback_tags: review.improvementFeedbackTags,
         house_code: this.houseService.currentHouseCode()
      };
 

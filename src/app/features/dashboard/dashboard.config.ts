@@ -19,18 +19,20 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     image: 'airbnb_rose.svg',
     imageClass: 'dark:brightness-100',
     route: '/dashboard/csv-reports/viewer',
-  },
-  {
-    id: 'payouts-reservas',
-    label: 'Payouts / Reservas',
-    icon: 'pi-calendar-clock',
-    route: '/dashboard/payouts-reservas',
-  },
-  {
-    id: 'feedback-analytics',
-    label: 'Análise de Feedback',
-    icon: 'pi-chart-pie',
-    route: '/dashboard/feedback-analytics',
+    items: [
+      {
+        id: 'payouts-reservas',
+        label: 'Payouts / Reservas',
+        icon: 'pi-calendar-clock',
+        route: '/dashboard/payouts-reservas',
+      },
+      {
+        id: 'feedback-analytics',
+        label: 'Análise de Feedback',
+        icon: 'pi-chart-pie',
+        route: '/dashboard/feedback-analytics',
+      },
+    ],
   },
   {
     id: 'manual-rentals',
@@ -93,4 +95,10 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     icon: 'pi-bell',
     route: '/dashboard/reminders',
   },
+  {
+    id: 'Site',
+    label: 'Ver Site',
+    icon: 'pi-globe',
+    route: '/',
+  }
 ];

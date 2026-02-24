@@ -3,7 +3,7 @@
   class="hidden sm:flex flex-col w-20 lg:w-64 h-screen border-r border-surface-200 dark:border-surface-700 bg-surface-0 dark:bg-surface-900 sticky top-0 left-0 z-40 transition-all duration-300"
 >
   <!-- Header -->
-  <div class="flex flex-col items-center lg:items-start py-4 lg:px-6">
+  <div class="flex flex-col items-center lg:items-start pt-3 pb-0 lg:px-6">
     <button
       pRipple
       class="flex lg:hidden items-center justify-center w-12 h-12 rounded-full hover:bg-surface-100 dark:hover:bg-surface-800 transition-colors duration-200 text-primary"
@@ -27,38 +27,66 @@
   <div class="flex-1 overflow-y-auto py-2 no-scrollbar">
     <div class="flex flex-col items-center lg:items-start gap-2 px-2 lg:px-4">
       @for (item of items(); track trackById($index, item)) {
-        <a
-          pRipple
-          [routerLink]="item.route"
-          [routerLinkActive]="['!text-primary', 'shadow-xl', 'active', 'bg-primary-50', 'dark:bg-primary/10']"
-          class="flex items-center justify-center lg:justify-start w-12 h-12 lg:w-full lg:h-auto lg:p-3 rounded-xl transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-600 dark:text-surface-400 group relative active:scale-95"
-          [pTooltip]="item.label | translate"
-          [tooltipDisabled]="isDesktop()"
-          tooltipPosition="right"
-        >
-          @if (item.image) {
-            <img
-              [src]="item.image"
-              class="w-5 h-5 object-contain flex-shrink-0"
-              [ngClass]="item.imageClass || 'dark:invert'"
-            />
-          } @else {
-            <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0"></span>
-          }
+        <div class="w-full flex flex-col">
+          <a
+            pRipple
+            [routerLink]="item.route"
+            [routerLinkActive]="['!text-primary', 'shadow-xl', 'active', 'bg-primary-50', 'dark:bg-primary/10']"
+            [routerLinkActiveOptions]="{ exact: !item.items }"
+            class="flex items-center justify-center lg:justify-start w-12 h-12 lg:w-full lg:h-auto lg:p-3 rounded-xl transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 text-surface-600 dark:text-surface-400 group relative active:scale-95"
+            [pTooltip]="item.label | translate"
+            [tooltipDisabled]="isDesktop()"
+            tooltipPosition="right"
+          >
+            @if (item.image) {
+              <img
+                [src]="item.image"
+                class="w-5 h-5 object-contain flex-shrink-0"
+                [ngClass]="item.imageClass || 'dark:invert'"
+              />
+            } @else {
+              <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0"></span>
+            }
 
-          <span class="hidden lg:block ml-3 truncate font-medium text-sm">
-            {{ item.label | translate }}
-          </span>
+            <span class="hidden lg:block ml-3 truncate font-medium text-sm flex-1">
+              {{ item.label | translate }}
+            </span>
 
-          @if (item.badge) {
-            <p-badge
-              class="absolute -top-1 -right-1 lg:static lg:ml-auto"
-              [value]="item.badge"
-              severity="danger"
-              size="small"
-            />
+            @if (item.badge) {
+              <p-badge
+                class="absolute -top-1 -right-1 lg:static lg:ml-auto"
+                [value]="item.badge"
+                severity="danger"
+                size="small"
+              />
+            }
+
+            @if (item.items && item.items.length > 0) {
+              <div
+                class="hidden lg:flex items-center justify-center w-6 h-6 ml-2 rounded-full hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors cursor-pointer"
+                (click)="toggleItem($event, item)"
+              >
+                <i class="pi text-xs" [ngClass]="isExpanded(item) ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+              </div>
+            }
+          </a>
+
+          @if (item.items && item.items.length > 0 && isExpanded(item)) {
+            <div class="hidden lg:flex flex-col gap-1 mt-1 ml-4 border-l-2 border-surface-200 dark:border-surface-700 pl-2">
+              @for (subItem of item.items; track trackById($index, subItem)) {
+                <a
+                  pRipple
+                  [routerLink]="subItem.route"
+                  routerLinkActive="text-primary font-semibold bg-surface-100 dark:bg-surface-800"
+                  class="flex items-center p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 text-sm text-surface-600 dark:text-surface-400 transition-all duration-200"
+                >
+                  <i [class]="'pi ' + subItem.icon" class="mr-2 text-sm"></i>
+                  <span class="truncate">{{ subItem.label | translate }}</span>
+                </a>
+              }
+            </div>
           }
-        </a>
+        </div>
       }
     </div>
   </div>
@@ -116,23 +144,55 @@
     <div class="flex-1 overflow-y-auto py-2">
       <div class="flex flex-col gap-1 px-2">
         @for (item of items(); track trackById($index, item)) {
-          <a
-            pRipple
-            [routerLink]="item.route"
-            routerLinkActive="bg-primary-50 dark:bg-primary/10 text-primary font-bold shadow-sm"
-            class="flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 group active:scale-95"
-            (click)="closeDrawer()"
-          >
-            @if (item.image) {
-              <img [src]="item.image" class="w-6 h-6 object-contain flex-shrink-0 dark:invert" />
-            } @else {
-              <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0 text-primary"></span>
+          <div class="w-full flex flex-col">
+            <div class="relative flex items-center">
+              <a
+                pRipple
+                [routerLink]="item.route"
+                [routerLinkActiveOptions]="{ exact: !item.items }"
+                routerLinkActive="bg-primary-50 dark:bg-primary/10 text-primary font-bold shadow-sm"
+                class="flex-1 flex items-center p-3 rounded-lg transition-all duration-200 hover:bg-surface-100 dark:hover:bg-surface-800 group active:scale-95"
+                (click)="closeDrawer()"
+              >
+                @if (item.image) {
+                  <img [src]="item.image" class="w-6 h-6 object-contain flex-shrink-0 dark:invert" />
+                } @else {
+                  <span [class]="'pi ' + item.icon" class="text-xl flex-shrink-0 text-primary"></span>
+                }
+                <span class="ml-3 truncate">{{ item.label | translate }}</span>
+                @if (item.badge) {
+                  <p-badge class="ml-auto" [value]="item.badge" severity="danger" />
+                }
+              </a>
+
+              @if (item.items && item.items.length > 0) {
+                <button
+                  pRipple
+                  class="flex items-center justify-center w-10 h-10 ml-1 rounded-full hover:bg-surface-200 dark:hover:bg-surface-700 transition-colors cursor-pointer text-surface-600 dark:text-surface-400"
+                  (click)="toggleItem($event, item)"
+                >
+                  <i class="pi" [ngClass]="isExpanded(item) ? 'pi-chevron-down' : 'pi-chevron-right'"></i>
+                </button>
+              }
+            </div>
+
+            @if (item.items && item.items.length > 0 && isExpanded(item)) {
+              <div class="flex flex-col gap-1 ml-4 border-l-2 border-surface-200 dark:border-surface-700 pl-2 mt-1">
+                @for (subItem of item.items; track trackById($index, subItem)) {
+                  <a
+                    pRipple
+                    [routerLink]="subItem.route"
+                    routerLinkActive="text-primary font-bold bg-surface-50 dark:bg-primary/10"
+                    class="flex items-center p-2 rounded-lg hover:bg-surface-100 dark:hover:bg-surface-800 text-sm transition-all duration-200"
+                    (click)="closeDrawer()"
+                  >
+                    <i [class]="'pi ' + subItem.icon" class="mr-2 text-lg"></i>
+                    <span class="truncate">{{ subItem.label | translate }}</span>
+                  </a>
+                }
+              </div>
             }
-            <span class="ml-3 truncate">{{ item.label | translate }}</span>
-            @if (item.badge) {
-              <p-badge class="ml-auto" [value]="item.badge" severity="danger" />
-            }
-          </a>
+          </div>
         }
       </div>
     </div>

@@ -1,4 +1,4 @@
-<div class="review-card" *ngIf="review">
+<div class="review-card" *ngIf="processedReview() as review">
     <p-card styleClass="shadow-sm">
         <ng-template pTemplate="header">
             <div class="flex items-center justify-between p-4 border-b border-gray-100 dark:border-gray-700">
@@ -15,7 +15,8 @@
                     </div>
                 </div>
                 <div class="flex flex-col items-end">
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 mb-1">
+                        <p-tag [value]="getSentimentLabel(review.sentiment)" [severity]="getSentimentSeverity(review.sentiment)"></p-tag>
                         <span class="text-xl font-bold">{{ review.overallRating }}</span>
                         <p-rating [ngModel]="review.overallRating" [readonly]="true" [stars]="5"></p-rating>
                     </div>
@@ -25,6 +26,18 @@
         </ng-template>
 
         <div class="content space-y-6">
+            <!-- Tags Section (Qualitative Analysis) -->
+            <div *ngIf="review.positiveFeedbackTags?.length || review.improvementFeedbackTags?.length" class="tags-section flex flex-col gap-3 p-3 bg-surface-50 dark:bg-surface-800 rounded-md">
+                <div *ngIf="review.positiveFeedbackTags?.length" class="flex items-center flex-wrap gap-2">
+                    <span class="text-sm font-semibold text-green-600 dark:text-green-400 min-w-[100px]"><i class="pi pi-thumbs-up mr-1"></i>Destaques:</span>
+                    <p-chip *ngFor="let tag of review.positiveFeedbackTags" [label]="tag" styleClass="bg-green-100 text-green-800 text-xs dark:bg-green-900 dark:text-green-100"></p-chip>
+                </div>
+                <div *ngIf="review.improvementFeedbackTags?.length" class="flex items-center flex-wrap gap-2">
+                     <span class="text-sm font-semibold text-orange-600 dark:text-orange-400 min-w-[100px]"><i class="pi pi-exclamation-triangle mr-1"></i>Atenção:</span>
+                    <p-chip *ngFor="let tag of review.improvementFeedbackTags" [label]="tag" styleClass="bg-orange-100 text-orange-800 text-xs dark:bg-orange-900 dark:text-orange-100"></p-chip>
+                </div>
+            </div>
+
             <!-- Public Comment -->
             <div class="public-comment">
                 <h4 class="font-semibold text-gray-700 dark:text-gray-300 mb-2">Comentário Público</h4>
@@ -52,7 +65,7 @@
                     <p-rating [ngModel]="review.cleanlinessRating" [readonly]="true" styleClass="text-sm"></p-rating>
                 </div>
                 <div class="rating-item flex justify-between items-center" *ngIf="review.accuracyRating">
-                    <span class="text-sm">Veracidade</span>
+                    <span class="text-sm">Exatidão do anúncio</span>
                     <p-rating [ngModel]="review.accuracyRating" [readonly]="true" styleClass="text-sm"></p-rating>
                 </div>
                 <div class="rating-item flex justify-between items-center" *ngIf="review.checkinRating">

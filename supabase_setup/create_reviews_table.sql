@@ -14,10 +14,16 @@ CREATE TABLE IF NOT EXISTS airbnb_reviews (
   
   -- Feedback Detalhado
   cleanliness_rating INTEGER,
+  accuracy_rating INTEGER,
   checkin_rating INTEGER,
   communication_rating INTEGER,
   location_rating INTEGER,
   value_rating INTEGER,
+  
+  -- Análise Qualitativa (Pilar 2)
+  sentiment TEXT,
+  positive_feedback_tags TEXT[],
+  improvement_feedback_tags TEXT[],
   
   created_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL,
   house_code TEXT -- Para filtrar por casa/propriedade

@@ -10,9 +10,7 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateModule } from '@ngx-translate/core';
-import { firstValueFrom } from 'rxjs';
 
 import { DatePicker } from 'primeng/datepicker';
 import { TableModule } from 'primeng/table';
@@ -34,10 +32,8 @@ import { StringUtils } from '../../../../shared/utils/string.utils';
 import { AirbnbUtils } from '../../../../shared/utils/airbnb.utils';
 import { normalizeAirbnbRow } from '../../../../models/airbnb.model';
 import { AirbnbReview, AirbnbReviewJSON } from '../../../../models/review.model';
-import {
-  ViewerRow,
-  getCellValue as getCellValueHelper,
-} from '../csv-viewer/csv-viewer.helpers';
+import { extractTags, analyzeSentiment } from '../../../../utils/review-analysis';
+import { ViewerRow, getCellValue as getCellValueHelper } from '../csv-viewer/csv-viewer.helpers';
 import { Dialog } from 'primeng/dialog';
 import { Textarea, TextareaModule } from 'primeng/textarea';
 
@@ -52,7 +48,6 @@ import { ColorService } from '../../../../services/color.service';
   imports: [
     CommonModule,
     FormsModule,
-    HttpClientModule,
     TranslateModule,
     TableModule,
     Button,
@@ -79,7 +74,6 @@ import { ColorService } from '../../../../services/color.service';
 })
 export class PayoutsReservasPage {
   private readonly supabase = inject(SupabaseService);
-  private readonly http = inject(HttpClient);
   private readonly messageService = inject(MessageService);
   private readonly headerService = inject(HeaderService);
   protected readonly colorService = inject(ColorService);
@@ -98,7 +92,7 @@ export class PayoutsReservasPage {
           actions: actions,
         });
       } else {
-         this.headerService.setHeader({
+        this.headerService.setHeader({
           title: 'Payouts / Reservas',
           icon: 'pi pi-calendar-clock',
         });
@@ -143,57 +137,19 @@ export class PayoutsReservasPage {
 
   protected readonly reviewsMap = computed(() => {
     const map = new Map<string, AirbnbReview>();
-    const rows = this.rows();
     const supReviews = this.supabaseReviews();
-    const locReviews = this.localReviews();
 
     // 1. Adicionar reviews do Supabase (já têm reservationCode)
     supReviews.forEach((r) => {
-        if (r.reservationCode) {
-            map.set(r.reservationCode, r);
-        }
-    });
-
-    // 2. Mesclar reviews locais
-    locReviews.forEach((localReview) => {
-        let code = localReview.reservationCode;
-
-        // Se não tiver código (comum no scraping), tentar encontrar pelo nome do hóspede
-        if (!code || !map.has(code)) {
-             // Tenta encontrar um row correspondente
-             // Normaliza o nome do hóspede do review
-             const guestNameNorm = StringUtils.normalize(localReview.guestName || '').toLowerCase();
-
-             // Procura na tabela
-             const match = rows.find(r => {
-                 const rowGuest = StringUtils.normalize(this.getCellValue(r, 'Hóspede')).toLowerCase();
-                 // Verifica se contém o nome (ex: "Gabriela" em "Gabriela Silva")
-                 return rowGuest.includes(guestNameNorm) || guestNameNorm.includes(rowGuest);
-             });
-
-             if (match) {
-                 code = this.getCellValue(match, 'Código de Confirmação');
-             }
-        }
-
-        // Se encontrou um código, adiciona/sobrescreve
-        if (code) {
-            // Preserva o ID do supabase se já existir, mas atualiza detalhes se o local for mais rico?
-            // Por enquanto, vamos assumir que o local (scraped) tem detalhes que o supabase pode não ter (ex: ratings detalhados)
-            const existing = map.get(code);
-            map.set(code, {
-                ...existing, // Mantém dados existentes (como IDs de banco)
-                ...localReview, // Sobrescreve com dados do JSON (detalhes)
-                reservationCode: code // Garante o código correto
-            });
-        }
+      if (r.reservationCode) {
+        map.set(r.reservationCode, r);
+      }
     });
 
     return map;
   });
 
   protected readonly supabaseReviews = signal<AirbnbReview[]>([]);
-  protected readonly localReviews = signal<AirbnbReview[]>([]);
 
   protected readonly selectedReview = signal<AirbnbReview | null>(null);
   protected showReviewDialog = false;
@@ -229,8 +185,8 @@ export class PayoutsReservasPage {
     // But user specifically said type "Payout/Reserva".
     // I'll stick to exact match or starts with "Payout/Reserva".
     data = data.filter((r) => {
-        const tipo = (r.__norm.tipo ?? '').trim();
-        return tipo === 'Payout/Reserva';
+      const tipo = (r.__norm.tipo ?? '').trim();
+      return tipo === 'Payout/Reserva';
     });
 
     // Filter by Year
@@ -271,9 +227,7 @@ export class PayoutsReservasPage {
       data = data.filter((row) => {
         const rawValues = row.__raw ? Object.values(row.__raw) : [];
         // Add derived values to search
-        const derived = [
-             this.getCellValue(row, 'Inicio-Fim'),
-        ];
+        const derived = [this.getCellValue(row, 'Inicio-Fim')];
 
         return [...rawValues, ...derived].some((val) => StringUtils.normalize(val).includes(query));
       });
@@ -296,17 +250,17 @@ export class PayoutsReservasPage {
 
   protected getCellValue(row: ViewerRow, field: string): string {
     if (field === 'Inicio-Fim') {
-        const start = row.__norm.dataInicio;
-        const end = row.__norm.dataTermino;
-        if (!start || !end) return '';
+      const start = row.__norm.dataInicio;
+      const end = row.__norm.dataTermino;
+      if (!start || !end) return '';
 
-        const formatDate = (dStr: string) => {
-            const d = this.parseAirbnbDate(dStr);
-            if (!d) return dStr;
-            return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getFullYear()).slice(-2)}`;
-        };
+      const formatDate = (dStr: string) => {
+        const d = this.parseAirbnbDate(dStr);
+        if (!d) return dStr;
+        return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${String(d.getFullYear()).slice(-2)}`;
+      };
 
-        return `${formatDate(start)} - ${formatDate(end)}`;
+      return `${formatDate(start)} - ${formatDate(end)}`;
     }
     return getCellValueHelper(row, field);
   }
@@ -353,7 +307,7 @@ export class PayoutsReservasPage {
     };
 
     if (range[1]) {
-        return `${format(range[0])} - ${format(range[1])}`;
+      return `${format(range[0])} - ${format(range[1])}`;
     }
     return format(range[0]);
   }
@@ -445,156 +399,167 @@ export class PayoutsReservasPage {
 
     if (data) {
       const reviews: AirbnbReview[] = data.map((r: any) => ({
-            id: r.id,
-            reviewId: r.review_id,
-            reservationCode: r.reservation_code,
-            guestName: r.guest_name,
-            reviewUrl: r.review_url,
-            createdAt: new Date(r.created_at),
-            overallRating: r.overall_rating,
-            publicComment: r.public_comment,
-            hostResponse: r.host_response,
-            privateFeedback: r.private_feedback,
-            cleanlinessRating: r.cleanliness_rating,
-            accuracyRating: r.accuracy_rating,
-            checkinRating: r.checkin_rating,
-            communicationRating: r.communication_rating,
-            locationRating: r.location_rating,
-            valueRating: r.value_rating,
+        id: r.id,
+        reviewId: r.review_id,
+        reservationCode: r.reservation_code,
+        guestName: r.guest_name,
+        reviewUrl: r.review_url,
+        createdAt: new Date(r.created_at),
+        overallRating: r.overall_rating,
+        publicComment: r.public_comment,
+        hostResponse: r.host_response,
+        privateFeedback: r.private_feedback,
+        cleanlinessRating: r.cleanliness_rating,
+        accuracyRating: r.accuracy_rating,
+        checkinRating: r.checkin_rating,
+        communicationRating: r.communication_rating,
+        locationRating: r.location_rating,
+        valueRating: r.value_rating,
+
+        // Campos Qualitativos
+        sentiment: r.sentiment,
+        positiveFeedbackTags: r.positive_feedback_tags,
+        improvementFeedbackTags: r.improvement_feedback_tags,
       }));
       this.supabaseReviews.set(reviews);
     }
 
-    // Carregar JSON local (se existir)
-    try {
-        const localData = await firstValueFrom(this.http.get<any[]>('assets/data/reviews-detailed.json'));
-        if (localData) {
-            const reviews: AirbnbReview[] = localData.map((json: any) => ({
-                reviewId: json.id,
-                reservationCode: '', // Será resolvido no computed
-                guestName: json.nomeHospede,
-                reviewUrl: json.url,
-                overallRating: json.avaliacaoGeral?.estrelasAvaliacaoGeral,
-                publicComment: json.avaliacaoGeral?.avaliacaoPublica,
-                hostResponse: json.avaliacaoGeral?.suaRespostaPublica,
-                privateFeedback: json.avaliacaoGeral?.mensagemPrivada,
 
-                cleanlinessRating: this.parseRating(json.feedbackDetalhado?.limpeza),
-                accuracyRating: this.parseRating(json.feedbackDetalhado?.exatidaoDoAnuncio),
-                checkinRating: this.parseRating(json.feedbackDetalhado?.checkIn),
-                communicationRating: this.parseRating(json.feedbackDetalhado?.comunicacao),
-                locationRating: this.parseRating(json.feedbackDetalhado?.localizacao),
-                valueRating: this.parseRating(json.feedbackDetalhado?.custoBeneficio)
-            }));
-            this.localReviews.set(reviews);
-        }
-    } catch (e) {
-        console.warn('Nenhum dado local de reviews encontrado ou erro ao carregar.', e);
-    }
   }
 
   private parseRating(val: any): number {
-      if (typeof val === 'number') return val;
-      if (typeof val === 'string') {
-          return parseFloat(val.replace(',', '.'));
-      }
-      return 0;
+    if (typeof val === 'number') return val;
+    if (typeof val === 'string') {
+      return parseFloat(val.replace(',', '.'));
+    }
+    return 0;
   }
 
   protected openReviewPopover(event: Event, review: AirbnbReview | undefined, popover: Popover) {
-      if (!review) return;
-      this.selectedReview.set(review);
-      popover.toggle(event);
+    if (!review) return;
+    this.selectedReview.set(review);
+    popover.toggle(event);
   }
 
   protected openReviewDialog(row: ViewerRow) {
-      const code = this.getCellValue(row, 'Código de Confirmação');
-      if (!code) {
-          this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Esta linha não possui código de reserva.' });
-          return;
-      }
-      this.selectedReservationCode = code;
-      this.jsonInput = '';
-      this.showReviewDialog = true;
+    const code = this.getCellValue(row, 'Código de Confirmação');
+    if (!code) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção',
+        detail: 'Esta linha não possui código de reserva.',
+      });
+      return;
+    }
+    this.selectedReservationCode = code;
+    this.jsonInput = '';
+    this.showReviewDialog = true;
   }
 
   protected async saveReviewJson() {
-      if (!this.jsonInput || !this.jsonInput.trim()) {
-          this.messageService.add({ severity: 'warn', summary: 'Atenção', detail: 'Cole o JSON do review.' });
-          return;
-      }
+    if (!this.jsonInput || !this.jsonInput.trim()) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Atenção',
+        detail: 'Cole o JSON do review.',
+      });
+      return;
+    }
 
-      try {
-          this.isSavingReview = true;
-          const json: AirbnbReviewJSON = JSON.parse(this.jsonInput);
+    try {
+      this.isSavingReview = true;
+      const json: AirbnbReviewJSON = JSON.parse(this.jsonInput);
 
-          // Converter JSON para Modelo
-          const review: AirbnbReview = {
-              reviewId: json.id,
-              reservationCode: this.selectedReservationCode,
-              guestName: json.nomeHospede,
-              reviewUrl: json.url,
-              overallRating: json.avaliacaoGeral.estrelasAvaliacaoGeral,
-              publicComment: json.avaliacaoGeral.avaliacaoPublica,
-              hostResponse: json.avaliacaoGeral.suaRespostaPublica,
-              privateFeedback: json.avaliacaoGeral.mensagemPrivada,
+      // Análise Qualitativa
+      const text =
+        (json.avaliacaoGeral.avaliacaoPublica || '') +
+        ' ' +
+        (json.avaliacaoGeral.mensagemPrivada || '');
+      const { positive, improvement } = extractTags(text);
+      const sentiment = analyzeSentiment(text, json.avaliacaoGeral.estrelasAvaliacaoGeral);
 
-              cleanlinessRating: json.feedbackDetalhado.limpeza,
-              checkinRating: json.feedbackDetalhado.checkIn,
-              communicationRating: json.feedbackDetalhado.comunicacao,
-              locationRating: json.feedbackDetalhado.localizacao,
-              valueRating: json.feedbackDetalhado.custoBeneficio
-          };
+      // Converter JSON para Modelo
+      const review: AirbnbReview = {
+        reviewId: json.id,
+        reservationCode: this.selectedReservationCode,
+        guestName: json.nomeHospede,
+        reviewUrl: json.url,
+        overallRating: json.avaliacaoGeral.estrelasAvaliacaoGeral,
+        publicComment: json.avaliacaoGeral.avaliacaoPublica,
+        hostResponse: json.avaliacaoGeral.suaRespostaPublica,
+        privateFeedback: json.avaliacaoGeral.mensagemPrivada,
 
-          const { error } = await this.supabase.saveReview(review);
-          if (error) throw error;
+        cleanlinessRating: json.feedbackDetalhado.limpeza,
+        accuracyRating: json.feedbackDetalhado.exatidaoDoAnuncio,
+        checkinRating: json.feedbackDetalhado.checkIn,
+        communicationRating: json.feedbackDetalhado.comunicacao,
+        locationRating: json.feedbackDetalhado.localizacao,
+        valueRating: json.feedbackDetalhado.custoBeneficio,
 
-          this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Review salvo com sucesso!' });
-          this.showReviewDialog = false;
-          await this.loadReviews(); // Recarregar para atualizar a tabela
+        // Campos Qualitativos
+        sentiment: sentiment,
+        positiveFeedbackTags: positive,
+        improvementFeedbackTags: improvement,
+      };
 
-      } catch (e: any) {
-          console.error('Erro ao salvar review:', e);
-          this.messageService.add({ severity: 'error', summary: 'Erro', detail: 'Falha ao processar ou salvar o JSON.' });
-      } finally {
-          this.isSavingReview = false;
-      }
+      const { error } = await this.supabase.saveReview(review);
+      if (error) throw error;
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Sucesso',
+        detail: 'Review salvo com sucesso!',
+      });
+      this.showReviewDialog = false;
+      await this.loadReviews(); // Recarregar para atualizar a tabela
+    } catch (e: any) {
+      console.error('Erro ao salvar review:', e);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: 'Falha ao processar ou salvar o JSON.',
+      });
+    } finally {
+      this.isSavingReview = false;
+    }
   }
 
   protected cancelReview() {
-      this.showReviewDialog = false;
-      this.jsonInput = '';
+    this.showReviewDialog = false;
+    this.jsonInput = '';
   }
 
   isCurrencyField(field: string): boolean {
-      return field === 'Valor';
+    return field === 'Valor';
   }
 
-  protected getReviewStatus(row: ViewerRow): 'REVIEWED' | 'EXPIRED' | 'WINDOW_OPEN' | 'FUTURE' | 'UNKNOWN' {
-      const code = this.getCellValue(row, 'Código de Confirmação');
-      if (this.reviewsMap().has(code)) {
-          return 'REVIEWED';
-      }
+  protected getReviewStatus(
+    row: ViewerRow,
+  ): 'REVIEWED' | 'EXPIRED' | 'WINDOW_OPEN' | 'FUTURE' | 'UNKNOWN' {
+    const code = this.getCellValue(row, 'Código de Confirmação');
+    if (this.reviewsMap().has(code)) {
+      return 'REVIEWED';
+    }
 
-      const endDateStr = row.__norm?.dataTermino;
-      if (!endDateStr) return 'UNKNOWN';
+    const endDateStr = row.__norm?.dataTermino;
+    if (!endDateStr) return 'UNKNOWN';
 
-      const endDate = this.parseAirbnbDate(endDateStr);
-      if (!endDate) return 'UNKNOWN';
+    const endDate = this.parseAirbnbDate(endDateStr);
+    if (!endDate) return 'UNKNOWN';
 
-      const now = new Date();
-      // Zerar horas para comparação de datas
-      now.setHours(0, 0, 0, 0);
+    const now = new Date();
+    // Zerar horas para comparação de datas
+    now.setHours(0, 0, 0, 0);
 
-      const diffTime = now.getTime() - endDate.getTime();
-      const diffDays = diffTime / (1000 * 3600 * 24);
+    const diffTime = now.getTime() - endDate.getTime();
+    const diffDays = diffTime / (1000 * 3600 * 24);
 
-      if (diffDays < 0) {
-          return 'FUTURE'; // Ainda não acabou
-      } else if (diffDays <= 14) {
-          return 'WINDOW_OPEN'; // Período de avaliação aberto (14 dias)
-      } else {
-          return 'EXPIRED'; // Passou do prazo e não tem review
-      }
+    if (diffDays < 0) {
+      return 'FUTURE'; // Ainda não acabou
+    } else if (diffDays <= 14) {
+      return 'WINDOW_OPEN'; // Período de avaliação aberto (14 dias)
+    } else {
+      return 'EXPIRED'; // Passou do prazo e não tem review
+    }
   }
 }

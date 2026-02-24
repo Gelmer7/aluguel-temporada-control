@@ -21,6 +21,11 @@ export interface AirbnbReview {
   communicationRating?: number; // comunicacao
   locationRating?: number; // localizacao
   valueRating?: number; // custoBeneficio
+
+  // Análise Qualitativa (Pilar 2)
+  sentiment?: 'POSITIVE' | 'NEUTRAL' | 'NEGATIVE';
+  positiveFeedbackTags?: string[];
+  improvementFeedbackTags?: string[];
 }
 
 // Interface auxiliar para mapear diretamente do JSON se necessário
@@ -33,6 +38,7 @@ export interface AirbnbReviewJSON {
   };
   feedbackDetalhado: {
     limpeza: number;
+    exatidaoDoAnuncio: number;
     checkIn: number;
     comunicacao: number;
     localizacao: number;

@@ -53,10 +53,32 @@ export class SidebarMenuComponent {
   userMenuItems = signal<MenuItem[]>([]);
 
   isDesktop = signal(window.innerWidth >= 1024);
+  expandedItems = signal<Set<string>>(new Set());
 
   @HostListener('window:resize')
   onResize() {
     this.isDesktop.set(window.innerWidth >= 1024);
+  }
+
+  toggleItem(event: Event, item: NavItem) {
+    if (item.items && item.items.length > 0) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      this.expandedItems.update((current) => {
+        const newSet = new Set(current);
+        if (newSet.has(item.id)) {
+          newSet.delete(item.id);
+        } else {
+          newSet.add(item.id);
+        }
+        return newSet;
+      });
+    }
+  }
+
+  isExpanded(item: NavItem): boolean {
+    return this.expandedItems().has(item.id);
   }
 
   constructor() {

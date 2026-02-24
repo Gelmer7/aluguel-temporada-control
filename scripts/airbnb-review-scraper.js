@@ -514,6 +514,7 @@ async function extractDetailedReviewData(page) {
       Cleanliness: 'limpeza',
 
       Exatidão: 'exatidaoDoAnuncio',
+      'Exatidão do anúncio': 'exatidaoDoAnuncio',
       Accuracy: 'exatidaoDoAnuncio',
       Veracidade: 'exatidaoDoAnuncio',
 

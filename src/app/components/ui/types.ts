@@ -18,4 +18,6 @@ export interface NavItem {
   badge?: string | number;
   /** Atalho textual do item (opcional). */
   shortcut?: string;
+  /** Subitens do menu (opcional). */
+  items?: NavItem[];
 }
