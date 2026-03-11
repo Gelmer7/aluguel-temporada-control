@@ -76,6 +76,7 @@
     "REPORTS": "Reports",
     "SUGGESTIONS": "Suggestions",
     "REMINDERS": "Reminders",
+    "LINKS": "Links",
     "YEAR": "Year",
     "MONTH": "Month",
     "MONTHS": "Months",
@@ -111,6 +112,12 @@
     "SELECT_PERIOD": "Select Period",
     "PERIOD": "Period",
     "FILTER_BY_PERIOD": "Filter by period"
+  },
+  "LINKS": {
+    "FORM_GUESTS": "Guest Form",
+    "FORM_RESPONSES": "Form Responses",
+    "AIRBNB_PAYMENTS": "Airbnb Payments",
+    "AIRBNB_REPORTS": "Airbnb Reports"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "New Suggestion",

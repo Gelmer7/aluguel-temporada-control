@@ -82,6 +82,11 @@ export const DASHBOARD_ROUTES: Routes = [
           import('./pages/reminders/reminders.page').then((m) => m.RemindersPage),
       },
       {
+        path: 'links',
+        loadComponent: () =>
+          import('./pages/links/links.page').then((m) => m.LinksPage),
+      },
+      {
         path: 'feedback-analytics',
         loadComponent: () =>
           import('./pages/feedback-analytics/feedback-analytics.page').then((m) => m.FeedbackAnalyticsPage),

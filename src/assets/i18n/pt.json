@@ -78,6 +78,7 @@
     "REPORTS": "Relatórios",
     "SUGGESTIONS": "Sugestões",
     "REMINDERS": "Lembretes",
+    "LINKS": "Links",
     "DATE": "Data",
     "SOURCE": "Fonte",
     "DESCRIPTION": "Descrição",
@@ -118,6 +119,12 @@
     "SELECT_PERIOD": "Selecionar Período",
     "PERIOD": "Período",
     "FILTER_BY_PERIOD": "Filtrar por período"
+  },
+  "LINKS": {
+    "FORM_GUESTS": "Formulário de Hóspedes",
+    "FORM_RESPONSES": "Respostas do Formulário",
+    "AIRBNB_PAYMENTS": "Pagamentos Airbnb",
+    "AIRBNB_REPORTS": "Relatórios Airbnb"
   },
   "SUGGESTIONS_FORM": {
     "NEW": "Nova Sugestão",

@@ -1,0 +1,35 @@
+<div class="h-full flex flex-col gap-3 p-2 overflow-y-auto">
+  <p-card [header]="'TERMS.LINKS' | translate" class="shadow-sm">
+    <div class="flex flex-col gap-2">
+      @for (l of links(); track l.url) {
+        <p-button
+          [label]="l.key | translate"
+          [icon]="l.icon"
+          (onClick)="open(l.url)"
+          [outlined]="true"
+          styleClass="justify-start"
+        ></p-button>
+      }
+
+      <p-divider></p-divider>
+      <p-button
+        label="Link Formulario Antigo"
+        icon="pi pi-external-link"
+        (onClick)="open('https://forms.gle/dx1Qnm75Cq2vD5M4A')"
+        [outlined]="true"
+        styleClass="justify-start"
+      ></p-button>
+      <p-button
+        label="Link Respostas do Formulario Antigo"
+        icon="pi pi-external-link"
+        (onClick)="
+          open(
+            'https://docs.google.com/spreadsheets/d/1_1OA6XRYAkEiK4pGg-zbLa1zkL-izKCU7kSe_UhUjpY/edit?usp=sharing'
+          )
+        "
+        [outlined]="true"
+        styleClass="justify-start"
+      ></p-button>
+    </div>
+  </p-card>
+</div>

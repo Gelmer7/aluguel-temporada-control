@@ -28,6 +28,12 @@
       "SUCCESS_MESSAGE": "Verifica tu correo para confirmar el registro."
     }
   },
+  "LINKS": {
+    "FORM_GUESTS": "Formulario de Huéspedes",
+    "FORM_RESPONSES": "Respuestas del Formulario",
+    "AIRBNB_PAYMENTS": "Pagos Airbnb",
+    "AIRBNB_REPORTS": "Reportes Airbnb"
+  },
   "TOOLBAR": {
     "LOGIN": "Iniciar Sesión",
     "LANGUAGE": "Idioma",
@@ -74,6 +80,7 @@
     "CONTRACTS": "Contratos",
     "CHARTS": "Gráficos",
     "REPORTS": "Reportes",
+    "LINKS": "Enlaces",
     "SUGGESTIONS": "Sugerencias",
     "YEAR": "Año",
     "MONTH": "Mes",

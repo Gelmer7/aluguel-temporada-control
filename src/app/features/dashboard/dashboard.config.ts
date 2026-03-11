@@ -96,6 +96,12 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     route: '/dashboard/reminders',
   },
   {
+    id: 'links',
+    label: 'TERMS.LINKS',
+    icon: 'pi-external-link',
+    route: '/dashboard/links',
+  },
+  {
     id: 'Site',
     label: 'Ver Site',
     icon: 'pi-globe',
