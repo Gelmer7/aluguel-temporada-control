@@ -66,6 +66,7 @@ export class HomePage implements OnInit, AfterViewInit {
       image: 'assets/images/house-1/sala_01.avif'
     }
   ];
+  selectedProperty = this.properties[0];
 
   images = [
     {

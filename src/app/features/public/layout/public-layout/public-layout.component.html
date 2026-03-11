@@ -1,13 +1,13 @@
-<div class="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
-  <header class="sticky top-0 z-50 bg-white dark:bg-gray-800 shadow-sm flex justify-between items-center p-4 md:px-8">
+<div class="min-h-screen flex flex-col">
+  <header class="sticky top-0 z-50 bg-white shadow-sm flex justify-between items-center p-4 md:px-8">
     <div>
       <h3>🏡 Aluguel temporada Villa Flora</h3>
     </div>
     <div class="hidden md:flex gap-6 items-center">
-      <button (click)="scrollToSection('propriedades')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Casas</button>
-      <button (click)="scrollToSection('galeria')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Galeria</button>
-      <button (click)="scrollToSection('disponibilidade')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Disponibilidade</button>
-      <button (click)="scrollToSection('contato')" class="text-surface-600 dark:text-surface-200 hover:text-surface-900 dark:hover:text-white font-medium bg-transparent border-none cursor-pointer">Contato</button>
+      <button (click)="scrollToSection('propriedades')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Casas</button>
+      <button (click)="scrollToSection('galeria')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Galeria</button>
+      <button (click)="scrollToSection('disponibilidade')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Disponibilidade</button>
+      <button (click)="scrollToSection('contato')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Contato</button>
 
       @if (user$ | async) {
         <p-button label="Dashboard" routerLink="/dashboard" styleClass="p-button-sm"></p-button>
@@ -54,7 +54,7 @@
     <router-outlet></router-outlet>
   </main>
 
-  <footer class="mt-auto py-8 text-center bg-gray-100 dark:bg-gray-800">
+  <footer class="mt-auto py-8 text-center bg-gray-100">
     <p>&copy; {{ currentYear }} Sistema Aluguel temporada Villa Flora. All rights reserved.</p>
   </footer>
 </div>

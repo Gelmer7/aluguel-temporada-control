@@ -30,32 +30,30 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-    @for (property of properties; track property.name) {
-      <div
-        class="bg-white dark:bg-surface-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
-      >
-        <div class="h-64 overflow-hidden relative">
-          <img
-            [src]="property.image"
-            [alt]="property.name"
-            class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
-          />
-          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        </div>
-        <div class="p-8">
-          <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0 group-hover:text-indigo-600 transition-colors">
-            {{ property.name }}
-          </h3>
-          <p class="text-surface-600 dark:text-surface-400 leading-relaxed mb-6">{{ property.description }}</p>
-          <button 
-            (click)="scrollToSection('contato')"
-            class="text-indigo-600 font-semibold hover:text-indigo-800 transition-colors flex items-center gap-2 group-hover:gap-3"
-          >
-            Saiba mais <i class="pi pi-arrow-right text-sm"></i>
-          </button>
-        </div>
+    <div
+      class="bg-white dark:bg-surface-800 rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 group scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out ring-2 ring-indigo-500"
+    >
+      <div class="h-64 overflow-hidden relative">
+        <img
+          [src]="selectedProperty.image"
+          [alt]="selectedProperty.name"
+          class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+        />
+        <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       </div>
-    }
+      <div class="p-8">
+        <h3 class="text-2xl font-bold mb-3 text-surface-900 dark:text-surface-0 group-hover:text-indigo-600 transition-colors">
+          {{ selectedProperty.name }}
+        </h3>
+        <p class="text-surface-600 dark:text-surface-400 leading-relaxed mb-6">{{ selectedProperty.description }}</p>
+        <button 
+          (click)="scrollToSection('contato')"
+          class="text-indigo-600 font-semibold hover:text-indigo-800 transition-colors flex items-center gap-2 group-hover:gap-3"
+        >
+          Saiba mais <i class="pi pi-arrow-right text-sm"></i>
+        </button>
+      </div>
+    </div>
   </div>
 </section>
 
