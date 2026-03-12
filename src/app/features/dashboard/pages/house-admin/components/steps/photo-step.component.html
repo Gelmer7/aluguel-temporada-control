@@ -1,0 +1,54 @@
+<div class="flex flex-col gap-6">
+  <div class="border-b border-surface-200 dark:border-surface-700 pb-2">
+    <h3 class="font-semibold text-primary">Fotos da Propriedade</h3>
+    <p class="text-sm text-surface-500">Adicione as fotos que serão exibidas no anúncio. A primeira foto será a capa.</p>
+  </div>
+
+  <!-- Área de Upload -->
+  <p-fileUpload
+    name="demo[]"
+    [multiple]="true"
+    accept="image/*"
+    maxFileSize="5000000"
+    chooseLabel="Selecionar Fotos"
+    class="w-full"
+    (onSelect)="onSelect($event)"
+    [showUploadButton]="false"
+    [showCancelButton]="false">
+  </p-fileUpload>
+
+  <!-- Galeria de Fotos Existentes -->
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
+    <div *ngFor="let photo of photos()" class="relative group aspect-square rounded-lg overflow-hidden border border-surface-200 dark:border-surface-700">
+      <img [src]="photo.url" class="w-full h-full object-cover" />
+
+      <!-- Badge de Capa -->
+      <div *ngIf="photo.is_cover" class="absolute top-2 left-2 bg-primary text-white text-[10px] px-2 py-1 rounded-full font-bold shadow-sm">
+        CAPA
+      </div>
+
+      <!-- Ações ao Hover -->
+      <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <button
+          pButton
+          icon="pi pi-star"
+          class="p-button-rounded p-button-sm p-button-warning"
+          (click)="setAsCover(photo)"
+          [pTooltip]="'Definir como Capa'">
+        </button>
+        <button
+          pButton
+          icon="pi pi-trash"
+          class="p-button-rounded p-button-sm p-button-danger"
+          (click)="deletePhoto(photo)">
+        </button>
+      </div>
+    </div>
+
+    <!-- Placeholder quando vazio -->
+    <div *ngIf="photos().length === 0" class="col-span-full py-12 flex flex-col items-center justify-center border-2 border-dashed border-surface-200 dark:border-surface-700 rounded-xl bg-surface-50 dark:bg-surface-800/50">
+      <i class="pi pi-images text-4xl text-surface-300 mb-2"></i>
+      <p class="text-surface-500 italic">Nenhuma foto adicionada ainda.</p>
+    </div>
+  </div>
+</div>

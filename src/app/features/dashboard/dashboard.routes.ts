@@ -91,6 +91,11 @@ export const DASHBOARD_ROUTES: Routes = [
         loadComponent: () =>
           import('./pages/feedback-analytics/feedback-analytics.page').then((m) => m.FeedbackAnalyticsPage),
       },
+      {
+        path: 'house-admin',
+        loadComponent: () =>
+          import('./pages/house-admin/house-admin.page').then((m) => m.HouseAdminPage),
+      },
     ],
   },
 ];

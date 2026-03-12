@@ -1,0 +1,63 @@
+<form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <!-- Regras da Casa -->
+  <div class="col-span-1 md:col-span-2 border-b border-surface-200 dark:border-surface-700 pb-2">
+    <h3 class="font-semibold text-primary">Regras da Casa</h3>
+  </div>
+
+  <div class="flex items-center justify-between p-2 border border-surface-200 dark:border-surface-700 rounded-lg">
+    <label for="pets_allowed" class="font-medium">Permite Animais?</label>
+    <p-toggleswitch id="pets_allowed" formControlName="pets_allowed"></p-toggleswitch>
+  </div>
+
+  <div class="flex items-center justify-between p-2 border border-surface-200 dark:border-surface-700 rounded-lg">
+    <label for="smoking_allowed" class="font-medium">Permite Fumar?</label>
+    <p-toggleswitch id="smoking_allowed" formControlName="smoking_allowed"></p-toggleswitch>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="quiet_hours" class="font-medium">Horário de Silêncio</label>
+    <input pInputText id="quiet_hours" formControlName="quiet_hours" placeholder="Ex: 22:00 - 08:00" class="w-full" />
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="additional_rules" class="font-medium">Regras Adicionais</label>
+    <textarea pTextarea id="additional_rules" formControlName="additional_rules" rows="3" class="w-full"></textarea>
+  </div>
+
+  <!-- Amenidades e Segurança -->
+  <div class="col-span-1 md:col-span-2 border-b border-surface-200 dark:border-surface-700 pb-2 mt-4">
+    <h3 class="font-semibold text-primary">Comodidades & Segurança</h3>
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="amenities" class="font-medium">Comodidades Oferecidas</label>
+    <p-multiselect
+      id="amenities"
+      [options]="amenityOptions"
+      formControlName="amenities"
+      defaultLabel="Selecione as comodidades"
+      appendTo="body"
+      class="w-full">
+    </p-multiselect>
+  </div>
+
+  <!-- Informações de Check-in -->
+  <div class="col-span-1 md:col-span-2 border-b border-surface-200 dark:border-surface-700 pb-2 mt-4">
+    <h3 class="font-semibold text-primary">Informações de Chegada (Privado)</h3>
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="wifi_name" class="font-medium">Nome do Wi-Fi</label>
+    <input pInputText id="wifi_name" formControlName="wifi_name" class="w-full" />
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="wifi_password" class="font-medium">Senha do Wi-Fi</label>
+    <input pInputText id="wifi_password" formControlName="wifi_password" type="password" class="w-full" />
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="arrival_instructions" class="font-medium">Instruções de Check-in</label>
+    <textarea pTextarea id="arrival_instructions" formControlName="arrival_instructions" rows="4" class="w-full"></textarea>
+  </div>
+</form>

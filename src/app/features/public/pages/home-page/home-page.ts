@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, ElementRef, ViewChildren, QueryList, Inject, PLATFORM_ID, inject, signal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -6,6 +6,8 @@ import { CardModule } from 'primeng/card';
 import { ImageModule } from 'primeng/image';
 import { DatePickerModule } from 'primeng/datepicker';
 import { GalleriaModule } from 'primeng/galleria';
+import { SupabaseService } from '../../../../services/supabase.service';
+import { House, HousePhoto } from '../../../../models/house.model';
 
 @Component({
   selector: 'app-home-page',
@@ -14,13 +16,21 @@ import { GalleriaModule } from 'primeng/galleria';
   templateUrl: './home-page.html',
 })
 export class HomePage implements OnInit, AfterViewInit {
+  private supabaseService = inject(SupabaseService);
+
   activeIndex: number = 0;
   numberOfMonths: number = 2;
+
+  // Sinais para dados dinâmicos
+  houses = signal<(House & { house_photos: HousePhoto[] })[]>([]);
+  loading = signal(true);
+  selectedProperty = signal<(House & { house_photos: HousePhoto[] }) | null>(null);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngOnInit() {
     this.updateCalendarView();
+    this.loadPublicHouses();
   }
 
   ngAfterViewInit() {
@@ -56,62 +66,47 @@ export class HomePage implements OnInit, AfterViewInit {
   }
 
   updateCalendarView() {
-    this.numberOfMonths = window.innerWidth < 768 ? 1 : 2;
+    if (isPlatformBrowser(this.platformId)) {
+      this.numberOfMonths = window.innerWidth < 768 ? 1 : 2;
+    }
   }
 
-  properties = [
-    {
-      name: 'Casa Dumont - Condomínio no Villa Flora de Sumaré',
-      description: 'O sobrado fica localizado no condomínio dos Crisântemos, no bairro Villa Flora na cidade de Sumaré, a 21 km de Campinas - SP. \n\nO bairro é arborizado, com segurança 24h e localização estratégica na cidade.\n\nO Condomínio possui cancela e ótima localização: próxima a praça da fazenda, restaurantes, padaria, farmácia, mercados, etc.',
-      image: 'assets/images/house-1/sala_01.avif'
-    }
-  ];
-  selectedProperty = this.properties[0];
+  async loadPublicHouses() {
+    this.loading.set(true);
+    const { data, error } = await this.supabaseService.getPublicHouses();
 
-  images = [
-    {
-      itemImageSrc: 'assets/images/house-1/sala_01.avif',
-      thumbnailImageSrc: 'assets/images/house-1/sala_01.avif',
-      alt: 'Sala de Estar',
-      title: 'Sala de Estar',
-      id: '1'
-    },
-    {
-      itemImageSrc: 'assets/images/house-1/sala_02.avif',
-      thumbnailImageSrc: 'assets/images/house-1/sala_02.avif',
-      alt: 'Detalhes da Sala',
-      title: 'Detalhes da Sala',
-      id: '2'
-    },
-    {
-      itemImageSrc: 'assets/images/house-1/sala_03.avif',
-      thumbnailImageSrc: 'assets/images/house-1/sala_03.avif',
-      alt: 'Vista da Sala',
-      title: 'Vista da Sala',
-      id: '3'
-    },
-    {
-      itemImageSrc: 'assets/images/house-1/cozinha_01.avif',
-      thumbnailImageSrc: 'assets/images/house-1/cozinha_01.avif',
-      alt: 'Cozinha Completa',
-      title: 'Cozinha Completa',
-      id: '4'
-    },
-    {
-      itemImageSrc: 'assets/images/house-1/sala_01.avif',
-      thumbnailImageSrc: 'assets/images/house-1/sala_01.avif',
-      alt: 'Sala de Estar',
-      title: 'Sala de Estar',
-      id: '5'
-    },
-    {
-      itemImageSrc: 'assets/images/house-1/sala_02.avif',
-      thumbnailImageSrc: 'assets/images/house-1/sala_02.avif',
-      alt: 'Detalhes da Sala',
-      title: 'Detalhes da Sala',
-      id: '6'
+    if (!error && data) {
+      this.houses.set(data);
+      if (data.length > 0) {
+        this.selectedProperty.set(data[0]);
+      }
     }
-  ];
+    this.loading.set(false);
+  }
+
+  get propertyImages() {
+    const current = this.selectedProperty();
+    if (!current || !current.house_photos || current.house_photos.length === 0) {
+      return [];
+    }
+    return current.house_photos.map(p => ({
+      itemImageSrc: p.url,
+      thumbnailImageSrc: p.url,
+      alt: current.name,
+      title: current.name,
+      id: p.id
+    }));
+  }
+
+  getCoverImage(house: House & { house_photos: HousePhoto[] }): string {
+    const cover = house.house_photos?.find(p => p.is_cover);
+    return cover ? cover.url : (house.house_photos?.[0]?.url || 'assets/images/placeholder-house.jpg');
+  }
+
+  onSelectHouse(house: House & { house_photos: HousePhoto[] }) {
+    this.selectedProperty.set(house);
+    // Rola para a seção de detalhes se necessário
+  }
 
   responsiveOptions = [
     {

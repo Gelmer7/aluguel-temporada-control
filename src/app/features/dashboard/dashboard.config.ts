@@ -102,6 +102,12 @@ export const DASHBOARD_MENU_ITEMS: NavItem[] = [
     route: '/dashboard/links',
   },
   {
+    id: 'house-admin',
+    label: 'HOUSE_ADMIN.TITLE',
+    icon: 'pi-home',
+    route: '/dashboard/house-admin',
+  },
+  {
     id: 'Site',
     label: 'Ver Site',
     icon: 'pi-globe',

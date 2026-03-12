@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
@@ -18,6 +18,17 @@ export class PublicLayoutComponent {
   currentYear = new Date().getFullYear();
 
   sidebarVisible: boolean = false;
+  isScrolled = signal(false);
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    // Se o scroll for maior que 50px, muda o estado do header
+    this.isScrolled.set(window.pageYOffset > 50);
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 
   scrollToSection(sectionId: string) {
     const element = document.getElementById(sectionId);

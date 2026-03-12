@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { AirbnbNormalizedRow, ManualRental, UnifiedEarning } from '../models/airbnb.model';
 import { Expense } from '../models/expense.model';
 import { AirbnbReview } from '../models/review.model';
+import { House, HousePhoto } from '../models/house.model';
 import { HouseService } from './house.service';
 
 @Injectable({
@@ -275,6 +276,127 @@ export class SupabaseService {
         .select();
 
      return { data, error };
+  }
+
+  // --- Public Methods ---
+
+  /**
+   * Busca todas as casas públicas com suas fotos de capa
+   * Usado na Home Page pública
+   */
+  async getPublicHouses() {
+    const { data, error } = await this.supabase
+      .from('houses')
+      .select(`
+        *,
+        house_photos (*)
+      `)
+      .eq('status', 'active')
+      .order('name');
+    
+    return { data: data as (House & { house_photos: HousePhoto[] })[], error };
+  }
+
+  // --- House Management Methods ---
+
+  /**
+   * Busca todas as casas que o usuário tem acesso
+   */
+  async getHouses() {
+    const { data, error } = await this.supabase
+      .from('houses')
+      .select('*')
+      .order('name');
+    
+    return { data: data as House[], error };
+  }
+
+  /**
+   * Busca uma casa específica pelo código
+   */
+  async getHouseByCode(code: string) {
+    const { data, error } = await this.supabase
+      .from('houses')
+      .select('*')
+      .eq('code', code)
+      .single();
+    
+    return { data: data as House, error };
+  }
+
+  /**
+   * Salva ou atualiza uma casa
+   */
+  async upsertHouse(house: House) {
+    const { data, error } = await this.supabase
+      .from('houses')
+      .upsert(house, { onConflict: 'code' })
+      .select();
+    
+    return { data, error };
+  }
+
+  /**
+   * Remove uma casa
+   */
+  async deleteHouse(code: string) {
+    return await this.supabase
+      .from('houses')
+      .delete()
+      .eq('code', code);
+  }
+
+  // --- House Photos Methods ---
+
+  /**
+   * Busca fotos de uma casa
+   */
+  async getHousePhotos(houseCode: string) {
+    const { data, error } = await this.supabase
+      .from('house_photos')
+      .select('*')
+      .eq('house_code', houseCode)
+      .order('sort_order');
+    
+    return { data: data as HousePhoto[], error };
+  }
+
+  /**
+   * Adiciona fotos em lote
+   */
+  async addHousePhotos(photos: HousePhoto[]) {
+    return await this.supabase
+      .from('house_photos')
+      .insert(photos)
+      .select();
+  }
+
+  /**
+   * Remove uma foto
+   */
+  async deleteHousePhoto(id: string) {
+    return await this.supabase
+      .from('house_photos')
+      .delete()
+      .eq('id', id);
+  }
+
+  /**
+   * Define a foto de capa da casa
+   */
+  async setHouseCoverPhoto(houseCode: string, photoId: string) {
+    // Primeiro, remove o status de capa de todas as fotos da casa
+    await this.supabase
+      .from('house_photos')
+      .update({ is_cover: false })
+      .eq('house_code', houseCode);
+    
+    // Depois, define a nova capa
+    return await this.supabase
+      .from('house_photos')
+      .update({ is_cover: true })
+      .eq('id', photoId)
+      .select();
   }
 }
 

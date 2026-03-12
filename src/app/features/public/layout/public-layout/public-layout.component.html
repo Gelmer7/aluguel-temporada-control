@@ -1,55 +1,175 @@
-<div class="min-h-screen flex flex-col">
-  <header class="sticky top-0 z-50 bg-white shadow-sm flex justify-between items-center p-4 md:px-8">
-    <div>
-      <h3>🏡 Aluguel temporada Villa Flora</h3>
-    </div>
-    <div class="hidden md:flex gap-6 items-center">
-      <button (click)="scrollToSection('propriedades')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Casas</button>
-      <button (click)="scrollToSection('galeria')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Galeria</button>
-      <button (click)="scrollToSection('disponibilidade')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Disponibilidade</button>
-      <button (click)="scrollToSection('contato')" class="text-surface-600 hover:text-surface-900 font-medium bg-transparent border-none cursor-pointer">Contato</button>
+<div class="min-h-screen flex flex-col relative">
+  <!-- Header Dinâmico -->
+  <header
+    class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 overflow-hidden"
+    [ngClass]="{
+      'shadow-lg py-3': isScrolled(),
+      'py-5': !isScrolled()
+    }"
+  >
+    <!-- Camada de Fundo Estilizada (Mesh Gradient + Glassmorphism) -->
+    <div
+      class="absolute inset-0 -z-10 transition-opacity duration-500"
+      [ngClass]="{ 'opacity-100': isScrolled(), 'opacity-0': !isScrolled() }"
+    >
+      <!-- Background com Blur -->
+      <div class="absolute inset-0 bg-white/80 dark:bg-surface-950/80 backdrop-blur-xl"></div>
 
-      @if (user$ | async) {
-        <p-button label="Dashboard" routerLink="/dashboard" styleClass="p-button-sm"></p-button>
-      } @else {
-        <p-button label="Login" routerLink="/auth/login" styleClass="p-button-outlined p-button-sm"></p-button>
-      }
+      <!-- Blobs Decorativos do Header -->
+      <div class="absolute -top-10 -left-10 w-40 h-40 bg-indigo-100/40 dark:bg-indigo-900/20 rounded-full blur-2xl"></div>
+      <div class="absolute -top-10 -right-10 w-40 h-40 bg-purple-100/40 dark:bg-purple-900/20 rounded-full blur-2xl"></div>
+
+      <!-- Textura de Grid -->
+      <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-[0.05]"></div>
     </div>
 
-    <!-- Mobile Menu Button -->
-    <div class="md:hidden">
-      <p-button icon="pi pi-bars" [text]="true" (onClick)="sidebarVisible = true"></p-button>
+    <div class="max-w-7xl mx-auto flex justify-between items-center px-4 md:px-8 relative z-10">
+      <!-- Logo e Título -->
+      <div class="flex items-center gap-3 cursor-pointer" (click)="scrollToTop()">
+        <img
+          src="aluguel-temporada-logo.svg"
+          alt="Logo"
+          class="w-6 h-6 object-contain transition-transform duration-300"
+          [ngClass]="{ 'scale-90': isScrolled() }"
+        />
+        <h3
+          class="hidden sm:block text-md transition-colors duration-300"
+          [ngClass]="{
+            'bg-gradient-to-r bg-clip-text': isScrolled(),
+            'text-white drop-shadow-md': !isScrolled(),
+          }"
+        >
+          Aluguel temporada Villa Flora
+        </h3>
+      </div>
+
+      <!-- Navegação Desktop -->
+      <div class="hidden md:flex gap-8 items-center">
+        <button
+          (click)="scrollToSection('propriedades')"
+          class="font-semibold bg-transparent border-none cursor-pointer transition-colors duration-300"
+          [ngClass]="{
+            'text-surface-600 hover:text-indigo-600': isScrolled(),
+            'text-white hover:text-indigo-200': !isScrolled(),
+          }"
+        >
+          Casas
+        </button>
+        <button
+          (click)="scrollToSection('galeria')"
+          class="font-semibold bg-transparent border-none cursor-pointer transition-colors duration-300"
+          [ngClass]="{
+            'text-surface-600 hover:text-indigo-600': isScrolled(),
+            'text-white hover:text-indigo-200': !isScrolled(),
+          }"
+        >
+          Galeria
+        </button>
+        <button
+          (click)="scrollToSection('disponibilidade')"
+          class="font-semibold bg-transparent border-none cursor-pointer transition-colors duration-300"
+          [ngClass]="{
+            'text-surface-600 hover:text-indigo-600': isScrolled(),
+            'text-white hover:text-indigo-200': !isScrolled(),
+          }"
+        >
+          Disponibilidade
+        </button>
+        <button
+          (click)="scrollToSection('contato')"
+          class="font-semibold bg-transparent border-none cursor-pointer transition-colors duration-300"
+          [ngClass]="{
+            'text-surface-600 hover:text-indigo-600': isScrolled(),
+            'text-white hover:text-indigo-200': !isScrolled(),
+          }"
+        >
+          Contato
+        </button>
+
+        @if (user$ | async) {
+          <p-button
+            label="Dashboard"
+            routerLink="/dashboard"
+            [severity]="isScrolled() ? 'primary' : 'secondary'"
+            [raised]="isScrolled()"
+            styleClass="p-button-sm px-6"
+          ></p-button>
+        } @else {
+          <p-button
+            label="Login"
+            routerLink="/auth/login"
+            [outlined]="isScrolled()"
+            [severity]="isScrolled() ? 'primary' : 'secondary'"
+            styleClass="p-button-sm px-6"
+          ></p-button>
+        }
+      </div>
+
+      <!-- Botão Menu Mobile -->
+      <div class="md:hidden">
+        <p-button
+          icon="pi pi-bars"
+          [text]="true"
+          (onClick)="sidebarVisible = true"
+          [style]="{ color: isScrolled() ? 'var(--p-surface-700)' : 'white' }"
+        ></p-button>
+      </div>
     </div>
   </header>
 
   <!-- Mobile Sidebar -->
   <p-drawer [(visible)]="sidebarVisible" position="right" styleClass="w-full sm:w-20rem">
     <div class="flex flex-col gap-4 p-4">
-        <div class="text-2xl font-bold mb-4 text-primary">Menu</div>
+      <div class="text-2xl font-bold mb-4 text-primary">Menu</div>
 
-        <button (click)="scrollToSection('propriedades')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
-            <i class="pi pi-home mr-2"></i> Casas
-        </button>
-        <button (click)="scrollToSection('galeria')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
-            <i class="pi pi-images mr-2"></i> Galeria
-        </button>
-        <button (click)="scrollToSection('disponibilidade')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
-            <i class="pi pi-calendar mr-2"></i> Disponibilidade
-        </button>
-        <button (click)="scrollToSection('contato')" class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer">
-            <i class="pi pi-envelope mr-2"></i> Contato
-        </button>
+      <button
+        (click)="scrollToSection('propriedades')"
+        class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <i class="pi pi-home mr-2"></i> Casas
+      </button>
+      <button
+        (click)="scrollToSection('galeria')"
+        class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <i class="pi pi-images mr-2"></i> Galeria
+      </button>
+      <button
+        (click)="scrollToSection('disponibilidade')"
+        class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <i class="pi pi-calendar mr-2"></i> Disponibilidade
+      </button>
+      <button
+        (click)="scrollToSection('contato')"
+        class="text-left p-3 text-lg text-surface-600 hover:bg-surface-100 rounded-lg transition-colors border-none bg-transparent cursor-pointer"
+      >
+        <i class="pi pi-envelope mr-2"></i> Contato
+      </button>
 
-        <div class="h-px bg-surface-200 my-2"></div>
+      <div class="h-px bg-surface-200 my-2"></div>
 
-        @if (user$ | async) {
-            <p-button label="Ir para Dashboard" icon="pi pi-th-large" routerLink="/dashboard" styleClass="w-full" (onClick)="sidebarVisible = false"></p-button>
-        } @else {
-            <p-button label="Fazer Login" icon="pi pi-user" routerLink="/auth/login" styleClass="p-button-outlined w-full" (onClick)="sidebarVisible = false"></p-button>
-        }
+      @if (user$ | async) {
+        <p-button
+          label="Ir para Dashboard"
+          icon="pi pi-th-large"
+          routerLink="/dashboard"
+          styleClass="w-full"
+          (onClick)="sidebarVisible = false"
+        ></p-button>
+      } @else {
+        <p-button
+          label="Fazer Login"
+          icon="pi pi-user"
+          routerLink="/auth/login"
+          styleClass="p-button-outlined w-full"
+          (onClick)="sidebarVisible = false"
+        ></p-button>
+      }
     </div>
   </p-drawer>
 
+  <!-- Conteúdo Principal -->
   <main class="flex-grow">
     <router-outlet></router-outlet>
   </main>

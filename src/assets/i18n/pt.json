@@ -338,6 +338,21 @@
     "FROM_TO": "De {{min}} a {{max}}",
     "ABOVE": "Acima de"
   },
+  "HOUSE_ADMIN": {
+    "TITLE": "Administrar Casas",
+    "ADD_NEW": "Nova Casa",
+    "COL_CODE": "Código",
+    "COL_NAME": "Nome",
+    "COL_STATUS": "Status",
+    "COL_ACTIONS": "Ações",
+    "NO_HOUSES": "Nenhuma casa cadastrada.",
+    "WIZARD": {
+      "STEP_BASIC": "Básico",
+      "STEP_PHOTOS": "Fotos",
+      "STEP_PRICING": "Preços",
+      "STEP_RULES": "Regras & Check-in"
+    }
+  },
   "PRIMENG": {
     "dayNames": ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"],
     "dayNamesShort": ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"],

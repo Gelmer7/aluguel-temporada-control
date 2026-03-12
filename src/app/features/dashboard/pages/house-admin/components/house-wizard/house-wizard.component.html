@@ -1,0 +1,64 @@
+<div class="wizard-container w-full">
+  <p-steps
+    [model]="items"
+    [(activeIndex)]="activeIndex"
+    [readonly]="false">
+  </p-steps>
+
+  <div class="mt-8 mb-8 p-2 border-t border-surface-100 dark:border-surface-800 pt-6">
+    <!-- Renderização dinâmica dos passos -->
+    <ng-container [ngSwitch]="activeIndex">
+      <div *ngSwitchCase="0" class="step-content">
+        <app-basic-info-step
+          [house]="house"
+          (onFormChange)="updateStepData(0, $event)">
+        </app-basic-info-step>
+      </div>
+      <div *ngSwitchCase="1" class="step-content">
+        <app-photo-step
+          [house]="house"
+          (onPhotosChange)="updateStepData(1, $event)">
+        </app-photo-step>
+      </div>
+      <div *ngSwitchCase="2" class="step-content">
+        <app-pricing-step
+          [house]="house"
+          (onFormChange)="updateStepData(2, $event)">
+        </app-pricing-step>
+      </div>
+      <div *ngSwitchCase="3" class="step-content">
+        <app-rules-step
+          [house]="house"
+          (onFormChange)="updateStepData(3, $event)">
+        </app-rules-step>
+      </div>
+    </ng-container>
+  </div>
+
+  <div class="flex justify-between mt-4">
+    <p-button
+      label="{{ 'COMMON.PREVIOUS' | translate }}"
+      icon="pi pi-angle-left"
+      (click)="prevStep()"
+      [disabled]="activeIndex === 0"
+      severity="secondary">
+    </p-button>
+
+    <p-button
+      *ngIf="activeIndex < items.length - 1"
+      label="{{ 'COMMON.NEXT' | translate }}"
+      icon="pi pi-angle-right"
+      iconPos="right"
+      (click)="nextStep()">
+    </p-button>
+
+    <p-button
+      *ngIf="activeIndex === items.length - 1"
+      label="{{ 'ACTIONS.SAVE' | translate }}"
+      icon="pi pi-check"
+      iconPos="right"
+      severity="success"
+      (click)="save()">
+    </p-button>
+  </div>
+</div>

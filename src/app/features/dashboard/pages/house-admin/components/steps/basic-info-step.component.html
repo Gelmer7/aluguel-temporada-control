@@ -1,0 +1,52 @@
+<form [formGroup]="form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="name" class="font-medium">{{ 'HOUSE_ADMIN.COL_NAME' | translate }}*</label>
+    <input pInputText id="name" formControlName="name" placeholder="Ex: Casa de Praia 47" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="code" class="font-medium">{{ 'HOUSE_ADMIN.COL_CODE' | translate }}*</label>
+    <input pInputText id="code" formControlName="code" placeholder="Ex: CASA_47" [readonly]="isEdit" />
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="status" class="font-medium">{{ 'HOUSE_ADMIN.COL_STATUS' | translate }}</label>
+    <p-select
+      id="status"
+      [options]="statusOptions"
+      formControlName="status"
+      appendTo="body"
+      class="w-full">
+    </p-select>
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="property_title" class="font-medium">Título de Propriedade (Airbnb)</label>
+    <input pInputText id="property_title" formControlName="property_title" placeholder="Ex: Incrível Casa com Vista para o Mar" />
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="description" class="font-medium">Descrição</label>
+    <textarea pTextarea id="description" formControlName="description" rows="5" placeholder="Descreva sua propriedade em detalhes..." class="w-full"></textarea>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="guests_max" class="font-medium">Número Máximo de Hóspedes</label>
+    <p-inputNumber id="guests_max" formControlName="guests_max" [showButtons]="true" [min]="1" class="w-full"></p-inputNumber>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="bedrooms" class="font-medium">Quartos</label>
+    <p-inputNumber id="bedrooms" formControlName="bedrooms" [showButtons]="true" [min]="0" class="w-full"></p-inputNumber>
+  </div>
+
+  <div class="flex flex-col gap-2">
+    <label for="bathrooms" class="font-medium">Banheiros</label>
+    <p-inputNumber id="bathrooms" formControlName="bathrooms" [showButtons]="true" [min]="0" class="w-full"></p-inputNumber>
+  </div>
+
+  <div class="col-span-1 md:col-span-2 flex flex-col gap-2">
+    <label for="address" class="font-medium">Endereço Completo</label>
+    <input pInputText id="address" formControlName="address" placeholder="Rua, Número, Bairro, Cidade..." />
+  </div>
+</form>
