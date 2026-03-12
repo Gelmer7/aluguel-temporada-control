@@ -234,10 +234,10 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div
-      class="bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-[40px] shadow-2xl p-8 md:p-16 border border-white dark:border-surface-700/50 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
+      class="bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-[40px] shadow-2xl p-1 md:p-4 border border-white dark:border-surface-700/50 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
     >
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
-        <div>
+        <div class="p-2 md:p-4">
           <h2 class="text-3xl font-bold text-surface-900 dark:text-surface-0 mb-2">
             Verifique a Disponibilidade
           </h2>
@@ -319,7 +319,7 @@
           [numberOfMonths]="numberOfMonths"
           [minDate]="today"
           [readonlyInput]="true"
-          styleClass="w-full max-w-5xl border-0 shadow-none bg-transparent custom-datepicker"
+          class="w-full max-w-5xl border-0 shadow-none bg-transparent custom-datepicker"
           [showOtherMonths]="false"
         >
         </p-datepicker>
