@@ -99,7 +99,7 @@
       <div
         *ngFor="let house of houses()"
         (click)="onSelectHouse(house)"
-        class="group relative bg-white/70 dark:bg-surface-900/70 backdrop-blur-md rounded-3xl shadow-lg border border-white/20 dark:border-surface-700/30 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 cursor-pointer"
+        class="group relative bg-white/70 dark:bg-surface-900/70 backdrop-blur-md rounded-lg shadow-lg border border-white/20 dark:border-surface-700/30 overflow-hidden hover:shadow-2xl transition-all duration-500 hover:-translate-y-3 cursor-pointer"
         [class.ring-2]="selectedProperty()?.id === house.id"
         [class.ring-indigo-500]="selectedProperty()?.id === house.id"
       >
@@ -115,7 +115,7 @@
 
           <!-- Badge de Preço -->
           <div
-            class="absolute top-4 right-4 bg-white/95 dark:bg-surface-900/95 backdrop-blur-md px-4 py-2 rounded-2xl text-sm font-bold text-indigo-600 shadow-xl border border-white/20"
+            class="absolute top-4 right-4 bg-white/95 dark:bg-surface-900/95 backdrop-blur-md px-4 py-2 rounded-lg text-sm font-bold text-indigo-600 shadow-xl border border-white/20"
           >
             {{ house.pricing.base_night | currency: 'BRL' }}
             <span class="text-[10px] text-surface-500 font-normal">/noite</span>
@@ -234,7 +234,7 @@
 
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div
-      class="bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-[40px] shadow-2xl p-1 md:p-4 border border-white dark:border-surface-700/50 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
+      class="bg-white/80 dark:bg-surface-900/80 backdrop-blur-xl rounded-lg shadow-2xl p-1 md:p-4 border border-white dark:border-surface-700/50 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
     >
       <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-10 gap-6">
         <div class="p-2 md:p-4">
@@ -310,7 +310,7 @@
       </div>
 
       <div
-        class="flex justify-center bg-surface-50 dark:bg-surface-900 rounded-2xl p-4 overflow-hidden"
+        class="flex justify-center bg-surface-50 dark:bg-surface-900 rounded-lg p-0 overflow-hidden"
       >
         <p-datepicker
           [(ngModel)]="dateRange"
@@ -331,10 +331,10 @@
 <!-- Contact Section -->
 <section
   id="contato"
-  class="max-w-5xl mx-auto my-24 px-4 sm:px-6 lg:px-8 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
+  class="mx-auto my-24 scroll-animate opacity-0 translate-y-10 transition-all duration-1000 ease-out"
 >
   <div
-    class="bg-gradient-to-r from-indigo-900 to-purple-900 rounded-3xl p-12 text-center text-white shadow-2xl relative overflow-hidden"
+    class="bg-gradient-to-r from-indigo-900 to-purple-900  p-12 text-center text-white shadow-2xl relative overflow-hidden"
   >
     <div class="relative z-10">
       <h2 class="text-4xl font-bold mb-6">Pronto para reservar?</h2>
